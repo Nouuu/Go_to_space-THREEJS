@@ -9,6 +9,12 @@ let terrain;
 /**
  * Textures matériel
  */
+const loader = new THREE.TextureLoader();
+
+const bgTexture = loader.load("./content/textures/spacebg.PNG");
+bgTexture.wrapS = THREE.RepeatWrapping;
+bgTexture.wrapT = THREE.RepeatWrapping;
+bgTexture.repeat.set(2, 2);
 
 const blackMat = new THREE.MeshStandardMaterial({color: 0x000000});
 const whiteMat = new THREE.MeshStandardMaterial({color: 0xffffff});
@@ -35,7 +41,7 @@ function init() {
      * Ajout du terrain
      */
     let geometry;
-    geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
+    geometry = new THREE.PlaneBufferGeometry(100, 50, 32, 32);
     terrain = new THREE.Mesh(geometry, whiteMat);
     terrain.receiveShadow = true;
     terrain.rotateX(Math.radians(-90));
@@ -49,6 +55,11 @@ function init() {
     let light = new THREE.AmbientLight(0xf2f2f2, 1);
     scene.add(light);
 
+    /**
+     * Background
+     */
+
+    scene.background = bgTexture;
 
 
     /**
