@@ -24,9 +24,9 @@ function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100);
-    camera.position.z = 0;
-    camera.position.y = 30;
-    camera.rotation.x -= Math.radians(90);
+    camera.position.z = 100;
+    camera.position.y = 50;
+    // camera.rotation.x -= Math.radians(90);
 
 
 
@@ -42,6 +42,12 @@ function init() {
 
     scene.add(terrain);
 
+    /**
+     * Ambient light
+     */
+
+    let light = new THREE.AmbientLight(0xf2f2f2, 1);
+    scene.add(light);
 
 
 
