@@ -2,8 +2,10 @@ import * as THREE from './libs/three.module.js';
 import {GUI} from './libs/dat.gui.module.js';
 import Stats from './libs/stats.module.js';
 
+import * as initTerrain from './initTerrain.js';
+
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let camera, scene, renderer, stats;
+let camera, scene, sceneSpace, sceneShip, renderer, stats;
 let terrain;
 
 /**
@@ -11,14 +13,37 @@ let terrain;
  */
 const loader = new THREE.TextureLoader();
 
-const bgTexture = loader.load("./content/textures/spacebg.PNG");
-bgTexture.wrapS = THREE.RepeatWrapping;
-bgTexture.wrapT = THREE.RepeatWrapping;
-bgTexture.repeat.set(2, 2);
+const bgSpaceTexture = loader.load("./content/textures/spacebg.PNG");
+bgSpaceTexture.wrapS = THREE.RepeatWrapping;
+bgSpaceTexture.wrapT = THREE.RepeatWrapping;
+bgSpaceTexture.repeat.set(2, 2);
 
 const blackMat = new THREE.MeshStandardMaterial({color: 0x000000});
 const whiteMat = new THREE.MeshStandardMaterial({color: 0xffffff});
 const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
+
+/**
+ * GUI
+ */
+let dimension = "ship";
+let params = {
+    Switch: function () {
+        switch (dimension) {
+            case "space":
+                scene = sceneSpace;
+                dimension = "ship";
+                break;
+            case "ship":
+                scene = sceneShip;
+                dimension = "space";
+                break;
+            default:
+                break;
+        }
+    }
+};
+let gui = new GUI();
+gui.add(params, 'Switch');
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,49 +51,19 @@ init();
 animate();
 
 function init() {
-    scene = new THREE.Scene();
     stats = new Stats();
     document.body.appendChild(stats.dom);
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100);
-    camera.position.z = 100;
-    camera.position.y = 50;
-    // camera.rotation.x -= Math.radians(90);
 
+    [sceneSpace, camera] = initTerrain.initSpace(bgSpaceTexture);
+    [sceneShip, camera] = initTerrain.initShip(whiteMat);
 
-
-
-    /**
-     * Ajout du terrain
-     */
-    let geometry;
-    geometry = new THREE.PlaneBufferGeometry(100, 50, 32, 32);
-    terrain = new THREE.Mesh(geometry, whiteMat);
-    terrain.receiveShadow = true;
-    terrain.rotateX(Math.radians(-90));
-
-    scene.add(terrain);
-
-    /**
-     * Ambient light
-     */
-
-    let light = new THREE.AmbientLight(0xf2f2f2, 1);
-    scene.add(light);
-
-    /**
-     * Background
-     */
-
-    scene.background = bgTexture;
-
-
+    scene = sceneSpace;
     /**
      * Options de rendu
      */
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 }
