@@ -1,5 +1,5 @@
-import * as THREE from './three.module.js';
-import {GUI} from './dat.gui.module.js';
+import * as THREE from './libs/three.module.js';
+import {GUI} from './libs/dat.gui.module.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let camera, scene, renderer;
