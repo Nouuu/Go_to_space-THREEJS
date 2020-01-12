@@ -1,8 +1,9 @@
 import * as THREE from './libs/three.module.js';
 import {GUI} from './libs/dat.gui.module.js';
+import Stats from './libs/stats.module.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let camera, scene, renderer;
+let camera, scene, renderer, stats;
 let terrain;
 
 /**
@@ -20,7 +21,8 @@ animate();
 
 function init() {
     scene = new THREE.Scene();
-
+    stats = new Stats();
+    document.body.appendChild(stats.dom);
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 0;
     camera.position.y = 30;
@@ -67,5 +69,6 @@ function animate() {
 }
 
 function render() {
+    stats.update();
     renderer.render(scene, camera);
 }
