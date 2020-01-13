@@ -15,6 +15,8 @@ let moveSpeed = 2;
 let rotateSpeed = 0.02;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
+let vectorZ = new THREE.Vector3(0, 0, 1);
+
 
 /**
  * Textures matériel
@@ -162,40 +164,87 @@ function control() {
      * RStick up : 3 négatif
      * RStick down : 3 positif
      */
-    if (keyboard.pressed("up")) {
-        camera.rotateOnAxis(vectorX, rotateSpeed);
-    }
-    if (keyboard.pressed("down")) {
-        camera.rotateOnAxis(vectorX, -rotateSpeed);
-    }
-    if (keyboard.pressed("left")) {
-        camera.rotateOnAxis(vectorY, rotateSpeed);
-    }
-    if (keyboard.pressed("right")) {
-        camera.rotateOnAxis(vectorY, -rotateSpeed);
-    }
-    if (keyboard.pressed("z")) {
-        camera.translateZ(-moveSpeed)
-    }
-    if (keyboard.pressed("s")) {
-        camera.translateZ(moveSpeed)
-    }
-    if (keyboard.pressed("q")) {
-        camera.translateX(-moveSpeed);
-    }
-    if (keyboard.pressed("d")) {
-        camera.translateX(moveSpeed);
-    }
-    if (keyboard.pressed("space")) {
-        camera.translateY(moveSpeed);
-    }
-    if (keyboard.pressed("ctrl")) {
-        camera.translateY(-moveSpeed);
-    }
-    if (keyboard.pressed("shift")) {
-        moveSpeed = 10;
+    if (gamepad) {
+        gamepad = navigator.getGamepads()[0];
+
+        if (gamepad.axes[1] <= -0.1) {
+            camera.translateZ(-moveSpeed * -gamepad.axes[1])
+        }
+        if (gamepad.axes[1] >= 0.1) {
+            camera.translateZ(moveSpeed * gamepad.axes[1])
+        }
+        if (gamepad.axes[0] <= -0.1) {
+            camera.translateX(-moveSpeed * -gamepad.axes[0]);
+        }
+        if (gamepad.axes[0] >= 0.1) {
+            camera.translateX(moveSpeed * gamepad.axes[0])
+        }
+        if (gamepad.axes[3] <= -0.1) {
+            camera.rotateOnAxis(vectorX, rotateSpeed * -gamepad.axes[3]);
+        }
+        if (gamepad.axes[3] >= 0.1) {
+            camera.rotateOnAxis(vectorX, -rotateSpeed * gamepad.axes[3]);
+        }
+        if (gamepad.axes[2] <= -0.1) {
+            camera.rotateOnAxis(vectorY, rotateSpeed * -gamepad.axes[2]);
+        }
+        if (gamepad.axes[2] >= 0.1) {
+            camera.rotateOnAxis(vectorY, -rotateSpeed * gamepad.axes[2]);
+        }
+        if (gamepad.buttons[14].pressed) {
+            camera.rotateOnAxis(vectorZ, rotateSpeed * 0.5);
+        }
+        if (gamepad.buttons[15].pressed) {
+            camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
+        }
+        if (gamepad.buttons[7].value >= 0.1) {
+            camera.translateY(moveSpeed * gamepad.buttons[7].value);
+        }
+        if (gamepad.buttons[6].value >= 0.1) {
+            camera.translateY(-moveSpeed * gamepad.buttons[6].value);
+        }
+        if (gamepad.buttons[0].pressed) {
+            moveSpeed = 2;
+        } else {
+            moveSpeed = 0.5;
+        }
     } else {
-        moveSpeed = 2;
+        // Partie clavier
+        if (keyboard.pressed("up")) {
+            camera.rotateOnAxis(vectorX, rotateSpeed);
+        }
+        if (keyboard.pressed("down")) {
+            camera.rotateOnAxis(vectorX, -rotateSpeed);
+        }
+        if (keyboard.pressed("left")) {
+            camera.rotateOnAxis(vectorY, rotateSpeed);
+        }
+        if (keyboard.pressed("right")) {
+            camera.rotateOnAxis(vectorY, -rotateSpeed);
+        }
+        if (keyboard.pressed("z")) {
+            camera.translateZ(-moveSpeed)
+        }
+        if (keyboard.pressed("s")) {
+            camera.translateZ(moveSpeed)
+        }
+        if (keyboard.pressed("q")) {
+            camera.translateX(-moveSpeed);
+        }
+        if (keyboard.pressed("d")) {
+            camera.translateX(moveSpeed);
+        }
+        if (keyboard.pressed("space")) {
+            camera.translateY(moveSpeed);
+        }
+        if (keyboard.pressed("ctrl")) {
+            camera.translateY(-moveSpeed);
+        }
+        if (keyboard.pressed("shift")) {
+            moveSpeed = 2;
+        } else {
+            moveSpeed = 0.5;
+        }
     }
 }
 
