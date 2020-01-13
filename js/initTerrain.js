@@ -8,7 +8,7 @@ const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
     map: earthTexture,
-    shininess: 15, // le brillant
+    shininess: 50, // le brillant
 });
 
 export function initSpace() {
@@ -28,17 +28,20 @@ export function initSpace() {
 
     geometry = new THREE.SphereBufferGeometry(30, 32, 32);
     meshPlanet = new THREE.Mesh(geometry, earthMaterial);
+    meshPlanet.receiveShadow = true;
+    meshPlanet.castShadow = true;
+    meshPlanet.name = "earth";
     scene.add(meshPlanet);
 
     /**
      * light
      */
 
-    let ambientLight = new THREE.AmbientLight(0xf2f2f2, 1);
+    let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
 
     let directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(0, 0, 31);
+    directionalLight.position.set(0, 0, 300);
     scene.add(directionalLight);
 
     /**
