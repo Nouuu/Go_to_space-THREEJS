@@ -13,3 +13,5 @@
 - **Monter :** Barre espace
 - **Descendre :** Ctrl gauche
 - **Boost vitesse :** Majuscule gauche
+
+[Gamepad control](https://stemkoski.github.io/Three.js/Mesh-Movement-Gamepad.html)
