@@ -1,4 +1,5 @@
 import * as THREE from './libs/three.module.js';
+import {THREEx} from './libs/THREEx.KeyboardState.js';
 import {GUI} from './libs/dat.gui.module.js';
 import Stats from './libs/stats.module.js';
 
