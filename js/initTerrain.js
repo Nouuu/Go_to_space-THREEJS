@@ -23,11 +23,23 @@ export function initSpace() {
     camera.position.x = 0;
 
     /**
-     * Ambient light
+     * Planet
      */
 
-    let light = new THREE.AmbientLight(0xf2f2f2, 1);
-    scene.add(light);
+    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
+    scene.add(meshPlanet);
+
+    /**
+     * light
+     */
+
+    let ambientLight = new THREE.AmbientLight(0xf2f2f2, 1);
+    scene.add(ambientLight);
+
+    let directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set(0, 0, 31);
+    scene.add(directionalLight);
 
     /**
      * Background
@@ -83,7 +95,7 @@ function stars(radius) {
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
-    for (let i = 0; i <radius; i++) {
+    for (let i = 0; i < radius; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
