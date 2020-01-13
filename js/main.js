@@ -11,7 +11,7 @@ let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, sta
 let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState();
-let moveSpeed = 2;
+let moveSpeed = 0.5;
 let rotateSpeed = 0.02;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
