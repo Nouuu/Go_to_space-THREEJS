@@ -31,9 +31,11 @@ let params = {
         switch (dimension) {
             case "space":
                 scene = sceneSpace;
+                camera = cameraSpace;
                 dimension = "ship";
                 break;
             case "ship":
+                camera = cameraShip;
                 scene = sceneShip;
                 dimension = "space";
                 break;
@@ -54,10 +56,11 @@ function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
 
-    [sceneSpace, camera] = initTerrain.initSpace(bgSpaceTexture);
-    [sceneShip, camera] = initTerrain.initShip(whiteMat);
+    [sceneSpace, cameraSpace] = initTerrain.initSpace();
+    [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
 
     scene = sceneSpace;
+    camera = cameraSpace;
     /**
      * Options de rendu
      */
