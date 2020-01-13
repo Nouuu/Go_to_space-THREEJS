@@ -1,6 +1,6 @@
 # Go_to_space-THREEJS
 
-## Les contrôles
+## Les contrôles claviers
 
 - **Avancer :** Z
 - **Reculer :** S
@@ -14,4 +14,4 @@
 - **Descendre :** Ctrl gauche
 - **Boost vitesse :** Majuscule gauche
 
-[Gamepad control](https://stemkoski.github.io/Three.js/Mesh-Movement-Gamepad.html)
+[Gamepad control](https://html5gamepad.com/)
