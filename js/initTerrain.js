@@ -4,7 +4,7 @@ export function initSpace() {
     let scene = new THREE.Scene();
     let radius = 7000;
 
-    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1e7);
+    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
     camera.position.z = 0;
     camera.position.y = 0;
     camera.position.x = 0;
