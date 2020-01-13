@@ -5,8 +5,8 @@ import Stats from './libs/stats.module.js';
 import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats;
-
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth;
+let planetRotationSpeed = 0.0005;
 /**
  * Textures matériel
  */
@@ -50,11 +50,21 @@ function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
 
+    /**
+     * init terrains
+     */
     [sceneSpace, cameraSpace] = initTerrain.initSpace();
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
 
     scene = sceneSpace;
     camera = cameraSpace;
+
+    /**
+     * Get planets
+     */
+
+    earth = scene.getObjectByName("earth");
+
     /**
      * Options de rendu
      */
@@ -75,12 +85,17 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     render();
+
+    if (dimension !== "space") {
+        planetUpdate();
+    }
 }
 
 function render() {
     stats.update();
-    camera.rotation.y += 0.005;
-    // camera.position.z -= 0.3;
-
     renderer.render(scene, camera);
+}
+
+function planetUpdate() {
+    earth.rotation.y += planetRotationSpeed;
 }
