@@ -138,6 +138,30 @@ function render() {
 }
 
 function control() {
+    // Partie manette
+    /**
+     * Buttons :
+     * a : 0
+     * b : 1
+     * y : 3
+     * x : 2
+     * left : 14
+     * right : 15
+     * up : 12
+     * down : 13
+     * gachette gauche : 6
+     * gachette droite : 7
+     *
+     * Axes :
+     * LStick left : 0 négatif
+     * LStick right : 0 positif
+     * LStick up : 1 négatif
+     * LStick down : 1 positif
+     * RStick Left : 2 négatif
+     * RStick Right : 2 positif
+     * RStick up : 3 négatif
+     * RStick down : 3 positif
+     */
     if (keyboard.pressed("up")) {
         camera.rotateOnAxis(vectorX, rotateSpeed);
     }
