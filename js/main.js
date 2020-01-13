@@ -6,7 +6,13 @@ import Stats from './libs/stats.module.js';
 import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
+
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats;
+let keyboard = new THREEx.KeyboardState();
+let moveSpeed = 1;
+let rotateSpeed = 0.01;
+let vectorX = new THREE.Vector3(1, 0, 0);
+let vectorY = new THREE.Vector3(0, 1, 0);
 
 /**
  * Textures matériel
@@ -76,12 +82,27 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     render();
+    control();
 }
 
 function render() {
     stats.update();
-    camera.rotation.y += 0.005;
-    // camera.position.z -= 0.3;
+    // camera.position.z -= 1;
 
     renderer.render(scene, camera);
+}
+
+function control() {
+    if (keyboard.pressed("up")) {
+        camera.rotateOnAxis(vectorX, rotateSpeed);
+    }
+    if (keyboard.pressed("down")) {
+        camera.rotateOnAxis(vectorX, -rotateSpeed);
+    }
+    if (keyboard.pressed("left")) {
+        camera.rotateOnAxis(vectorY, rotateSpeed);
+    }
+    if (keyboard.pressed("right")) {
+        camera.rotateOnAxis(vectorY, -rotateSpeed);
+    }
 }
