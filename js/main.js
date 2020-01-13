@@ -6,8 +6,8 @@ import Stats from './libs/stats.module.js';
 import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
-
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats;
+let planetRotationSpeed = 0.0005;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth;
 let keyboard = new THREEx.KeyboardState();
 let moveSpeed = 1;
 let rotateSpeed = 0.01;
@@ -57,11 +57,21 @@ function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
 
+    /**
+     * init terrains
+     */
     [sceneSpace, cameraSpace] = initTerrain.initSpace();
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
 
     scene = sceneSpace;
     camera = cameraSpace;
+
+    /**
+     * Get planets
+     */
+
+    earth = scene.getObjectByName("earth");
+
     /**
      * Options de rendu
      */
@@ -83,12 +93,13 @@ function animate() {
     requestAnimationFrame(animate);
     render();
     control();
+    if (dimension !== "space") {
+        planetUpdate();
+    }
 }
 
 function render() {
     stats.update();
-    // camera.position.z -= 1;
-
     renderer.render(scene, camera);
 }
 
@@ -105,4 +116,8 @@ function control() {
     if (keyboard.pressed("right")) {
         camera.rotateOnAxis(vectorY, -rotateSpeed);
     }
+}
+
+function planetUpdate() {
+    earth.rotation.y += planetRotationSpeed;
 }
