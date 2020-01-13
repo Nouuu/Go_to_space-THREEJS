@@ -7,7 +7,7 @@ import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth, cube;
 let keyboard = new THREEx.KeyboardState();
 let moveSpeed = 1;
 let rotateSpeed = 0.01;
@@ -72,6 +72,20 @@ function init() {
 
     earth = scene.getObjectByName("earth");
 
+    /**
+     * Camera object
+     */
+
+    cube = new THREE.Mesh(
+        new THREE.CubeGeometry(2, 2, 2),
+        new THREE.MeshPhongMaterial({color: 0xf2f2f2})
+    );
+    cube.castShadow = true;
+    cube.receiveShadow = true;
+    cube.position.applyMatrix4(camera.matrixWorld);
+    scene.add(camera);
+    camera.add(cube);
+    cube.position.set(0, -5, -12);
     /**
      * Options de rendu
      */
