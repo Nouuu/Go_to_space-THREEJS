@@ -145,8 +145,13 @@ function control() {
     if (keyboard.pressed("space")) {
         camera.translateY(moveSpeed);
     }
-    if (keyboard.pressed("shift")) {
+    if (keyboard.pressed("ctrl")) {
         camera.translateY(-moveSpeed);
+    }
+    if (keyboard.pressed("shift")) {
+        moveSpeed = 10;
+    } else {
+        moveSpeed = 2;
     }
 }
 
