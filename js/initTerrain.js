@@ -1,6 +1,6 @@
 import * as THREE from "./libs/three.module.js";
 
-export function initSpace(bgText) {
+export function initSpace() {
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 100;
@@ -16,7 +16,7 @@ export function initSpace(bgText) {
      * Background
      */
 
-    scene.background = bgText;
+    let starField = stars(radius);
 
     return [scene, camera];
 }

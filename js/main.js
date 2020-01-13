@@ -13,11 +13,6 @@ let terrain;
  */
 const loader = new THREE.TextureLoader();
 
-const bgSpaceTexture = loader.load("./content/textures/spacebg.PNG");
-bgSpaceTexture.wrapS = THREE.RepeatWrapping;
-bgSpaceTexture.wrapT = THREE.RepeatWrapping;
-bgSpaceTexture.repeat.set(2, 2);
-
 const blackMat = new THREE.MeshStandardMaterial({color: 0x000000});
 const whiteMat = new THREE.MeshStandardMaterial({color: 0xffffff});
 const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
