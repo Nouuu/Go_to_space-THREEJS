@@ -8,6 +8,7 @@ import * as initTerrain from './initTerrain.js';
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth, cube;
+let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState();
 let moveSpeed = 2;
 let rotateSpeed = 0.02;
@@ -60,7 +61,7 @@ function init() {
     /**
      * init terrains
      */
-    [sceneSpace, cameraSpace] = initTerrain.initSpace();
+    [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
 
     scene = sceneSpace;
@@ -86,12 +87,14 @@ function init() {
     scene.add(camera);
     camera.add(cube);
     cube.position.set(0, -5, -12);
+
     /**
      * Options de rendu
      */
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 }

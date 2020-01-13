@@ -11,11 +11,10 @@ let earthMaterial = new THREE.MeshPhongMaterial({
     shininess: 50, // le brillant
 });
 
-export function initSpace() {
+export function initSpace(radius) {
     let geometry;
     let meshPlanet;
     let scene = new THREE.Scene();
-    let radius = 7000;
 
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
     camera.position.z = 100;
@@ -31,6 +30,7 @@ export function initSpace() {
     meshPlanet.receiveShadow = true;
     meshPlanet.castShadow = true;
     meshPlanet.name = "earth";
+    meshPlanet.rotateZ(Math.radians(5));
     scene.add(meshPlanet);
 
     /**
@@ -42,6 +42,7 @@ export function initSpace() {
 
     let directionalLight = new THREE.DirectionalLight(0xffffff);
     directionalLight.position.set(0, 0, 300);
+    directionalLight.castShadow = true;
     scene.add(directionalLight);
 
     /**
@@ -98,7 +99,7 @@ function stars(radius) {
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
-    for (let i = 0; i < radius; i++) {
+    for (let i = 0; i < radius/2; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
