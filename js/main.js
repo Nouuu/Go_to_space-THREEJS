@@ -8,6 +8,7 @@ import * as initTerrain from './initTerrain.js';
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth, cube;
+let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState();
 let moveSpeed = 2;
@@ -87,6 +88,22 @@ function init() {
     scene.add(camera);
     camera.add(cube);
     cube.position.set(0, -5, -12);
+
+    /**
+     * Gamepad
+     */
+
+    window.addEventListener("gamepadconnected", (event) => {
+        console.log("A gamepad connected:");
+        console.log(event.gamepad);
+        gamepad = navigator.getGamepads()[0];
+    });
+
+    window.addEventListener("gamepaddisconnected", (event) => {
+        console.log("A gamepad disconnected:");
+        console.log(event.gamepad);
+        gamepad = false;
+    });
 
     /**
      * Options de rendu
