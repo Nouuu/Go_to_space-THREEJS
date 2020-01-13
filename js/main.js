@@ -9,8 +9,8 @@ Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth, cube;
 let keyboard = new THREEx.KeyboardState();
-let moveSpeed = 1;
-let rotateSpeed = 0.01;
+let moveSpeed = 2;
+let rotateSpeed = 0.02;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
 
@@ -129,6 +129,24 @@ function control() {
     }
     if (keyboard.pressed("right")) {
         camera.rotateOnAxis(vectorY, -rotateSpeed);
+    }
+    if (keyboard.pressed("z")) {
+        camera.translateZ(-moveSpeed)
+    }
+    if (keyboard.pressed("s")) {
+        camera.translateZ(moveSpeed)
+    }
+    if (keyboard.pressed("q")) {
+        camera.translateX(-moveSpeed);
+    }
+    if (keyboard.pressed("d")) {
+        camera.translateX(moveSpeed);
+    }
+    if (keyboard.pressed("space")) {
+        camera.translateY(moveSpeed);
+    }
+    if (keyboard.pressed("shift")) {
+        camera.translateY(-moveSpeed);
     }
 }
 
