@@ -5,8 +5,7 @@ import Stats from './libs/stats.module.js';
 import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let camera, scene, sceneSpace, sceneShip, renderer, stats;
-let terrain;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats;
 
 /**
  * Textures matériel
@@ -80,5 +79,8 @@ function animate() {
 
 function render() {
     stats.update();
+    camera.rotation.y += 0.005;
+    // camera.position.z -= 0.3;
+
     renderer.render(scene, camera);
 }
