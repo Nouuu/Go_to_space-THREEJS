@@ -1,11 +1,19 @@
 import * as THREE from './libs/three.module.js';
+import {THREEx} from './libs/THREEx.KeyboardState.js';
 import {GUI} from './libs/dat.gui.module.js';
 import Stats from './libs/stats.module.js';
 
 import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats;
+let planetRotationSpeed = 0.0005;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth, cube;
+let spaceRadius = 14000;
+let keyboard = new THREEx.KeyboardState();
+let moveSpeed = 2;
+let rotateSpeed = 0.02;
+let vectorX = new THREE.Vector3(1, 0, 0);
+let vectorY = new THREE.Vector3(0, 1, 0);
 
 /**
  * Textures matériel
@@ -50,17 +58,43 @@ function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
 
-    [sceneSpace, cameraSpace] = initTerrain.initSpace();
+    /**
+     * init terrains
+     */
+    [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
 
     scene = sceneSpace;
     camera = cameraSpace;
+
+    /**
+     * Get planets
+     */
+
+    earth = scene.getObjectByName("earth");
+
+    /**
+     * Camera object
+     */
+
+    cube = new THREE.Mesh(
+        new THREE.CubeGeometry(2, 2, 2),
+        new THREE.MeshPhongMaterial({color: 0xf2f2f2})
+    );
+    cube.castShadow = true;
+    cube.receiveShadow = true;
+    cube.position.applyMatrix4(camera.matrixWorld);
+    scene.add(camera);
+    camera.add(cube);
+    cube.position.set(0, -5, -12);
+
     /**
      * Options de rendu
      */
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 }
@@ -75,12 +109,55 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     render();
+    control();
+    if (dimension !== "space") {
+        planetUpdate();
+    }
 }
 
 function render() {
     stats.update();
-    camera.rotation.y += 0.005;
-    // camera.position.z -= 0.3;
-
     renderer.render(scene, camera);
+}
+
+function control() {
+    if (keyboard.pressed("up")) {
+        camera.rotateOnAxis(vectorX, rotateSpeed);
+    }
+    if (keyboard.pressed("down")) {
+        camera.rotateOnAxis(vectorX, -rotateSpeed);
+    }
+    if (keyboard.pressed("left")) {
+        camera.rotateOnAxis(vectorY, rotateSpeed);
+    }
+    if (keyboard.pressed("right")) {
+        camera.rotateOnAxis(vectorY, -rotateSpeed);
+    }
+    if (keyboard.pressed("z")) {
+        camera.translateZ(-moveSpeed)
+    }
+    if (keyboard.pressed("s")) {
+        camera.translateZ(moveSpeed)
+    }
+    if (keyboard.pressed("q")) {
+        camera.translateX(-moveSpeed);
+    }
+    if (keyboard.pressed("d")) {
+        camera.translateX(moveSpeed);
+    }
+    if (keyboard.pressed("space")) {
+        camera.translateY(moveSpeed);
+    }
+    if (keyboard.pressed("ctrl")) {
+        camera.translateY(-moveSpeed);
+    }
+    if (keyboard.pressed("shift")) {
+        moveSpeed = 10;
+    } else {
+        moveSpeed = 2;
+    }
+}
+
+function planetUpdate() {
+    earth.rotation.y += planetRotationSpeed;
 }
