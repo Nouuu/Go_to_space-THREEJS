@@ -1,11 +1,24 @@
 import * as THREE from "./libs/three.module.js";
 
+const loader = new THREE.TextureLoader();
+
+// Textures
+const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
+
+// Materials
+let earthMaterial = new THREE.MeshPhongMaterial({
+    map: earthTexture,
+    shininess: 15, // le brillant
+});
+
 export function initSpace() {
+    let geometry;
+    let meshPlanet;
     let scene = new THREE.Scene();
     let radius = 7000;
 
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
-    camera.position.z = 0;
+    camera.position.z = 100;
     camera.position.y = 0;
     camera.position.x = 0;
 
