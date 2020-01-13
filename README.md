@@ -1,6 +1,6 @@
 # Go_to_space-THREEJS
 
-## Les contrôles
+## Les contrôles claviers
 
 - **Avancer :** Z
 - **Reculer :** S
@@ -13,3 +13,5 @@
 - **Monter :** Barre espace
 - **Descendre :** Ctrl gauche
 - **Boost vitesse :** Majuscule gauche
+
+[Gamepad control](https://html5gamepad.com/)
