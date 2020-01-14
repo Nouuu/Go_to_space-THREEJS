@@ -2,6 +2,11 @@ import * as THREE from "./libs/three.module.js";
 
 const loader = new THREE.TextureLoader();
 
+// Sizes
+const planetSizes = {
+    sun: 300,
+    earth: 90,
+};
 // Textures
 const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
 const sunTexture = loader.load("./content/textures/sun.jpg");
@@ -26,8 +31,8 @@ let meshPlanet;
 export function initSpace(radius) {
     let scene = new THREE.Scene();
 
-    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
-    camera.position.z = 300;
+    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius*2);
+    camera.position.z = 600;
     camera.position.y = 0;
     camera.position.x = 0;
 
@@ -43,8 +48,8 @@ export function initSpace(radius) {
 
     meshEarth.position.x = -1000;
 
-    planets.add(meshSun);
     planets.add(meshEarth);
+    planets.add(meshSun);
     scene.add(planets);
 
     /**
@@ -151,12 +156,16 @@ function stars(radius) {
     return starField;
 }
 
-function earth() {
-    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
-    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
+function sun() {
+    geometry = new THREE.SphereBufferGeometry(planetSizes.sun, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, sunMaterial);
+    meshPlanet.name = "sun";
     meshPlanet.position.set(0, 0, 0);
-    meshPlanet.receiveShadow = true;
-    meshPlanet.castShadow = true;
+    return meshPlanet;
+}
+
+function earth() {
+    generatePlanet(planetSizes.earth, earthMaterial);
     meshPlanet.name = "earth";
     meshPlanet.rotateZ(Math.radians(5));
     return meshPlanet;
@@ -172,3 +181,11 @@ function sun() {
 
     return meshPlanet;
 }
+
+function generatePlanet(size, material) {
+    geometry = new THREE.SphereBufferGeometry(size, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, material);
+    meshPlanet.position.set(0, 0, 0);
+    meshPlanet.receiveShadow = true;
+    meshPlanet.castShadow = true;
+}
