@@ -14,12 +14,10 @@ let earthMaterial = new THREE.MeshPhongMaterial({
 
 let sunMaterial = new THREE.MeshPhongMaterial({
     map: sunTexture,
-});
-
-// Materials
-let earthMaterial = new THREE.MeshPhongMaterial({
-    map: earthTexture,
-    shininess: 50, // le brillant
+    shininess: 50,
+    emissive: 0xFFF400,
+    emissiveIntensity: 0.3,
+    side: THREE.DoubleSide
 });
 
 let geometry;
@@ -45,13 +43,16 @@ export function initSpace(radius) {
      * light
      */
 
+    let pointLight = new THREE.PointLight(0xffffff, 2, radius * 2);
+    pointLight.position.set(0, 0, 0);
+    pointLight.castShadow = true;
+    pointLight.shadow.camera.near = 1;
+    pointLight.shadow.camera.far = radius;
+    scene.add(pointLight);
+
+
     let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
-
-    let pointLight = new THREE.PointLight(0xffffff, 1, radius);
-    pointLight.position.set(0, 0, 300);
-    pointLight.castShadow = true;
-    scene.add(pointLight);
 
     /**
      * Background
