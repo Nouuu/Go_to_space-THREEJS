@@ -6,20 +6,29 @@ const loader = new THREE.TextureLoader();
 const planetSizes = {
     sun: 300,
     earth: 90,
+    mercury: 30,
+    venus: 50
 };
+
 // Textures
 const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
 const sunTexture = loader.load("./content/textures/sun.jpg");
+const mercuryTexture = loader.load("./content/textures/mercury.jpg");
+const venusTexture = loader.load("./content/textures/venus.jpg");
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
     map: earthTexture,
-    shininess: 30, // le brillant
 });
-
+let mercuryMaterial = new THREE.MeshPhongMaterial({
+    map: mercuryTexture,
+});
+let venusMaterial = new THREE.MeshPhongMaterial({
+    map: venusTexture,
+});
 let sunMaterial = new THREE.MeshPhongMaterial({
     map: sunTexture,
-    shininess: 50,
+    shininess: 50, // le brillant
     emissive: 0xFFF400,
     emissiveIntensity: 0.3,
     side: THREE.DoubleSide
@@ -43,11 +52,18 @@ export function initSpace(radius) {
     planets.position.set(0, 0, 0);
     planets.name = "planets";
 
+    let meshMercury = mercury();
+    let meshVenus = venus();
     let meshEarth = earth();
     let meshSun = sun();
 
-    meshEarth.position.x = -1000;
+    meshMercury.position.x = -1000 - planetSizes.mercury / 2;
+    meshVenus.position.x = -2000 - planetSizes.venus / 2;
+    meshEarth.position.x = -3000 - planetSizes.earth / 2;
 
+
+    planets.add(meshMercury);
+    planets.add(meshVenus);
     planets.add(meshEarth);
     planets.add(meshSun);
     scene.add(planets);
@@ -171,14 +187,15 @@ function earth() {
     return meshPlanet;
 }
 
-function sun() {
-    geometry = new THREE.SphereBufferGeometry(90, 32, 32);
-    meshPlanet = new THREE.Mesh(geometry, sunMaterial);
-    // meshPlanet.receiveShadow = true;
-    // meshPlanet.castShadow = true;
-    meshPlanet.name = "sun";
-    meshPlanet.position.set(0, 0, 0);
+function mercury() {
+    generatePlanet(planetSizes.mercury, mercuryMaterial);
+    meshPlanet.name = "mercury";
+    return meshPlanet;
+}
 
+function venus() {
+    generatePlanet(planetSizes.venus, venusMaterial);
+    meshPlanet.name = "venus";
     return meshPlanet;
 }
 
@@ -188,4 +205,4 @@ function generatePlanet(size, material) {
     meshPlanet.position.set(0, 0, 0);
     meshPlanet.receiveShadow = true;
     meshPlanet.castShadow = true;
-}
+}
