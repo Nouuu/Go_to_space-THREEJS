@@ -4,46 +4,63 @@ const loader = new THREE.TextureLoader();
 
 // Textures
 const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
+const sunTexture = loader.load("./content/textures/sun.jpg");
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
     map: earthTexture,
-    shininess: 50, // le brillant
+    shininess: 30, // le brillant
 });
 
+let sunMaterial = new THREE.MeshPhongMaterial({
+    map: sunTexture,
+    shininess: 50,
+    emissive: 0xFFF400,
+    emissiveIntensity: 0.3,
+    side: THREE.DoubleSide
+});
+
+let geometry;
+let meshPlanet;
+
 export function initSpace(radius) {
-    let geometry;
-    let meshPlanet;
     let scene = new THREE.Scene();
 
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
-    camera.position.z = 100;
+    camera.position.z = 300;
     camera.position.y = 0;
     camera.position.x = 0;
 
     /**
-     * Planet
+     * Planets
      */
+    let planets = new THREE.Group();
+    planets.position.set(0, 0, 0);
+    planets.name = "planets";
 
-    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
-    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
-    meshPlanet.receiveShadow = true;
-    meshPlanet.castShadow = true;
-    meshPlanet.name = "earth";
-    meshPlanet.rotateZ(Math.radians(5));
-    scene.add(meshPlanet);
+    let meshEarth = earth();
+    let meshSun = sun();
+
+    meshEarth.position.x = -1000;
+
+    planets.add(meshSun);
+    planets.add(meshEarth);
+    scene.add(planets);
 
     /**
      * light
      */
 
+    let pointLight = new THREE.PointLight(0xffffff, 2, radius * 2);
+    pointLight.position.set(0, 0, 0);
+    pointLight.castShadow = true;
+    pointLight.shadow.camera.near = 1;
+    pointLight.shadow.camera.far = radius;
+    scene.add(pointLight);
+
+
     let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
-
-    let pointLight = new THREE.PointLight(0xffffff);
-    pointLight.position.set(0, 0, 300);
-    pointLight.castShadow = true;
-    scene.add(pointLight);
 
     /**
      * Background
@@ -99,7 +116,7 @@ function stars(radius) {
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
-    for (let i = 0; i < radius/2; i++) {
+    for (let i = 0; i < radius / 2; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
@@ -132,4 +149,26 @@ function stars(radius) {
     starField[1].updateMatrix();
 
     return starField;
+}
+
+function earth() {
+    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
+    meshPlanet.position.set(0, 0, 0);
+    meshPlanet.receiveShadow = true;
+    meshPlanet.castShadow = true;
+    meshPlanet.name = "earth";
+    meshPlanet.rotateZ(Math.radians(5));
+    return meshPlanet;
+}
+
+function sun() {
+    geometry = new THREE.SphereBufferGeometry(90, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, sunMaterial);
+    // meshPlanet.receiveShadow = true;
+    // meshPlanet.castShadow = true;
+    meshPlanet.name = "sun";
+    meshPlanet.position.set(0, 0, 0);
+
+    return meshPlanet;
 }
