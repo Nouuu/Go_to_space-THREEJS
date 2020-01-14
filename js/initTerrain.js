@@ -27,17 +27,25 @@ export function initSpace(radius) {
     let scene = new THREE.Scene();
 
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
-    camera.position.z = 100;
+    camera.position.z = 300;
     camera.position.y = 0;
     camera.position.x = 0;
 
     /**
-     * Planet
+     * Planets
      */
-
+    let planets = new THREE.Group();
+    planets.position.set(0, 0, 0);
+    planets.name = "planets";
 
     let meshEarth = earth();
-    scene.add(meshEarth);
+    let meshSun = sun();
+
+    meshEarth.position.x = -1000;
+
+    planets.add(meshSun);
+    planets.add(meshEarth);
+    scene.add(planets);
 
     /**
      * light
