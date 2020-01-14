@@ -23,6 +23,7 @@ const venusTexture = loader.load("./content/textures/venus.jpg");
 const marsTexture = loader.load("./content/textures/mars.jpg");
 const jupiterTexture = loader.load("./content/textures/jupiter.jpg");
 const saturneTexture = loader.load("./content/textures/saturn.jpg");
+const saturneRingTexture = loader.load("./content/textures/saturn_ring.png");
 const uranusTexture = loader.load("./content/textures/uranus.jpg");
 const neptuneTexture = loader.load("./content/textures/neptune.jpg");
 
@@ -44,6 +45,12 @@ let jupiterMaterial = new THREE.MeshPhongMaterial({
 });
 let saturneMaterial = new THREE.MeshPhongMaterial({
     map: saturneTexture,
+});
+let saturneRingMaterial = new THREE.MeshPhongMaterial({
+    map: saturneRingTexture,
+    color: 0xffffff,
+    side: THREE.DoubleSide,
+    transparent: true
 });
 let uranusMaterial = new THREE.MeshPhongMaterial({
     map: uranusTexture,
@@ -137,7 +144,7 @@ export function initSpace(radius) {
 
 export function initShip(terrainMat) {
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100);
+    let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 30;
     camera.position.y = 10;
     // camera.rotation.x -= Math.radians(90);
@@ -252,11 +259,27 @@ function jupiter() {
     return meshPlanet;
 }
 
-//TODO anneaux de saturne
+
 function saturne() {
+    let group = new THREE.Group();
     generatePlanet(planetSizes.saturne, saturneMaterial);
-    meshPlanet.name = "saturne";
-    return meshPlanet;
+
+    let ringGeometry = new THREE.RingBufferGeometry(planetSizes.saturne + 30, planetSizes.saturne + 100, 64);
+    let pos = ringGeometry.attributes.position;
+    let v3 = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+        v3.fromBufferAttribute(pos, i);
+        geometry.attributes.uv.setXY(i, v3.length() < 4 ? 0 : 1, 1);
+    }
+
+    let ringMesh = new THREE.Mesh(ringGeometry, saturneRingMaterial);
+    ringMesh.rotation.x = Math.radians(75);
+    ringMesh.position.set(0, 0, 0);
+
+    group.add(meshPlanet);
+    group.add(ringMesh);
+    group.name = "saturne";
+    return group;
 }
 
 function uranus() {
