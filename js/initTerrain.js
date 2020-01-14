@@ -4,6 +4,17 @@ const loader = new THREE.TextureLoader();
 
 // Textures
 const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
+const sunTexture = loader.load("./content/textures/sun.jpg");
+
+// Materials
+let earthMaterial = new THREE.MeshPhongMaterial({
+    map: earthTexture,
+    shininess: 30, // le brillant
+});
+
+let sunMaterial = new THREE.MeshPhongMaterial({
+    map: sunTexture,
+});
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
@@ -134,9 +145,21 @@ function stars(radius) {
 function earth() {
     geometry = new THREE.SphereBufferGeometry(30, 32, 32);
     meshPlanet = new THREE.Mesh(geometry, earthMaterial);
+    meshPlanet.position.set(0, 0, 0);
     meshPlanet.receiveShadow = true;
     meshPlanet.castShadow = true;
     meshPlanet.name = "earth";
     meshPlanet.rotateZ(Math.radians(5));
+    return meshPlanet;
+}
+
+function sun() {
+    geometry = new THREE.SphereBufferGeometry(90, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, sunMaterial);
+    // meshPlanet.receiveShadow = true;
+    // meshPlanet.castShadow = true;
+    meshPlanet.name = "sun";
+    meshPlanet.position.set(0, 0, 0);
+
     return meshPlanet;
 }
