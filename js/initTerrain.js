@@ -111,12 +111,12 @@ function stars(radius) {
     let vertices = [];
     let vertices2 = [];
     let newRand = function (radius) {
-        return (0.5 - Math.random()) * (radius / 2);
+        return THREE.Math.randFloatSpread(2) * (radius);
     };
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
-    for (let i = 0; i < radius / 2; i++) {
+    for (let i = 0; i < radius; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
