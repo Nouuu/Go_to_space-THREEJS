@@ -7,7 +7,12 @@ const planetSizes = {
     sun: 300,
     earth: 90,
     mercury: 30,
-    venus: 50
+    venus: 100,
+    mars: 60,
+    jupiter: 200,
+    saturne: 150,
+    uranus: 110,
+    neptune: 110,
 };
 
 // Textures
@@ -15,6 +20,11 @@ const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
 const sunTexture = loader.load("./content/textures/sun.jpg");
 const mercuryTexture = loader.load("./content/textures/mercury.jpg");
 const venusTexture = loader.load("./content/textures/venus.jpg");
+const marsTexture = loader.load("./content/textures/mars.jpg");
+const jupiterTexture = loader.load("./content/textures/jupiter.jpg");
+const saturneTexture = loader.load("./content/textures/saturn.jpg");
+const uranusTexture = loader.load("./content/textures/uranus.jpg");
+const neptuneTexture = loader.load("./content/textures/neptune.jpg");
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
@@ -25,6 +35,21 @@ let mercuryMaterial = new THREE.MeshPhongMaterial({
 });
 let venusMaterial = new THREE.MeshPhongMaterial({
     map: venusTexture,
+});
+let marsMaterial = new THREE.MeshPhongMaterial({
+    map: marsTexture,
+});
+let jupiterMaterial = new THREE.MeshPhongMaterial({
+    map: jupiterTexture,
+});
+let saturneMaterial = new THREE.MeshPhongMaterial({
+    map: saturneTexture,
+});
+let uranusMaterial = new THREE.MeshPhongMaterial({
+    map: uranusTexture,
+});
+let neptuneMaterial = new THREE.MeshPhongMaterial({
+    map: neptuneTexture,
 });
 let sunMaterial = new THREE.MeshPhongMaterial({
     map: sunTexture,
@@ -40,7 +65,7 @@ let meshPlanet;
 export function initSpace(radius) {
     let scene = new THREE.Scene();
 
-    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius*2);
+    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
     camera.position.z = 600;
     camera.position.y = 0;
     camera.position.x = 0;
@@ -55,16 +80,32 @@ export function initSpace(radius) {
     let meshMercury = mercury();
     let meshVenus = venus();
     let meshEarth = earth();
+    let meshMars = mars();
+    let meshJupiter = jupiter();
+    let meshSaturne = saturne();
+    let meshUranus = uranus();
+    let meshNeptune = neptune();
     let meshSun = sun();
 
     meshMercury.position.x = -1000 - planetSizes.mercury / 2;
     meshVenus.position.x = -2000 - planetSizes.venus / 2;
     meshEarth.position.x = -3000 - planetSizes.earth / 2;
+    meshMars.position.x = -4000 - planetSizes.mars / 2;
+    meshJupiter.position.x = -5000 - planetSizes.jupiter / 2;
+    meshSaturne.position.x = -6000 - planetSizes.saturne / 2;
+    meshUranus.position.x = -7000 - planetSizes.uranus / 2;
+    meshNeptune.position.x = -8000 - planetSizes.neptune / 2;
 
 
     planets.add(meshMercury);
     planets.add(meshVenus);
     planets.add(meshEarth);
+    planets.add(meshMars);
+    planets.add(meshMars);
+    planets.add(meshJupiter);
+    planets.add(meshSaturne);
+    planets.add(meshUranus);
+    planets.add(meshNeptune);
     planets.add(meshSun);
     scene.add(planets);
 
@@ -196,6 +237,36 @@ function mercury() {
 function venus() {
     generatePlanet(planetSizes.venus, venusMaterial);
     meshPlanet.name = "venus";
+    return meshPlanet;
+}
+
+function mars() {
+    generatePlanet(planetSizes.mars, marsMaterial);
+    meshPlanet.name = "mars";
+    return meshPlanet;
+}
+
+function jupiter() {
+    generatePlanet(planetSizes.jupiter, jupiterMaterial);
+    meshPlanet.name = "jupiter";
+    return meshPlanet;
+}
+
+function saturne() {
+    generatePlanet(planetSizes.saturne, saturneMaterial);
+    meshPlanet.name = "saturne";
+    return meshPlanet;
+}
+
+function uranus() {
+    generatePlanet(planetSizes.uranus, uranusMaterial);
+    meshPlanet.name = "uranus";
+    return meshPlanet;
+}
+
+function neptune() {
+    generatePlanet(planetSizes.neptune, neptuneMaterial);
+    meshPlanet.name = "neptune";
     return meshPlanet;
 }
 
