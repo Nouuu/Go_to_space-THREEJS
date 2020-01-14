@@ -7,7 +7,8 @@ import * as initTerrain from './initTerrain.js';
 
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, earth, cube;
+let systemRotationSpeed = 0.00005;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
 let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState();
@@ -76,7 +77,7 @@ function init() {
      * Get planets
      */
 
-    earth = scene.getObjectByName("earth");
+    planets = scene.getObjectByName("planets");
 
     /**
      * Camera object
@@ -258,5 +259,5 @@ function control() {
 }
 
 function planetUpdate() {
-    earth.rotation.y += planetRotationSpeed;
+    planets.rotation.y += systemRotationSpeed;
 }
