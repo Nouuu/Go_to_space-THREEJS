@@ -40,10 +40,10 @@ export function initSpace(radius) {
     let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
 
-    let directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(0, 0, 300);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
+    let pointLight = new THREE.PointLight(0xffffff);
+    pointLight.position.set(0, 0, 300);
+    pointLight.castShadow = true;
+    scene.add(pointLight);
 
     /**
      * Background
