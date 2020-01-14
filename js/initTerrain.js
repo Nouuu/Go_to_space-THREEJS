@@ -253,6 +253,7 @@ function jupiter() {
 }
 
 //TODO anneaux de saturne
+//https://threejs.org/docs/#api/en/geometries/RingGeometry
 function saturne() {
     generatePlanet(planetSizes.saturne, saturneMaterial);
     meshPlanet.name = "saturne";
