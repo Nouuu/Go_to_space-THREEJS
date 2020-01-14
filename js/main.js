@@ -152,7 +152,9 @@ function control() {
      * up : 12
      * down : 13
      * gachette gauche : 6
+     * gachette haut gauche : 4
      * gachette droite : 7
+     * gachette haut droite : 5
      *
      * Axes :
      * LStick left : 0 négatif
@@ -191,10 +193,10 @@ function control() {
         if (gamepad.axes[2] >= 0.1) {
             camera.rotateOnAxis(vectorY, -rotateSpeed * gamepad.axes[2]);
         }
-        if (gamepad.buttons[14].pressed) {
+        if (gamepad.buttons[4].pressed) {
             camera.rotateOnAxis(vectorZ, rotateSpeed * 0.5);
         }
-        if (gamepad.buttons[15].pressed) {
+        if (gamepad.buttons[5].pressed) {
             camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
         }
         if (gamepad.buttons[7].value >= 0.1) {
