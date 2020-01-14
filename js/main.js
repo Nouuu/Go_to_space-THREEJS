@@ -12,6 +12,8 @@ let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState();
 let moveSpeed = 0.5;
+let currentMoveSpeed = moveSpeed;
+let boostMoveSpeed = 2;
 let rotateSpeed = 0.02;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
@@ -168,16 +170,16 @@ function control() {
         gamepad = navigator.getGamepads()[0];
 
         if (gamepad.axes[1] <= -0.1) {
-            camera.translateZ(-moveSpeed * -gamepad.axes[1])
+            camera.translateZ(-currentMoveSpeed * -gamepad.axes[1])
         }
         if (gamepad.axes[1] >= 0.1) {
-            camera.translateZ(moveSpeed * gamepad.axes[1])
+            camera.translateZ(currentMoveSpeed * gamepad.axes[1])
         }
         if (gamepad.axes[0] <= -0.1) {
-            camera.translateX(-moveSpeed * -gamepad.axes[0]);
+            camera.translateX(-currentMoveSpeed * -gamepad.axes[0]);
         }
         if (gamepad.axes[0] >= 0.1) {
-            camera.translateX(moveSpeed * gamepad.axes[0])
+            camera.translateX(currentMoveSpeed * gamepad.axes[0])
         }
         if (gamepad.axes[3] <= -0.1) {
             camera.rotateOnAxis(vectorX, rotateSpeed * -gamepad.axes[3]);
@@ -198,15 +200,15 @@ function control() {
             camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
         }
         if (gamepad.buttons[7].value >= 0.1) {
-            camera.translateY(moveSpeed * gamepad.buttons[7].value);
+            camera.translateY(currentMoveSpeed * gamepad.buttons[7].value);
         }
         if (gamepad.buttons[6].value >= 0.1) {
-            camera.translateY(-moveSpeed * gamepad.buttons[6].value);
+            camera.translateY(-currentMoveSpeed * gamepad.buttons[6].value);
         }
         if (gamepad.buttons[0].pressed) {
-            moveSpeed = 2;
+            currentMoveSpeed = boostMoveSpeed;
         } else {
-            moveSpeed = 0.5;
+            currentMoveSpeed = moveSpeed;
         }
     } else {
         // Partie clavier
@@ -223,27 +225,34 @@ function control() {
             camera.rotateOnAxis(vectorY, -rotateSpeed);
         }
         if (keyboard.pressed("z")) {
-            camera.translateZ(-moveSpeed)
+            camera.translateZ(-currentMoveSpeed)
         }
         if (keyboard.pressed("s")) {
-            camera.translateZ(moveSpeed)
+            camera.translateZ(currentMoveSpeed)
         }
         if (keyboard.pressed("q")) {
-            camera.translateX(-moveSpeed);
+            camera.translateX(-currentMoveSpeed);
         }
         if (keyboard.pressed("d")) {
-            camera.translateX(moveSpeed);
+            camera.translateX(currentMoveSpeed);
         }
         if (keyboard.pressed("space")) {
-            camera.translateY(moveSpeed);
+            camera.translateY(currentMoveSpeed);
         }
         if (keyboard.pressed("ctrl")) {
-            camera.translateY(-moveSpeed);
+            camera.translateY(-currentMoveSpeed);
         }
+        if (keyboard.pressed("a")) {
+            camera.rotateOnAxis(vectorZ, rotateSpeed * 0.5);
+        }
+        if (keyboard.pressed("e")) {
+            camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
+        }
+
         if (keyboard.pressed("shift")) {
-            moveSpeed = 2;
+            currentMoveSpeed = boostMoveSpeed;
         } else {
-            moveSpeed = 0.5;
+            currentMoveSpeed = moveSpeed;
         }
     }
 }
