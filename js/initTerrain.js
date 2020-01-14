@@ -11,9 +11,10 @@ let earthMaterial = new THREE.MeshPhongMaterial({
     shininess: 50, // le brillant
 });
 
+let geometry;
+let meshPlanet;
+
 export function initSpace(radius) {
-    let geometry;
-    let meshPlanet;
     let scene = new THREE.Scene();
 
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
@@ -25,13 +26,9 @@ export function initSpace(radius) {
      * Planet
      */
 
-    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
-    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
-    meshPlanet.receiveShadow = true;
-    meshPlanet.castShadow = true;
-    meshPlanet.name = "earth";
-    meshPlanet.rotateZ(Math.radians(5));
-    scene.add(meshPlanet);
+
+    let meshEarth = earth();
+    scene.add(meshEarth);
 
     /**
      * light
@@ -40,7 +37,7 @@ export function initSpace(radius) {
     let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
 
-    let pointLight = new THREE.PointLight(0xffffff);
+    let pointLight = new THREE.PointLight(0xffffff, 1, radius);
     pointLight.position.set(0, 0, 300);
     pointLight.castShadow = true;
     scene.add(pointLight);
@@ -99,7 +96,7 @@ function stars(radius) {
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
-    for (let i = 0; i < radius/2; i++) {
+    for (let i = 0; i < radius / 2; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
@@ -132,4 +129,14 @@ function stars(radius) {
     starField[1].updateMatrix();
 
     return starField;
+}
+
+function earth() {
+    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
+    meshPlanet.receiveShadow = true;
+    meshPlanet.castShadow = true;
+    meshPlanet.name = "earth";
+    meshPlanet.rotateZ(Math.radians(5));
+    return meshPlanet;
 }
