@@ -35,13 +35,14 @@ const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
 /**
  * GUI
  */
-let dimension = "ship";
+let dimension = "space";
 let params = {
     Switch: function () {
         switch (dimension) {
             case "space":
                 scene = sceneSpace;
                 camera = cameraSpace;
+                planets = scene.getObjectByName("planets");
                 camera.add(listener);
                 sound.play();
                 dimension = "ship";
@@ -84,14 +85,16 @@ function init() {
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
     // Par défaut, positionnement sur la scène de l'espace
-    scene = sceneSpace;
-    camera = cameraSpace;
+    scene = sceneShip;
+    camera = cameraShip;
 
     /**
      * Get planets
      */
     // Récupération du groupe "planets"
-    planets = scene.getObjectByName("planets");
+    if (dimension === 'ship') {
+        planets = scene.getObjectByName("planets");
+    }
 
     /**
      * Camera object
@@ -277,4 +280,13 @@ function control() {
             currentMoveSpeed = moveSpeed;
         }
     }
+}
+
+function music() {
+    let audioLoader = new THREE.AudioLoader();
+    audioLoader.load('./content/audio/2001.ogg', function (buffer) {
+        sound.setBuffer(buffer);
+        sound.setLoop(true);
+        sound.setVolume(1);
+    });
 }
