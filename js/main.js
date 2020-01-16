@@ -8,6 +8,8 @@ import * as initTerrain from './initTerrain.js';
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
 let systemRotationSpeed = 0.00005;
+let listener = new THREE.AudioListener();
+let sound = new THREE.Audio(listener);
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
 let gamepad = false;
 let spaceRadius = 14000;
@@ -40,12 +42,15 @@ let params = {
             case "space":
                 scene = sceneSpace;
                 camera = cameraSpace;
+                camera.add(listener);
+                sound.play();
                 dimension = "ship";
                 break;
             case "ship":
                 camera = cameraShip;
                 scene = sceneShip;
                 dimension = "space";
+                sound.stop();
                 break;
             default:
                 break;
@@ -63,6 +68,12 @@ animate();
 function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
+
+    /**
+     * load music
+     */
+
+    music();
 
     /**
      * init terrains
@@ -262,4 +273,13 @@ function control() {
 
 function planetUpdate() {
     planets.rotation.y += systemRotationSpeed;
+}
+
+function music() {
+    let audioLoader = new THREE.AudioLoader();
+    audioLoader.load('./content/audio/2001.ogg', function (buffer) {
+        sound.setBuffer(buffer);
+        sound.setLoop(true);
+        sound.setVolume(1);
+    });
 }
