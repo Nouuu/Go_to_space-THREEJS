@@ -8,6 +8,7 @@ import * as initTerrain from './initTerrain.js';
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
 let systemRotationSpeed = 0.00005;
+let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
 let gamepad = false;
 let spaceRadius = 14000;
@@ -260,4 +261,8 @@ function control() {
 
 function planetUpdate() {
     planets.rotation.y += systemRotationSpeed;
+
+    for (let i = 0; i < planetList.length; i++) {
+        planets.getObjectByName(planetList[i]).rotation.y += planetRotationSpeed;
+    }
 }
