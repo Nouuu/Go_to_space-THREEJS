@@ -12,7 +12,7 @@ let systemRotationSpeed = 0.0005;
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
 let gamepad = false;
 let spaceRadius = 14000;
-let keyboard = new THREEx.KeyboardState();
+let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
 let moveSpeed = 10;
 let currentMoveSpeed = moveSpeed;
 let boostMoveSpeed = 15;

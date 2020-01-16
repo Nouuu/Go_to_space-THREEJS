@@ -142,7 +142,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      */
 
     // Génération et ajout des particules d'étoiles dans la scène
-    let starField = stars(radius);          // Tableau de deux éléménets
+    let starField = stars(radius);          // Fonction qui retourne un tableau de deux éléménets
     scene.add(starField[0]);
     scene.add(starField[1]);
 
@@ -161,8 +161,7 @@ export function initShip(terrainMat) {
     /**
      * Ajout du terrain
      */
-    let geometry;
-    geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
+    let geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
     let terrain = new THREE.Mesh(geometry, terrainMat);
     terrain.receiveShadow = true;
     terrain.rotateX(Math.radians(-90));
@@ -180,7 +179,6 @@ export function initShip(terrainMat) {
 }
 
 // Fonction de création des particules d'étoiles
-// Prend le rayon du système solaire en paramètre
 function stars(radius) {
 
     // (-radius/2 < float aléatoire < radius/2) * radius
@@ -195,7 +193,7 @@ function stars(radius) {
         new THREE.BufferGeometry()
     ];
 
-    // Création d'un vecteur de coordonnées par type d'étoile (triplet de nombres : x, y, z)
+    // Création d'un vecteur de coordonnées par type d'étoile (x, y, z)
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
