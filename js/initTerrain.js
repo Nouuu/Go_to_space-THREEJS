@@ -49,8 +49,8 @@ let saturneMaterial = new THREE.MeshPhongMaterial({
 let saturneRingMaterial = new THREE.MeshPhongMaterial({
     map: saturneRingTexture,
     color: 0xffffff,
-    side: THREE.DoubleSide,
-    transparent: true
+    side: THREE.DoubleSide, //?
+    transparent: true // active la transparence du png
 });
 let uranusMaterial = new THREE.MeshPhongMaterial({
     map: uranusTexture,
@@ -63,13 +63,13 @@ let sunMaterial = new THREE.MeshPhongMaterial({
     shininess: 50, // le brillant
     emissive: 0xFFF400,
     emissiveIntensity: 0.3,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide // ?
 });
 
 let geometry;
 let meshPlanet;
 
-export function initSpace(radius) {
+export function initSpace(radius) { //?
     let scene = new THREE.Scene();
 
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
@@ -124,7 +124,7 @@ export function initSpace(radius) {
     pointLight.position.set(0, 0, 0);
     pointLight.castShadow = true;
     pointLight.shadow.camera.near = 1;
-    pointLight.shadow.camera.far = radius;
+    pointLight.shadow.camera.far = radius; //?
     scene.add(pointLight);
 
 
@@ -135,7 +135,7 @@ export function initSpace(radius) {
      * Background
      */
 
-    let starField = stars(radius);
+    let starField = stars(radius); //?
     scene.add(starField[0]);
     scene.add(starField[1]);
 
@@ -172,7 +172,7 @@ export function initShip(terrainMat) {
 }
 
 function stars(radius) {
-    let starsGeometry = [
+    let starsGeometry = [ // tableau de deux objets carrés
         new THREE.BufferGeometry(),
         new THREE.BufferGeometry()
     ];
@@ -181,10 +181,14 @@ function stars(radius) {
     let vertices2 = [];
     let newRand = function (radius) {
         return THREE.Math.randFloatSpread(2) * (radius);
+        // (-radius/2 < float aléatoire < radius/2) * radius
     };
-    let star = new THREE.Vector3();
-    let star2 = new THREE.Vector3();
 
+    // Création de deux types d'étoile
+    let star = new THREE.Vector3(); // triplet de nombres (x, y et z)
+    let star2 = new THREE.Vector3(); // triplet de nombres (x, y et z)
+
+    // Boucle sur tout le rayon de l'univers
     for (let i = 0; i < radius; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
