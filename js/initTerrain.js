@@ -82,7 +82,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      */
     // Création du groupe qui contient toutes les planètes
     let planets = new THREE.Group();
-    planets.position.set(0, 0, 0); // Positionné au centre du plan (le soleil)
+    planets.position.set(0, 0, 0); // Positionné au centre du plan
     planets.name = "planets";
 
     // Génération des mesh grâce à des fonctions
@@ -122,7 +122,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
     scene.add(planets);
 
     /**
-     * light
+     * Light
      */
 
     // Création du spotlight
@@ -181,14 +181,13 @@ export function initShip(terrainMat) {
 // Fonction de création des particules d'étoiles
 function stars(radius) {
 
-    // (-radius/2 < float aléatoire < radius/2) * radius
+    // (-1 < float aléatoire < 1) * radius
     let newRand = function (radius) {
         return THREE.Math.randFloatSpread(2) * (radius);
     };
 
     // Création de deux types d'étoiles
     let starsGeometry = [
-        // Représente un pixel
         new THREE.BufferGeometry(),
         new THREE.BufferGeometry()
     ];
@@ -218,11 +217,8 @@ function stars(radius) {
         star2Coordinates[i * 3 + 2] = star2.z;
     }
 
-    // Pour chaque objet étoile, ajout de l'attribut 'position'
-    // Organise trois par trois les valeurs dans starCoordinates
-    // Création d'un tableau ??
-    // Se multiplie autant de fois qu'il y a d'attributs position
-    // objet feuille : dessin de points
+    // Pour chaque objet BufferGeometry dans starsGeometry, ajout de l'attribut 'position'
+    // Les valeurs de starCoordinates sont passées en position à starsGeometry, organisées trois par trois
     starsGeometry[0].addAttribute('position', new THREE.Float32BufferAttribute(starCoordinates, 3));
     starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(star2Coordinates, 3));
 
@@ -232,7 +228,7 @@ function stars(radius) {
         new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
     ];
 
-    // Création de mesh points
+    // Création de points basés sur les coordonnées dans les starsGeometry
     let starField = [
         new THREE.Points(starsGeometry[0], starMaterial[0]),
         new THREE.Points(starsGeometry[1], starMaterial[1])
@@ -294,12 +290,12 @@ function saturne() {
     generatePlanet(planetSizes.saturne, saturneMaterial);
 
     let ringGeometry = new THREE.RingBufferGeometry(planetSizes.saturne + 30, planetSizes.saturne + 100, 64);
-    let ringPosition = ringGeometry.attributes.position;
+    /*let ringPosition = ringGeometry.attributes.position;
     let v3 = new THREE.Vector3();
     for (let i = 0; i < ringPosition.count; i++) {
         v3.fromBufferAttribute(ringPosition, i);
         geometry.attributes.uv.setXY(i, v3.length() < 4 ? 0 : 1, 1);
-    }
+    }*/
 
     let ringMesh = new THREE.Mesh(ringGeometry, saturneRingMaterial);
     ringMesh.rotation.x = Math.radians(75);

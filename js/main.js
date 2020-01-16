@@ -43,7 +43,7 @@ let params = {
                 scene = sceneSpace;
                 camera = cameraSpace;
                 planets = scene.getObjectByName("planets");
-                camera.add(listener);
+                camera.add(listener); // Ajout de l'audio à la caméra
                 sound.play();
                 dimension = "ship";
                 break;
@@ -84,7 +84,7 @@ function init() {
     // Récupération des scènes et caméra
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
-    // Par défaut, positionnement sur la scène de l'espace
+    // Par défaut, positionnement sur la scène du vaisseau
     scene = sceneShip;
     camera = cameraShip;
 
@@ -162,81 +162,92 @@ function planetsRotation() {
     planets.rotation.y += systemRotationSpeed;
 }
 
-// Fonction de gestion des contrôles de la navigation
 function control() {
 
     // Partie manette
     /**
-     * Boutons :
+     * BOUTONS :
      * a : 0
      * b : 1
-     * y : 3
      * x : 2
-     * gauche : 14
-     * droite : 15
+     * y : 3
+     * gachette haut gauche : 4
+     * gachette haut droite : 5
+     * gachette gauche : 6
+     * gachette droite : 7
      * haut : 12
      * bas : 13
-     * gachette gauche : 6
-     * gachette haut gauche : 4
-     * gachette droite : 7
-     * gachette haut droite : 5
+     * gauche : 14
+     * droite : 15
      *
-     * Axes :
-     * Stick gauche left : 0 négatif
-     * Stick gauche right : 0 positif
-     * Stick gauche up : 1 négatif
-     * Stick gauche down : 1 positif
-     * Stick droit gauche : 2 négatif
-     * Stick droit droite : 2 positif
-     * Stick droit haut : 3 négatif
-     * Stick droit bas : 3 positif
+     * AXES :
+     * Stick gauche gauche : axe 0, négatif
+     * Stick gauche droite : axe 0, positif
+     * Stick gauche haut : axe 1, négatif
+     * Stick gauche bas : axe 1, positif
+     * Stick droit gauche : axe 2, négatif
+     * Stick droit droite : axe 2, positif
+     * Stick droit haut : axe 3, négatif
+     * Stick droit bas : axe 3, positif
      */
     if (gamepad) {
-        gamepad = navigator.getGamepads()[0];
+        //gamepad = navigator.getGamepads()[0];
 
+        // Stick gauche haut : reculer
         if (gamepad.axes[1] <= -0.1) {
-            camera.translateZ(-currentMoveSpeed * -gamepad.axes[1])
+            camera.translateZ(currentMoveSpeed * gamepad.axes[1])
         }
+        // Stick gauche bas : avancer
         if (gamepad.axes[1] >= 0.1) {
             camera.translateZ(currentMoveSpeed * gamepad.axes[1])
         }
+        // Stick gauche gauche : gauche
         if (gamepad.axes[0] <= -0.1) {
             camera.translateX(-currentMoveSpeed * -gamepad.axes[0]);
         }
+        // Stick gauche gauche : droite
         if (gamepad.axes[0] >= 0.1) {
             camera.translateX(currentMoveSpeed * gamepad.axes[0])
         }
+        // Stick droit haut : roulade avant
         if (gamepad.axes[3] <= -0.1) {
             camera.rotateOnAxis(vectorX, rotateSpeed * -gamepad.axes[3]);
         }
+        // Stick droit haut : roulade arrière
         if (gamepad.axes[3] >= 0.1) {
             camera.rotateOnAxis(vectorX, -rotateSpeed * gamepad.axes[3]);
         }
+        // Stick droit gauche : tourner à gauche
         if (gamepad.axes[2] <= -0.1) {
             camera.rotateOnAxis(vectorY, rotateSpeed * -gamepad.axes[2]);
         }
+        // Stick droit gauche : tourner à droite
         if (gamepad.axes[2] >= 0.1) {
             camera.rotateOnAxis(vectorY, -rotateSpeed * gamepad.axes[2]);
         }
+        // Appui sur gachette haut gauche : tonneau à gauche
         if (gamepad.buttons[4].pressed) {
             camera.rotateOnAxis(vectorZ, rotateSpeed * 0.5);
         }
+        // Appui sur gachette haut droite : tonneau à droite
         if (gamepad.buttons[5].pressed) {
             camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
         }
-        if (gamepad.buttons[7].value >= 0.1) {
-            camera.translateY(currentMoveSpeed * gamepad.buttons[7].value);
-        }
+        // Appui sur gachette gauche : descendre
         if (gamepad.buttons[6].value >= 0.1) {
             camera.translateY(-currentMoveSpeed * gamepad.buttons[6].value);
         }
+        // Appui sur gachette droite : monter
+        if (gamepad.buttons[7].value >= 0.1) {
+            camera.translateY(currentMoveSpeed * gamepad.buttons[7].value);
+        }
+        // Appui bouton a
         if (gamepad.buttons[0].pressed) {
             currentMoveSpeed = boostMoveSpeed;
         } else {
             currentMoveSpeed = moveSpeed;
         }
-    } else {
-        // Partie clavier
+    } else { // Partie clavier
         if (keyboard.pressed("up")) {
             camera.rotateOnAxis(vectorX, rotateSpeed);
         }
@@ -285,7 +296,7 @@ function control() {
 function music() {
     let audioLoader = new THREE.AudioLoader();
     audioLoader.load('./content/audio/2001.ogg', function (buffer) {
-        sound.setBuffer(buffer);
+        sound.setBuffer(buffer); // Définition de la source du buffer
         sound.setLoop(true);
         sound.setVolume(1);
     });
