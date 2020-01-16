@@ -2,48 +2,134 @@ import * as THREE from "./libs/three.module.js";
 
 const loader = new THREE.TextureLoader();
 
+// Sizes
+const planetSizes = {
+    sun: 300,
+    earth: 90,
+    mercury: 30,
+    venus: 100,
+    mars: 60,
+    jupiter: 200,
+    saturne: 150,
+    uranus: 110,
+    neptune: 110,
+};
+
 // Textures
 const earthTexture = loader.load("./content/textures/earth_atmos_4096.jpg");
+const sunTexture = loader.load("./content/textures/sun.jpg");
+const mercuryTexture = loader.load("./content/textures/mercury.jpg");
+const venusTexture = loader.load("./content/textures/venus.jpg");
+const marsTexture = loader.load("./content/textures/mars.jpg");
+const jupiterTexture = loader.load("./content/textures/jupiter.jpg");
+const saturneTexture = loader.load("./content/textures/saturn.jpg");
+const saturneRingTexture = loader.load("./content/textures/saturn_ring.png");
+const uranusTexture = loader.load("./content/textures/uranus.jpg");
+const neptuneTexture = loader.load("./content/textures/neptune.jpg");
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
     map: earthTexture,
+});
+let mercuryMaterial = new THREE.MeshPhongMaterial({
+    map: mercuryTexture,
+});
+let venusMaterial = new THREE.MeshPhongMaterial({
+    map: venusTexture,
+});
+let marsMaterial = new THREE.MeshPhongMaterial({
+    map: marsTexture,
+});
+let jupiterMaterial = new THREE.MeshPhongMaterial({
+    map: jupiterTexture,
+});
+let saturneMaterial = new THREE.MeshPhongMaterial({
+    map: saturneTexture,
+});
+let saturneRingMaterial = new THREE.MeshPhongMaterial({
+    map: saturneRingTexture,
+    color: 0xffffff,
+    side: THREE.DoubleSide,
+    transparent: true
+});
+let uranusMaterial = new THREE.MeshPhongMaterial({
+    map: uranusTexture,
+});
+let neptuneMaterial = new THREE.MeshPhongMaterial({
+    map: neptuneTexture,
+});
+let sunMaterial = new THREE.MeshPhongMaterial({
+    map: sunTexture,
     shininess: 50, // le brillant
+    emissive: 0xFFF400,
+    emissiveIntensity: 0.3,
+    side: THREE.DoubleSide
 });
 
+let geometry;
+let meshPlanet;
+
 export function initSpace(radius) {
-    let geometry;
-    let meshPlanet;
     let scene = new THREE.Scene();
 
-    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius);
-    camera.position.z = 100;
+    let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
+    camera.position.z = 600;
     camera.position.y = 0;
     camera.position.x = 0;
 
     /**
-     * Planet
+     * Planets
      */
+    let planets = new THREE.Group();
+    planets.position.set(0, 0, 0);
+    planets.name = "planets";
 
-    geometry = new THREE.SphereBufferGeometry(30, 32, 32);
-    meshPlanet = new THREE.Mesh(geometry, earthMaterial);
-    meshPlanet.receiveShadow = true;
-    meshPlanet.castShadow = true;
-    meshPlanet.name = "earth";
-    meshPlanet.rotateZ(Math.radians(5));
-    scene.add(meshPlanet);
+    let meshMercury = mercury();
+    let meshVenus = venus();
+    let meshEarth = earth();
+    let meshMars = mars();
+    let meshJupiter = jupiter();
+    let meshSaturne = saturne();
+    let meshUranus = uranus();
+    let meshNeptune = neptune();
+    let meshSun = sun();
+
+    meshMercury.position.x = -1000 - planetSizes.mercury / 2;
+    meshVenus.position.x = -2000 - planetSizes.venus / 2;
+    meshEarth.position.x = -3000 - planetSizes.earth / 2;
+    meshMars.position.x = -4000 - planetSizes.mars / 2;
+    meshJupiter.position.x = -5000 - planetSizes.jupiter / 2;
+    meshSaturne.position.x = -6000 - planetSizes.saturne / 2;
+    meshUranus.position.x = -7000 - planetSizes.uranus / 2;
+    meshNeptune.position.x = -8000 - planetSizes.neptune / 2;
+
+
+    planets.add(meshMercury);
+    planets.add(meshVenus);
+    planets.add(meshEarth);
+    planets.add(meshMars);
+    planets.add(meshMars);
+    planets.add(meshJupiter);
+    planets.add(meshSaturne);
+    planets.add(meshUranus);
+    planets.add(meshNeptune);
+    planets.add(meshSun);
+    scene.add(planets);
 
     /**
      * light
      */
 
+    let pointLight = new THREE.PointLight(0xffffff, 2, radius * 2);
+    pointLight.position.set(0, 0, 0);
+    pointLight.castShadow = true;
+    pointLight.shadow.camera.near = 1;
+    pointLight.shadow.camera.far = radius;
+    scene.add(pointLight);
+
+
     let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
-
-    let directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(0, 0, 300);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
 
     /**
      * Background
@@ -58,7 +144,7 @@ export function initSpace(radius) {
 
 export function initShip(terrainMat) {
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100);
+    let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 30;
     camera.position.y = 10;
     // camera.rotation.x -= Math.radians(90);
@@ -94,12 +180,12 @@ function stars(radius) {
     let vertices = [];
     let vertices2 = [];
     let newRand = function (radius) {
-        return (0.5 - Math.random()) * (radius / 2);
+        return THREE.Math.randFloatSpread(2) * (radius);
     };
     let star = new THREE.Vector3();
     let star2 = new THREE.Vector3();
 
-    for (let i = 0; i < radius/2; i++) {
+    for (let i = 0; i < radius; i++) {
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
@@ -132,4 +218,86 @@ function stars(radius) {
     starField[1].updateMatrix();
 
     return starField;
+}
+
+function sun() {
+    geometry = new THREE.SphereBufferGeometry(planetSizes.sun, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, sunMaterial);
+    meshPlanet.name = "sun";
+    meshPlanet.position.set(0, 0, 0);
+    return meshPlanet;
+}
+
+function earth() {
+    generatePlanet(planetSizes.earth, earthMaterial);
+    meshPlanet.name = "earth";
+    meshPlanet.rotateZ(Math.radians(5));
+    return meshPlanet;
+}
+
+function mercury() {
+    generatePlanet(planetSizes.mercury, mercuryMaterial);
+    meshPlanet.name = "mercury";
+    return meshPlanet;
+}
+
+function venus() {
+    generatePlanet(planetSizes.venus, venusMaterial);
+    meshPlanet.name = "venus";
+    return meshPlanet;
+}
+
+function mars() {
+    generatePlanet(planetSizes.mars, marsMaterial);
+    meshPlanet.name = "mars";
+    return meshPlanet;
+}
+
+function jupiter() {
+    generatePlanet(planetSizes.jupiter, jupiterMaterial);
+    meshPlanet.name = "jupiter";
+    return meshPlanet;
+}
+
+
+function saturne() {
+    let group = new THREE.Group();
+    generatePlanet(planetSizes.saturne, saturneMaterial);
+
+    let ringGeometry = new THREE.RingBufferGeometry(planetSizes.saturne + 30, planetSizes.saturne + 100, 64);
+    let pos = ringGeometry.attributes.position;
+    let v3 = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+        v3.fromBufferAttribute(pos, i);
+        geometry.attributes.uv.setXY(i, v3.length() < 4 ? 0 : 1, 1);
+    }
+
+    let ringMesh = new THREE.Mesh(ringGeometry, saturneRingMaterial);
+    ringMesh.rotation.x = Math.radians(75);
+    ringMesh.position.set(0, 0, 0);
+
+    group.add(meshPlanet);
+    group.add(ringMesh);
+    group.name = "saturne";
+    return group;
+}
+
+function uranus() {
+    generatePlanet(planetSizes.uranus, uranusMaterial);
+    meshPlanet.name = "uranus";
+    return meshPlanet;
+}
+
+function neptune() {
+    generatePlanet(planetSizes.neptune, neptuneMaterial);
+    meshPlanet.name = "neptune";
+    return meshPlanet;
+}
+
+function generatePlanet(size, material) {
+    geometry = new THREE.SphereBufferGeometry(size, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, material);
+    meshPlanet.position.set(0, 0, 0);
+    meshPlanet.receiveShadow = true;
+    meshPlanet.castShadow = true;
 }
