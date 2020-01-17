@@ -96,15 +96,31 @@ export function initSpace(radius) { // radius = rayon du système solaire
     let meshNeptune = neptune();
     let meshSun = sun();
 
-    // Positionnement des planètes
-    meshMercury.position.x = -1000 - planetSizes.mercury / 2;
-    meshVenus.position.x = -2000 - planetSizes.venus / 2;
-    meshEarth.position.x = -3000 - planetSizes.earth / 2;
-    meshMars.position.x = -4000 - planetSizes.mars / 2;
-    meshJupiter.position.x = -5000 - planetSizes.jupiter / 2;
-    meshSaturne.position.x = -6000 - planetSizes.saturne / 2;
-    meshUranus.position.x = -7000 - planetSizes.uranus / 2;
-    meshNeptune.position.x = -8000 - planetSizes.neptune / 2;
+    //Position
+    meshMercury.position.x = Math.cos(Math.radians(180)) * (1000 + planetSizes.mercury / 2);
+    meshMercury.position.z = Math.sin(Math.radians(180)) * (1000 + planetSizes.mercury / 2);
+
+    meshVenus.position.x = Math.cos(Math.radians(30)) * (2000 + planetSizes.venus / 2);
+    meshVenus.position.z = Math.sin(Math.radians(30)) * (2000 + planetSizes.venus / 2);
+
+    meshEarth.position.x = Math.cos(Math.radians(225)) * (3000 + planetSizes.earth / 2);
+    meshEarth.position.z = Math.sin(Math.radians(225)) * (3000 + planetSizes.earth / 2);
+
+    meshMars.position.x = Math.cos(Math.radians(150)) * (4000 + planetSizes.mars / 2);
+    meshMars.position.z = Math.sin(Math.radians(150)) * (4000 + planetSizes.mars / 2);
+
+    meshJupiter.position.x = Math.cos(Math.radians(300)) * (5000 + planetSizes.jupiter / 2);
+    meshJupiter.position.z = Math.sin(Math.radians(300)) * (5000 + planetSizes.jupiter / 2);
+
+    meshSaturne.position.x = Math.cos(Math.radians(90)) * (6000 + planetSizes.saturne / 2);
+    meshSaturne.position.z = Math.sin(Math.radians(90)) * (6000 + planetSizes.saturne / 2);
+
+    meshUranus.position.x = Math.cos(Math.radians(120)) * (7000 + planetSizes.uranus / 2);
+    meshUranus.position.z = Math.sin(Math.radians(120)) * (7000 + planetSizes.uranus / 2);
+
+    meshNeptune.position.x = Math.cos(Math.radians(270)) * (8000 + planetSizes.neptune / 2);
+    meshNeptune.position.z = Math.sin(Math.radians(270)) * (8000 + planetSizes.neptune / 2);
+
 
     // Ajout des planètes dans le groupe
     planets.add(meshMercury);

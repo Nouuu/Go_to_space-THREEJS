@@ -9,6 +9,7 @@ import * as initTerrain from './initTerrain.js';
 Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.0005;
 let systemRotationSpeed = 0.0005;
+let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
 let sound = new THREE.Audio(listener);
 let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
@@ -152,6 +153,7 @@ function animate() {
     control();
     if (dimension !== "space") {
         planetsRotation();
+        planetUpdate();
     }
 }
 
@@ -295,6 +297,13 @@ function control() {
     }
 }
 
+function planetUpdate() {
+    planets.rotation.y += systemRotationSpeed;
+
+    for (let i = 0; i < planetList.length; i++) {
+        planets.getObjectByName(planetList[i]).rotation.y += planetRotationSpeed;
+    }
+}
 function music() {
     let audioLoader = new THREE.AudioLoader();
     audioLoader.load('./content/audio/2001.ogg', function (buffer) {
