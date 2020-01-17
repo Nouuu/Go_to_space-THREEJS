@@ -7,7 +7,7 @@ import * as initTerrain from './initTerrain.js';
 
 // Création et initialisation des variables
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let planetRotationSpeed = 0.005;
+let planetRotationSpeed = 0.01;
 let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
@@ -37,35 +37,8 @@ const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
  * GUI
  */
 let dimension = "space";
-let params = {
-    Switch: function () {
-        switch (dimension) {
-            case "space":
-                scene.remove(camera);
-                scene = sceneSpace;
-                camera = cameraSpace;
-                scene.add(camera);
-                camera.add(cube);
-                cube.position.set(0, -5, -12);
-                planets = scene.getObjectByName("planets");
-                camera.add(listener); // Ajout de l'audio à la caméra
-                sound.play();
-                dimension = "ship";
-                break;
-            case "ship":
-                camera = cameraShip;
-                scene = sceneShip;
-                dimension = "space";
-                sound.stop();
-                break;
-            default:
-                break;
-        }
-    }
-};
-let gui = new GUI();
-gui.add(params, 'Switch');
 
+startGUI();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 init();
@@ -309,3 +282,56 @@ function music() {
         sound.setVolume(1);
     });
 }
+
+function startGUI() {
+
+    let params = {
+        Switch: function () {
+            switch (dimension) {
+                case "space":
+                    scene.remove(camera);
+                    scene = sceneSpace;
+                    camera = cameraSpace;
+                    scene.add(camera);
+                    camera.add(cube);
+                    cube.position.set(0, -5, -12);
+                    planets = scene.getObjectByName("planets");
+                    camera.add(listener); // Ajout de l'audio à la caméra
+                    sound.play();
+                    dimension = "ship";
+                    break;
+                case "ship":
+                    camera = cameraShip;
+                    scene = sceneShip;
+                    dimension = "space";
+                    sound.stop();
+                    break;
+                default:
+                    break;
+            }
+        },
+        PlanetRotationSpeed : planetRotationSpeed,
+        SystemRotationSpeed : systemRotationSpeed,
+        PlayPauseMusic : function () {
+            if (sound.isPlaying) {
+                sound.stop();
+            } else {
+                sound.play();
+            }
+        },
+    };
+
+    let gui = new GUI();
+    gui.width = 350;
+    let spaceFolder = gui.addFolder('Space settings');
+    let shipControlsFolder = gui.addFolder('SpaceShip controls settings');
+
+    gui.add(params, 'Switch').name('Switch scene');
+
+    spaceFolder.add(params, 'PlanetRotationSpeed').name('Planet rotation speed').min(0).max(0.1).step(0.005).onChange(function () {
+        planetRotationSpeed = params.PlanetRotationSpeed;
+    });
+    spaceFolder.add(params, 'SystemRotationSpeed').name('System rotation speed').min(0).max(0.01).step(0.0005).onChange(function () {
+        systemRotationSpeed = params.SystemRotationSpeed;
+    });
+    spaceFolder.add(params, 'PlayPauseMusic').name('Play/Pause music');
