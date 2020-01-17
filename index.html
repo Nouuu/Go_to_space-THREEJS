@@ -10,11 +10,39 @@
             padding: 0;
             margin: 0;
         }
+        img.full {
+            height: calc(99vh);
+            width: calc(99vw);
+
+        }
+
+        .container {
+            position: relative;
+        }
+        canvas {
+            display: none;
+        }
+        .animate-button {
+            position: absolute;
+            display: block;
+            padding: 40px 90px;
+            top: calc(80% - 50px);
+            left: calc(50% - 50px);
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(#15EDED, #029CF5);
+        }
+
     </style>
 </head>
 <body>
-<script type="module" src="js/main.js">
-</script>
+    <div class="overlay">
+        <div class="container">
+            <img src="./content/images/starwars.jpg" alt="photo of space" class="full">
+            <button class="animate-button">Launch Site</button>
+        </div>
+    </div>
+<script type="module" src="js/main.js" defer></script>
 </body>
 
 </html>
