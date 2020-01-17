@@ -297,7 +297,7 @@ function music() {
     let audioLoader = new THREE.AudioLoader();
     audioLoader.load('./content/audio/2001.ogg', function (buffer) {
         sound.setBuffer(buffer); // Définition de la source du buffer
-        sound.setLoop(true);
+        sound.setLoop(false);
         sound.setVolume(1);
     });
 }
