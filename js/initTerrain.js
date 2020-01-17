@@ -49,8 +49,8 @@ let saturneMaterial = new THREE.MeshPhongMaterial({
 let saturneRingMaterial = new THREE.MeshPhongMaterial({
     map: saturneRingTexture,
     color: 0xffffff,
-    side: THREE.DoubleSide, //?
-    transparent: true // active la transparence du png
+    side: THREE.DoubleSide, // Application de la texture sur les deux côtés de l'anneau
+    transparent: true       // active la transparence du png
 });
 let uranusMaterial = new THREE.MeshPhongMaterial({
     map: uranusTexture,
@@ -60,30 +60,32 @@ let neptuneMaterial = new THREE.MeshPhongMaterial({
 });
 let sunMaterial = new THREE.MeshPhongMaterial({
     map: sunTexture,
-    shininess: 50, // le brillant
-    emissive: 0xFFF400,
-    emissiveIntensity: 0.3,
-    side: THREE.DoubleSide // ?
+    shininess: 50,          // Brillance
+    emissive: 0xFFF400,     // Couleur émise par l'objet
+    emissiveIntensity: 0.3, // Intensité de la couleur émise
+    side: THREE.DoubleSide  // Applique la texture des deux côtés et garantit que la lumière passe à travers
 });
 
 let geometry;
 let meshPlanet;
 
-export function initSpace(radius) { //?
+export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
-
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
     camera.position.z = 600;
     camera.position.y = 0;
     camera.position.x = 0;
+    //camera.lookAt(new THREE.Vector3(600,0,0));
 
     /**
      * Planets
      */
+    // Création du groupe qui contient toutes les planètes
     let planets = new THREE.Group();
-    planets.position.set(0, 0, 0);
+    planets.position.set(0, 0, 0); // Positionné au centre du plan
     planets.name = "planets";
 
+    // Génération des mesh grâce à des fonctions
     let meshMercury = mercury();
     let meshVenus = venus();
     let meshEarth = earth();
@@ -94,6 +96,7 @@ export function initSpace(radius) { //?
     let meshNeptune = neptune();
     let meshSun = sun();
 
+    // Positionnement des planètes
     meshMercury.position.x = -1000 - planetSizes.mercury / 2;
     meshVenus.position.x = -2000 - planetSizes.venus / 2;
     meshEarth.position.x = -3000 - planetSizes.earth / 2;
@@ -103,7 +106,7 @@ export function initSpace(radius) { //?
     meshUranus.position.x = -7000 - planetSizes.uranus / 2;
     meshNeptune.position.x = -8000 - planetSizes.neptune / 2;
 
-
+    // Ajout des planètes dans le groupe
     planets.add(meshMercury);
     planets.add(meshVenus);
     planets.add(meshEarth);
@@ -114,20 +117,23 @@ export function initSpace(radius) { //?
     planets.add(meshUranus);
     planets.add(meshNeptune);
     planets.add(meshSun);
+
+    // Ajout du groupe dans la scène
     scene.add(planets);
 
     /**
-     * light
+     * Light
      */
 
+    // Création du spotlight
     let pointLight = new THREE.PointLight(0xffffff, 2, radius * 2);
-    pointLight.position.set(0, 0, 0);
-    pointLight.castShadow = true;
-    pointLight.shadow.camera.near = 1;
-    pointLight.shadow.camera.far = radius; //?
+    pointLight.position.set(0, 0, 0);       // Positionné au centre de la scène (au centre du soleil)
+    pointLight.castShadow = true;           // Génère des ombres
+    pointLight.shadow.camera.near = 1;      // Distance minimum d'émission des ombres
+    pointLight.shadow.camera.far = radius;  // Distance maximale d'émission des ombres
     scene.add(pointLight);
 
-
+    // Création de la lumière ambiante
     let ambientLight = new THREE.AmbientLight(0xf2f2f2, 0.8);
     scene.add(ambientLight);
 
@@ -135,10 +141,12 @@ export function initSpace(radius) { //?
      * Background
      */
 
-    let starField = stars(radius); //?
+    // Génération et ajout des particules d'étoiles dans la scène
+    let starField = stars(radius);          // Fonction qui retourne un tableau de deux éléménets
     scene.add(starField[0]);
     scene.add(starField[1]);
 
+    // La fonction renvoie un tableau contenant la scène et la caméra
     return [scene, camera];
 }
 
@@ -153,8 +161,7 @@ export function initShip(terrainMat) {
     /**
      * Ajout du terrain
      */
-    let geometry;
-    geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
+    let geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
     let terrain = new THREE.Mesh(geometry, terrainMat);
     terrain.receiveShadow = true;
     terrain.rotateX(Math.radians(-90));
@@ -171,57 +178,71 @@ export function initShip(terrainMat) {
     return [scene, camera];
 }
 
+// Fonction de création des particules d'étoiles
 function stars(radius) {
-    let starsGeometry = [ // tableau de deux objets carrés
+
+    // (-1 < float aléatoire < 1) * radius
+    let newRand = function (radius) {
+        return THREE.Math.randFloatSpread(2) * (radius);
+    };
+
+    // Création de deux types d'étoiles
+    let starsGeometry = [
         new THREE.BufferGeometry(),
         new THREE.BufferGeometry()
     ];
 
-    let vertices = [];
-    let vertices2 = [];
-    let newRand = function (radius) {
-        return THREE.Math.randFloatSpread(2) * (radius);
-        // (-radius/2 < float aléatoire < radius/2) * radius
-    };
+    // Création d'un vecteur de coordonnées par type d'étoile (x, y, z)
+    let star = new THREE.Vector3();
+    let star2 = new THREE.Vector3();
 
-    // Création de deux types d'étoile
-    let star = new THREE.Vector3(); // triplet de nombres (x, y et z)
-    let star2 = new THREE.Vector3(); // triplet de nombres (x, y et z)
+    // Création de deux tableaux vides
+    let starCoordinates = [];
+    let star2Coordinates = [];
 
     // Boucle sur tout le rayon de l'univers
     for (let i = 0; i < radius; i++) {
+        // Attribution aléatoire de coordonnées à aux étoiles
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
 
-        vertices[i * 3] = star.x;
-        vertices[i * 3 + 1] = star.y;
-        vertices[i * 3 + 2] = star.z;
-        vertices2[i * 3] = star2.x;
-        vertices2[i * 3 + 1] = star2.y;
-        vertices2[i * 3 + 2] = star2.z;
+        //Remplissage du tableau avec les coordonnées de l'étoile 1
+        starCoordinates[i * 3] = star.x;
+        starCoordinates[i * 3 + 1] = star.y;
+        starCoordinates[i * 3 + 2] = star.z;
+
+        //Remplissage du tableau avec les coordonnées de l'étoile 2
+        star2Coordinates[i * 3] = star2.x;
+        star2Coordinates[i * 3 + 1] = star2.y;
+        star2Coordinates[i * 3 + 2] = star2.z;
     }
 
+    // Pour chaque objet BufferGeometry dans starsGeometry, ajout de l'attribut 'position'
+    // Les valeurs de starCoordinates sont passées en position à starsGeometry, organisées trois par trois
+    starsGeometry[0].addAttribute('position', new THREE.Float32BufferAttribute(starCoordinates, 3));
+    starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(star2Coordinates, 3));
 
-    starsGeometry[0].addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
-
+    // Couleur et taille
     let starMaterial = [
         new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false}),
-        new THREE.PointsMaterial({color: 0xFF0003, size: 1, sizeAttenuation: false})
+        new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
     ];
 
+    // Création de points basés sur les coordonnées dans les starsGeometry
     let starField = [
         new THREE.Points(starsGeometry[0], starMaterial[0]),
         new THREE.Points(starsGeometry[1], starMaterial[1])
     ];
 
-    //TODO trouver à quoi ça sert
-    starField[0].matrixAutoUpdate = false;
-    starField[0].updateMatrix();
-    starField[1].matrixAutoUpdate = false;
-    starField[1].updateMatrix();
-
     return starField;
+}
+
+function generatePlanet(size, material) {
+    geometry = new THREE.SphereBufferGeometry(size, 32, 32);
+    meshPlanet = new THREE.Mesh(geometry, material);
+    meshPlanet.position.set(0, 0, 0);
+    meshPlanet.receiveShadow = true;
+    meshPlanet.castShadow = true;
 }
 
 function sun() {
@@ -269,12 +290,12 @@ function saturne() {
     generatePlanet(planetSizes.saturne, saturneMaterial);
 
     let ringGeometry = new THREE.RingBufferGeometry(planetSizes.saturne + 30, planetSizes.saturne + 100, 64);
-    let pos = ringGeometry.attributes.position;
+    /*let ringPosition = ringGeometry.attributes.position;
     let v3 = new THREE.Vector3();
-    for (let i = 0; i < pos.count; i++) {
-        v3.fromBufferAttribute(pos, i);
+    for (let i = 0; i < ringPosition.count; i++) {
+        v3.fromBufferAttribute(ringPosition, i);
         geometry.attributes.uv.setXY(i, v3.length() < 4 ? 0 : 1, 1);
-    }
+    }*/
 
     let ringMesh = new THREE.Mesh(ringGeometry, saturneRingMaterial);
     ringMesh.rotation.x = Math.radians(75);
@@ -296,12 +317,4 @@ function neptune() {
     generatePlanet(planetSizes.neptune, neptuneMaterial);
     meshPlanet.name = "neptune";
     return meshPlanet;
-}
-
-function generatePlanet(size, material) {
-    geometry = new THREE.SphereBufferGeometry(size, 32, 32);
-    meshPlanet = new THREE.Mesh(geometry, material);
-    meshPlanet.position.set(0, 0, 0);
-    meshPlanet.receiveShadow = true;
-    meshPlanet.castShadow = true;
 }
