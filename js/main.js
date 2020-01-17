@@ -191,7 +191,7 @@ function control() {
      * Stick droit bas : axe 3, positif
      */
     if (gamepad) {
-        //gamepad = navigator.getGamepads()[0];
+        gamepad = navigator.getGamepads()[0];
 
         // Stick gauche haut : reculer
         if (gamepad.axes[1] <= -0.1) {
