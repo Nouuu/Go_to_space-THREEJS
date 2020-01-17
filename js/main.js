@@ -40,8 +40,12 @@ let params = {
     Switch: function () {
         switch (dimension) {
             case "space":
+                scene.remove(camera);
                 scene = sceneSpace;
                 camera = cameraSpace;
+                scene.add(camera);
+                camera.add(cube);
+                cube.position.set(0, -5, -12);
                 planets = scene.getObjectByName("planets");
                 camera.add(listener); // Ajout de l'audio à la caméra
                 sound.play();
@@ -107,8 +111,6 @@ function init() {
     cube.castShadow = true;
     cube.receiveShadow = true;
     scene.add(camera);
-    camera.add(cube);
-    cube.position.set(0, -5, -12);
 
     /**
      * Gamepad
