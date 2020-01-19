@@ -12,6 +12,7 @@ body {
 }
 
 .container {
+  position: absolute;
   width: 100%;
   height: 100vh;
   overflow: hidden;
@@ -20,10 +21,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transition: opacity 0.5s ease;
 }
 
-.container-finish {
-  display: none;
+.container.container-finish {
+  opacity: 0;
+  pointer-events: none;
 }
 
 canvas {
@@ -106,20 +109,20 @@ canvas.display {
 
 @keyframes slide {
   0% {
-    background-color: #EE0E0E;
+    background-color: #ee0e0e;
     transform: translatex(0vw);
   }
   100% {
-    background-color: #D6C031;
+    background-color: #d6c031;
     transform: translatex(calc(var(--container-size) - (var(--box-size) * 1.25)));
   }
 }
 @keyframes color-change {
   0% {
-    background-color: #EE0E0E;
+    background-color: #ee0e0e;
   }
   100% {
-    background-color: #D6C031;
+    background-color: #d6c031;
   }
 }
 @keyframes flip-1 {
