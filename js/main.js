@@ -139,7 +139,7 @@ function init() {
     renderer.domElement.id = 'canvas';
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener('load', onLoad, false);
+    document.addEventListener('keydown', onLoad, false);
 }
 
 function onWindowResize() {
@@ -148,17 +148,13 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-async function onLoad() {
-        await sleep(2000);
-        const preload = document.querySelector('.container');
-        const canvas = document.querySelector('#canvas');
-        canvas.classList.add('display');
-        preload.classList.add('container-finish');
+function onLoad() {
+    const preload = document.querySelector('.container');
+    const canvas = document.querySelector('#canvas');
+    canvas.classList.add('display');
+    preload.classList.add('container-finish');
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function animate() {
     requestAnimationFrame(animate);
