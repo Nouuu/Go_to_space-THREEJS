@@ -72,7 +72,6 @@ init();
 animate();
 
 function init() {
-
     // Ajout des stats FPS
     stats = new Stats();
     document.body.appendChild(stats.dom);
@@ -90,8 +89,8 @@ function init() {
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
     // Par défaut, positionnement sur la scène du vaisseau
-    scene = sceneShip;
-    camera = cameraShip;
+    scene = sceneSpace;
+    camera = cameraSpace;
 
     /**
      * Get planets
@@ -137,14 +136,28 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
+    renderer.domElement.id = 'canvas';
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('load', onLoad, false);
 }
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+async function onLoad() {
+        await sleep(2000);
+        const preload = document.querySelector('.container');
+        const canvas = document.querySelector('#canvas');
+        canvas.classList.add('display');
+        preload.classList.add('container-finish');
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function animate() {
