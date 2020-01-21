@@ -109,11 +109,9 @@ canvas.display {
 
 @keyframes slide {
   0% {
-    background-color: #ee0e0e;
     transform: translatex(0vw);
   }
   100% {
-    background-color: #d6c031;
     transform: translatex(calc(var(--container-size) - (var(--box-size) * 1.25)));
   }
 }
@@ -306,7 +304,6 @@ canvas.display {
 @keyframes boxS {
   50% {
     box-shadow: 1px 0 10px rgba(255, 17, 0, 0.5), -1px 0 10px rgba(200, 57, 0, 0.5), 0 1px 10px rgba(255, 123, 0, 0.5), 0 -1px 10px rgba(255, 153, 0, 0.5);
-    /* box-shadow: 0 0 10px rgba(0, 176, 255, .5); */
   }
   100% {
     box-shadow: 0 0 0 rgba(255, 217, 0, 0.5);
@@ -320,22 +317,22 @@ canvas.display {
 }
 
 .b1 {
-  border-radius: 100% 0 0 0/100% 0 0 0;
+  border-radius: 100% 0 0 0;
   background: linear-gradient(#ff5100, #ce9c40);
 }
 
 .b2 {
-  border-radius: 0 100% 0 0/0 100% 0 0;
+  border-radius: 0 100% 0 0;
   background: linear-gradient(transparent, rgba(174, 100, 32, 0.747));
 }
 
 .b3 {
-  border-radius: 0 0 0 100%/0 0 0 100%;
+  border-radius: 0 0 0 100%;
   background: linear-gradient(#ce9c40, rgba(174, 80, 26, 0.952));
 }
 
 .b4 {
-  border-radius: 0 0 100% 0/0 0 100% 0;
+  border-radius: 0 0 100% 0;
   background: linear-gradient(rgba(174, 80, 26, 0.904), rgba(174, 105, 26, 0.863));
 }
 
@@ -350,25 +347,25 @@ canvas.display {
 .c1 {
   right: 0;
   bottom: 0;
-  border-radius: 100% 0 0 0/100% 0 0 0;
+  border-radius: 100% 0 0 0;
 }
 
 .c2 {
   left: 0;
   bottom: 0;
-  border-radius: 0 100% 0 0/0 100% 0 0;
+  border-radius: 0 100% 0 0;
 }
 
 .c3 {
   right: 0;
   top: 0;
-  border-radius: 0 0 0 100%/0 0 0 100%;
+  border-radius: 0 0 0 100%;
 }
 
 .c4 {
   left: 0;
   top: 0;
-  border-radius: 0 0 100% 0/0 0 100% 0;
+  border-radius: 0 0 100% 0;
 }
 
 /*# sourceMappingURL=style.css.map */
