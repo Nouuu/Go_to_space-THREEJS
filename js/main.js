@@ -20,6 +20,7 @@ let shipMoveSpeed = 10;
 let shipBoostSpeed = 15;
 let currentMoveSpeed = shipMoveSpeed;
 let shipRotationSpeed = 0.02;
+let musicVolume = 1;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
 let vectorZ = new THREE.Vector3(0, 0, 1);
@@ -133,7 +134,6 @@ function render() {
     stats.update();
     renderer.render(scene, camera);
 }
-
 
 function control() {
 
@@ -279,7 +279,7 @@ function music() {
     audioLoader.load('./content/audio/2001.ogg', function (buffer) {
         sound.setBuffer(buffer); // Définition de la source du buffer
         sound.setLoop(false);
-        sound.setVolume(1);
+        sound.setVolume(musicVolume);
     });
 }
 
@@ -312,12 +312,17 @@ function startGUI() {
         },
         PlanetRotationSpeed : planetRotationSpeed,
         SystemRotationSpeed : systemRotationSpeed,
+        MusicVolume: musicVolume,
         PlayPauseMusic : function () {
             if (sound.isPlaying) {
-                sound.stop();
+                sound.pause();
             } else {
                 sound.play();
             }
+        },
+        RestartMusic: function () {
+            sound.stop();
+            sound.play();
         },
         ShipMoveSpeed: shipMoveSpeed,
         ShipBoostSpeed: shipBoostSpeed,
@@ -328,6 +333,7 @@ function startGUI() {
     gui.width = 310;
     let spaceFolder = gui.addFolder('Space settings');
     let shipControlsFolder = gui.addFolder('SpaceShip controls settings');
+    let spaceSoundFolder;
 
     gui.add(params, 'Switch').name('Switch scene');
 
@@ -337,7 +343,14 @@ function startGUI() {
     spaceFolder.add(params, 'SystemRotationSpeed').name('System rotation speed').min(0).max(0.01).step(0.0005).onChange(function () {
         systemRotationSpeed = params.SystemRotationSpeed;
     });
-    spaceFolder.add(params, 'PlayPauseMusic').name('Play/Pause music');
+
+    spaceSoundFolder = spaceFolder.addFolder('Sound control');
+    spaceSoundFolder.add(params, 'MusicVolume').name('Music volume').min(0).max(2).step(0.1).onChange(function () {
+        musicVolume = params.MusicVolume;
+        sound.setVolume(musicVolume);
+    });
+    spaceSoundFolder.add(params, 'PlayPauseMusic').name('Play/Pause music');
+    spaceSoundFolder.add(params, 'RestartMusic').name('Restart music');
 
     shipControlsFolder.add(params, 'ShipMoveSpeed').name('Ship move speed').min(1).max(10).step(0.5).onChange(function () {
         shipMoveSpeed = params.ShipMoveSpeed;
