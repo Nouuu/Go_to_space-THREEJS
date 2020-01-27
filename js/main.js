@@ -139,6 +139,7 @@ function init() {
     renderer.domElement.id = 'canvas';
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
+    document.addEventListener('click', onLoad, false);
     document.addEventListener('keydown', onLoad, false);
 }
 
