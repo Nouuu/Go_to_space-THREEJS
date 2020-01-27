@@ -2,6 +2,7 @@ import * as THREE from './libs/three.module.js';
 import {THREEx} from './libs/THREEx.KeyboardState.js';
 import {GUI} from './libs/dat.gui.module.js';
 import Stats from './libs/stats.module.js';
+import { ColladaLoader } from './libs/ColladaLoader.js';
 
 import * as initTerrain from './initTerrain.js';
 
@@ -12,7 +13,7 @@ let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
 let sound = new THREE.Audio(listener);
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube, falcon;
 let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
@@ -78,13 +79,26 @@ function init() {
      * Camera object
      */
     // Création du cube représentant la caméra
-    cube = new THREE.Mesh(
-        new THREE.CubeGeometry(2, 2, 2),
-        new THREE.MeshPhongMaterial({color: 0xf2f2f2})
-    );
-    cube.castShadow = true;
-    cube.receiveShadow = true;
+    // cube = new THREE.Mesh(
+    //     new THREE.CubeGeometry(2, 2, 2),
+    //     new THREE.MeshPhongMaterial({color: 0xf2f2f2})
+    // );
+    // cube.castShadow = true;
+    // cube.receiveShadow = true;
     scene.add(camera);
+
+    let loadingManager = new THREE.LoadingManager(function () {
+        cameraSpace.add(falcon);
+    });
+
+    let loader = new ColladaLoader(loadingManager);
+    loader.load('./content/models/MilleniumFalcon/model.dae', function (collada) {
+        falcon = collada.scene;
+        falcon.position.z -= 70;
+        falcon.position.y -= 20;
+        falcon.position.x -= 13;
+        falcon.rotation.x += Math.radians(180);
+    });
 
     /**
      * Gamepad
@@ -302,8 +316,8 @@ function startGUI() {
                     scene = sceneSpace;
                     camera = cameraSpace;
                     scene.add(camera);
-                    camera.add(cube);
-                    cube.position.set(0, -5, -12);
+                    // camera.add(cube);
+                    // cube.position.set(0, -5, -12);
                     planets = scene.getObjectByName("planets");
                     camera.add(listener); // Ajout de l'audio à la caméra
                     sound.play();
@@ -373,5 +387,6 @@ function startGUI() {
 
 
     spaceFolder.open();
+    spaceSoundFolder.open();
     shipControlsFolder.open();
 }
