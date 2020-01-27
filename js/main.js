@@ -7,7 +7,7 @@ import * as initTerrain from './initTerrain.js';
 
 // Création et initialisation des variables
 Math.radians = (degrees) => degrees * Math.PI / 180;
-let planetRotationSpeed = 0.005;
+let planetRotationSpeed = 0.01;
 let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
@@ -16,10 +16,11 @@ let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, sta
 let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
-let moveSpeed = 10;
-let currentMoveSpeed = moveSpeed;
-let boostMoveSpeed = 15;
-let rotateSpeed = 0.02;
+let shipMoveSpeed = 10;
+let shipBoostSpeed = 15;
+let currentMoveSpeed = shipMoveSpeed;
+let shipRotationSpeed = 0.02;
+let musicVolume = 1;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
 let vectorZ = new THREE.Vector3(0, 0, 1);
@@ -37,35 +38,8 @@ const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
  * GUI
  */
 let dimension = "space";
-let params = {
-    Switch: function () {
-        switch (dimension) {
-            case "space":
-                scene.remove(camera);
-                scene = sceneSpace;
-                camera = cameraSpace;
-                scene.add(camera);
-                camera.add(cube);
-                cube.position.set(0, -5, -12);
-                planets = scene.getObjectByName("planets");
-                camera.add(listener); // Ajout de l'audio à la caméra
-                sound.play();
-                dimension = "ship";
-                break;
-            case "ship":
-                camera = cameraShip;
-                scene = sceneShip;
-                dimension = "space";
-                sound.stop();
-                break;
-            default:
-                break;
-        }
-    }
-};
-let gui = new GUI();
-gui.add(params, 'Switch');
 
+startGUI();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 init();
@@ -170,7 +144,6 @@ function render() {
     renderer.render(scene, camera);
 }
 
-
 function control() {
 
     // Partie manette
@@ -220,27 +193,27 @@ function control() {
         }
         // Stick droit haut : roulade avant
         if (gamepad.axes[3] <= -0.1) {
-            camera.rotateOnAxis(vectorX, rotateSpeed * -gamepad.axes[3]);
+            camera.rotateOnAxis(vectorX, shipRotationSpeed * -gamepad.axes[3]);
         }
         // Stick droit haut : roulade arrière
         if (gamepad.axes[3] >= 0.1) {
-            camera.rotateOnAxis(vectorX, -rotateSpeed * gamepad.axes[3]);
+            camera.rotateOnAxis(vectorX, -shipRotationSpeed * gamepad.axes[3]);
         }
         // Stick droit gauche : tourner à gauche
         if (gamepad.axes[2] <= -0.1) {
-            camera.rotateOnAxis(vectorY, rotateSpeed * -gamepad.axes[2]);
+            camera.rotateOnAxis(vectorY, shipRotationSpeed * -gamepad.axes[2]);
         }
         // Stick droit gauche : tourner à droite
         if (gamepad.axes[2] >= 0.1) {
-            camera.rotateOnAxis(vectorY, -rotateSpeed * gamepad.axes[2]);
+            camera.rotateOnAxis(vectorY, -shipRotationSpeed * gamepad.axes[2]);
         }
         // Appui sur gachette haut gauche : tonneau à gauche
         if (gamepad.buttons[4].pressed) {
-            camera.rotateOnAxis(vectorZ, rotateSpeed * 0.5);
+            camera.rotateOnAxis(vectorZ, shipRotationSpeed * 0.5);
         }
         // Appui sur gachette haut droite : tonneau à droite
         if (gamepad.buttons[5].pressed) {
-            camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
+            camera.rotateOnAxis(vectorZ, -shipRotationSpeed * 0.5);
         }
         // Appui sur gachette gauche : descendre
         if (gamepad.buttons[6].value >= 0.1) {
@@ -252,22 +225,22 @@ function control() {
         }
         // Appui bouton a
         if (gamepad.buttons[0].pressed) {
-            currentMoveSpeed = boostMoveSpeed;
+            currentMoveSpeed = shipBoostSpeed;
         } else {
-            currentMoveSpeed = moveSpeed;
+            currentMoveSpeed = shipMoveSpeed;
         }
     } else { // Partie clavier
         if (keyboard.pressed("up")) {
-            camera.rotateOnAxis(vectorX, rotateSpeed);
+            camera.rotateOnAxis(vectorX, shipRotationSpeed);
         }
         if (keyboard.pressed("down")) {
-            camera.rotateOnAxis(vectorX, -rotateSpeed);
+            camera.rotateOnAxis(vectorX, -shipRotationSpeed);
         }
         if (keyboard.pressed("left")) {
-            camera.rotateOnAxis(vectorY, rotateSpeed);
+            camera.rotateOnAxis(vectorY, shipRotationSpeed);
         }
         if (keyboard.pressed("right")) {
-            camera.rotateOnAxis(vectorY, -rotateSpeed);
+            camera.rotateOnAxis(vectorY, -shipRotationSpeed);
         }
         if (keyboard.pressed("z")) {
             camera.translateZ(-currentMoveSpeed)
@@ -288,16 +261,16 @@ function control() {
             camera.translateY(-currentMoveSpeed);
         }
         if (keyboard.pressed("a")) {
-            camera.rotateOnAxis(vectorZ, rotateSpeed * 0.5);
+            camera.rotateOnAxis(vectorZ, shipRotationSpeed * 0.5);
         }
         if (keyboard.pressed("e")) {
-            camera.rotateOnAxis(vectorZ, -rotateSpeed * 0.5);
+            camera.rotateOnAxis(vectorZ, -shipRotationSpeed * 0.5);
         }
 
         if (keyboard.pressed("shift")) {
-            currentMoveSpeed = boostMoveSpeed;
+            currentMoveSpeed = shipBoostSpeed;
         } else {
-            currentMoveSpeed = moveSpeed;
+            currentMoveSpeed = shipMoveSpeed;
         }
     }
 }
@@ -315,6 +288,90 @@ function music() {
     audioLoader.load('./content/audio/2001.ogg', function (buffer) {
         sound.setBuffer(buffer); // Définition de la source du buffer
         sound.setLoop(false);
-        sound.setVolume(1);
+        sound.setVolume(musicVolume);
     });
+}
+
+function startGUI() {
+
+    let params = {
+        Switch: function () {
+            switch (dimension) {
+                case "space":
+                    scene.remove(camera);
+                    scene = sceneSpace;
+                    camera = cameraSpace;
+                    scene.add(camera);
+                    camera.add(cube);
+                    cube.position.set(0, -5, -12);
+                    planets = scene.getObjectByName("planets");
+                    camera.add(listener); // Ajout de l'audio à la caméra
+                    sound.play();
+                    dimension = "ship";
+                    break;
+                case "ship":
+                    camera = cameraShip;
+                    scene = sceneShip;
+                    dimension = "space";
+                    sound.stop();
+                    break;
+                default:
+                    break;
+            }
+        },
+        PlanetRotationSpeed : planetRotationSpeed,
+        SystemRotationSpeed : systemRotationSpeed,
+        MusicVolume: musicVolume,
+        PlayPauseMusic : function () {
+            if (sound.isPlaying) {
+                sound.pause();
+            } else {
+                sound.play();
+            }
+        },
+        RestartMusic: function () {
+            sound.stop();
+            sound.play();
+        },
+        ShipMoveSpeed: shipMoveSpeed,
+        ShipBoostSpeed: shipBoostSpeed,
+        ShipRotationSpeed: shipRotationSpeed
+    };
+
+    let gui = new GUI();
+    gui.width = 310;
+    let spaceFolder = gui.addFolder('Space settings');
+    let shipControlsFolder = gui.addFolder('SpaceShip controls settings');
+    let spaceSoundFolder;
+
+    gui.add(params, 'Switch').name('Switch scene');
+
+    spaceFolder.add(params, 'PlanetRotationSpeed').name('Planet rotation speed').min(0).max(0.1).step(0.005).onChange(function () {
+        planetRotationSpeed = params.PlanetRotationSpeed;
+    });
+    spaceFolder.add(params, 'SystemRotationSpeed').name('System rotation speed').min(0).max(0.01).step(0.0005).onChange(function () {
+        systemRotationSpeed = params.SystemRotationSpeed;
+    });
+
+    spaceSoundFolder = spaceFolder.addFolder('Sound control');
+    spaceSoundFolder.add(params, 'MusicVolume').name('Music volume').min(0).max(2).step(0.1).onChange(function () {
+        musicVolume = params.MusicVolume;
+        sound.setVolume(musicVolume);
+    });
+    spaceSoundFolder.add(params, 'PlayPauseMusic').name('Play/Pause music');
+    spaceSoundFolder.add(params, 'RestartMusic').name('Restart music');
+
+    shipControlsFolder.add(params, 'ShipMoveSpeed').name('Ship move speed').min(1).max(10).step(0.5).onChange(function () {
+        shipMoveSpeed = params.ShipMoveSpeed;
+    });
+    shipControlsFolder.add(params, 'ShipBoostSpeed').name('Ship boost speed').min(2).max(20).step(0.5).onChange(function () {
+        shipBoostSpeed = params.ShipBoostSpeed;
+    });
+    shipControlsFolder.add(params, 'ShipRotationSpeed').name('Ship rotation speed').min(0.001).max(0.05).step(0.001).onChange(function () {
+        shipRotationSpeed = params.ShipRotationSpeed;
+    });
+
+
+    spaceFolder.open();
+    shipControlsFolder.open();
 }
