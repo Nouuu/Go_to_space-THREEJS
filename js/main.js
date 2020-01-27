@@ -46,7 +46,6 @@ init();
 animate();
 
 function init() {
-
     // Ajout des stats FPS
     stats = new Stats();
     document.body.appendChild(stats.dom);
@@ -111,8 +110,11 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
+    renderer.domElement.id = 'canvas';
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
+    document.addEventListener('click', onLoad, false);
+    document.addEventListener('keydown', onLoad, false);
 }
 
 function onWindowResize() {
@@ -120,6 +122,14 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+function onLoad() {
+    const preload = document.querySelector('.container');
+    const canvas = document.querySelector('#canvas');
+    canvas.classList.add('display');
+    preload.classList.add('container-finish');
+}
+
 
 function animate() {
     requestAnimationFrame(animate);
