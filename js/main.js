@@ -2,7 +2,7 @@ import * as THREE from './libs/three.module.js';
 import {THREEx} from './libs/THREEx.KeyboardState.js';
 import {GUI} from './libs/dat.gui.module.js';
 import Stats from './libs/stats.module.js';
-import { ColladaLoader } from './libs/ColladaLoader.js';
+import {ColladaLoader} from './libs/ColladaLoader.js';
 
 import * as initTerrain from './initTerrain.js';
 
@@ -94,11 +94,16 @@ function init() {
     let loader = new ColladaLoader(loadingManager);
     loader.load('./content/models/MilleniumFalcon/model.dae', function (collada) {
         falcon = collada.scene;
-        falcon.position.z -= 70;
+        falcon.position.z -= 75;
         falcon.position.y -= 20;
         falcon.position.x -= 13;
         falcon.rotation.x += Math.radians(180);
+        falcon.traverse(function (child) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        });
     });
+
 
     /**
      * Gamepad
@@ -334,10 +339,10 @@ function startGUI() {
                     break;
             }
         },
-        PlanetRotationSpeed : planetRotationSpeed,
-        SystemRotationSpeed : systemRotationSpeed,
+        PlanetRotationSpeed: planetRotationSpeed,
+        SystemRotationSpeed: systemRotationSpeed,
         MusicVolume: musicVolume,
-        PlayPauseMusic : function () {
+        PlayPauseMusic: function () {
             if (sound.isPlaying) {
                 sound.pause();
             } else {
