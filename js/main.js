@@ -121,6 +121,9 @@ function init() {
         console.log("Une manette est connectée :");
         console.log(event.gamepad);
         gamepad = navigator.getGamepads()[0];
+        if (gamepad.buttons[0].pressed) {
+            onLoad();
+        }
     });
 
     // Ecoute du débranchement de la manette
