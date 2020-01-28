@@ -13,7 +13,7 @@ let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
 let sound = new THREE.Audio(listener);
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube, falcon;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot, falcon;
 let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
@@ -93,18 +93,19 @@ function init() {
     scene.add(camera);
 
     let loadingManager = new THREE.LoadingManager(function () {
-        cameraSpace.add(falcon);
+        cameraSpace.add(falconPivot);
     });
 
     let loader = new ColladaLoader(loadingManager);
     loader.load('./content/models/MilleniumFalcon/model.dae', function (collada) {
+        falconPivot = new THREE.Group();
         falcon = collada.scene;
-        falcon.position.z -= 75;
-        falcon.position.y -= 20;
         falcon.position.x -= 13;
         falcon.rotation.x += Math.radians(180);
+        falconPivot.add(falcon);
+        falconPivot.position.z -= 75;
+        falconPivot.position.y -= 20;
         falcon.children[0].children.pop();
-
         falcon.traverse(function (child) {
             child.castShadow = true;
             child.receiveShadow = true;
@@ -204,19 +205,63 @@ function control() {
 
         // Stick gauche haut : reculer
         if (gamepad.axes[1] <= -0.1) {
-            camera.translateZ(currentMoveSpeed * gamepad.axes[1])
+            camera.translateZ(currentMoveSpeed * gamepad.axes[1]);
+            if (currentShipMoveFrontRotationEffect > -shipMoveFrontRotationEffect) {
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect < 0) {
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
         }
         // Stick gauche bas : avancer
         if (gamepad.axes[1] >= 0.1) {
-            camera.translateZ(currentMoveSpeed * gamepad.axes[1])
+            camera.translateZ(currentMoveSpeed * gamepad.axes[1]);
+            if (currentShipMoveFrontRotationEffect < shipMoveFrontRotationEffect) {
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect > 0) {
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
         }
         // Stick gauche gauche : gauche
         if (gamepad.axes[0] <= -0.1) {
             camera.translateX(-currentMoveSpeed * -gamepad.axes[0]);
+            if (currentShipMoveSideRotationEffect > -shipMoveSideRotationEffect) {
+                falconPivot.rotation.z += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect < 0) {
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
         }
         // Stick gauche gauche : droite
         if (gamepad.axes[0] >= 0.1) {
-            camera.translateX(currentMoveSpeed * gamepad.axes[0])
+            camera.translateX(currentMoveSpeed * gamepad.axes[0]);
+            if (currentShipMoveSideRotationEffect < shipMoveSideRotationEffect) {
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect > 0) {
+                falconPivot.rotation.z += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
         }
         // Stick droit haut : roulade avant
         if (gamepad.axes[3] <= -0.1) {
@@ -272,14 +317,14 @@ function control() {
         if (keyboard.pressed("z")) {
             camera.translateZ(-currentMoveSpeed);
             if (currentShipMoveFrontRotationEffect < shipMoveFrontRotationEffect) {
-                falcon.rotation.x -= shipMoveRotationPresicion;
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
                 falcon.position.y -= 0.5;
                 falcon.position.z -= 0.5;
                 currentShipMoveFrontRotationEffect++;
             }
         } else {
             if (currentShipMoveFrontRotationEffect > 0) {
-                falcon.rotation.x += shipMoveRotationPresicion;
+                falconPivot.rotation.x += shipMoveRotationPresicion;
                 falcon.position.y += 0.5;
                 falcon.position.z += 0.5;
                 currentShipMoveFrontRotationEffect--;
@@ -288,14 +333,14 @@ function control() {
         if (keyboard.pressed("s")) {
             camera.translateZ(currentMoveSpeed);
             if (currentShipMoveFrontRotationEffect > -shipMoveFrontRotationEffect) {
-                falcon.rotation.x += shipMoveRotationPresicion;
+                falconPivot.rotation.x += shipMoveRotationPresicion;
                 falcon.position.y += 0.5;
                 falcon.position.z += 0.5;
                 currentShipMoveFrontRotationEffect--;
             }
         } else {
             if (currentShipMoveFrontRotationEffect < 0) {
-                falcon.rotation.x -= shipMoveRotationPresicion;
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
                 falcon.position.y -= 0.5;
                 falcon.position.z -= 0.5;
                 currentShipMoveFrontRotationEffect++;
@@ -304,37 +349,27 @@ function control() {
         if (keyboard.pressed("q")) {
             camera.translateX(-currentMoveSpeed);
             if (currentShipMoveSideRotationEffect > -shipMoveSideRotationEffect) {
-                falcon.rotation.y += shipMoveRotationPresicion;
+                falconPivot.rotation.z += shipMoveRotationPresicion;
                 currentShipMoveSideRotationEffect--;
             }
         } else {
             if (currentShipMoveSideRotationEffect < 0) {
-                falcon.rotation.y -= shipMoveRotationPresicion;
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
                 currentShipMoveSideRotationEffect++;
             }
         }
         if (keyboard.pressed("d")) {
             camera.translateX(currentMoveSpeed);
             if (currentShipMoveSideRotationEffect < shipMoveSideRotationEffect) {
-                falcon.rotation.y -= shipMoveRotationPresicion;
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
                 currentShipMoveSideRotationEffect++;
             }
         } else {
             if (currentShipMoveSideRotationEffect > 0) {
-                falcon.rotation.y += shipMoveRotationPresicion;
+                falconPivot.rotation.z += shipMoveRotationPresicion;
                 currentShipMoveSideRotationEffect--;
             }
         }
-        /*TODO
-        Create a object that will act as pivot:
-
-            mesh.position.y = 10;
-
-            var pivot = new THREE.Object3D();
-            pivot.add( mesh );
-
-            scene.add( pivot );
-         */
         if (keyboard.pressed("space")) {
             camera.translateY(currentMoveSpeed);
         }
