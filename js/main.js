@@ -21,6 +21,11 @@ let shipMoveSpeed = 10;
 let shipBoostSpeed = 15;
 let currentMoveSpeed = shipMoveSpeed;
 let shipRotationSpeed = 0.02;
+let shipMoveFrontRotationEffect = 10;
+let shipMoveSideRotationEffect = 10;
+let currentShipMoveFrontRotationEffect = 0;
+let currentShipMoveSideRotationEffect = 0;
+let shipMoveRotationPresicion = 0.02;
 let musicVolume = 1;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
@@ -265,17 +270,71 @@ function control() {
             camera.rotateOnAxis(vectorY, -shipRotationSpeed);
         }
         if (keyboard.pressed("z")) {
-            camera.translateZ(-currentMoveSpeed)
+            camera.translateZ(-currentMoveSpeed);
+            if (currentShipMoveFrontRotationEffect < shipMoveFrontRotationEffect) {
+                falcon.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect > 0) {
+                falcon.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
         }
         if (keyboard.pressed("s")) {
-            camera.translateZ(currentMoveSpeed)
+            camera.translateZ(currentMoveSpeed);
+            if (currentShipMoveFrontRotationEffect > -shipMoveFrontRotationEffect) {
+                falcon.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect < 0) {
+                falcon.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
         }
         if (keyboard.pressed("q")) {
             camera.translateX(-currentMoveSpeed);
+            if (currentShipMoveSideRotationEffect > -shipMoveSideRotationEffect) {
+                falcon.rotation.y += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect < 0) {
+                falcon.rotation.y -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
         }
         if (keyboard.pressed("d")) {
             camera.translateX(currentMoveSpeed);
+            if (currentShipMoveSideRotationEffect < shipMoveSideRotationEffect) {
+                falcon.rotation.y -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect > 0) {
+                falcon.rotation.y += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
         }
+        /*TODO
+        Create a object that will act as pivot:
+
+            mesh.position.y = 10;
+
+            var pivot = new THREE.Object3D();
+            pivot.add( mesh );
+
+            scene.add( pivot );
+         */
         if (keyboard.pressed("space")) {
             camera.translateY(currentMoveSpeed);
         }
