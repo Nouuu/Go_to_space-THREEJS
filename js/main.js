@@ -98,6 +98,8 @@ function init() {
         falcon.position.y -= 20;
         falcon.position.x -= 13;
         falcon.rotation.x += Math.radians(180);
+        falcon.children[0].children.pop();
+
         falcon.traverse(function (child) {
             child.castShadow = true;
             child.receiveShadow = true;
