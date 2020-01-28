@@ -2,6 +2,7 @@ import * as THREE from './libs/three.module.js';
 import {THREEx} from './libs/THREEx.KeyboardState.js';
 import {GUI} from './libs/dat.gui.module.js';
 import Stats from './libs/stats.module.js';
+import {ColladaLoader} from './libs/ColladaLoader.js';
 
 import * as initTerrain from './initTerrain.js';
 
@@ -12,7 +13,7 @@ let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
 let sound = new THREE.Audio(listener);
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, cube;
+let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot, falcon;
 let gamepad = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
@@ -20,6 +21,11 @@ let shipMoveSpeed = 10;
 let shipBoostSpeed = 15;
 let currentMoveSpeed = shipMoveSpeed;
 let shipRotationSpeed = 0.02;
+let shipMoveFrontRotationEffect = 10;
+let shipMoveSideRotationEffect = 10;
+let currentShipMoveFrontRotationEffect = 0;
+let currentShipMoveSideRotationEffect = 0;
+let shipMoveRotationPresicion = 0.02;
 let musicVolume = 1;
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
@@ -78,13 +84,34 @@ function init() {
      * Camera object
      */
     // Création du cube représentant la caméra
-    cube = new THREE.Mesh(
-        new THREE.CubeGeometry(2, 2, 2),
-        new THREE.MeshPhongMaterial({color: 0xf2f2f2})
-    );
-    cube.castShadow = true;
-    cube.receiveShadow = true;
+    // cube = new THREE.Mesh(
+    //     new THREE.CubeGeometry(2, 2, 2),
+    //     new THREE.MeshPhongMaterial({color: 0xf2f2f2})
+    // );
+    // cube.castShadow = true;
+    // cube.receiveShadow = true;
     scene.add(camera);
+
+    let loadingManager = new THREE.LoadingManager(function () {
+        cameraSpace.add(falconPivot);
+    });
+
+    let loader = new ColladaLoader(loadingManager);
+    loader.load('./content/models/MilleniumFalcon/model.dae', function (collada) {
+        falconPivot = new THREE.Group();
+        falcon = collada.scene;
+        falcon.position.x -= 13;
+        falcon.rotation.x += Math.radians(180);
+        falconPivot.add(falcon);
+        falconPivot.position.z -= 75;
+        falconPivot.position.y -= 20;
+        falcon.children[0].children.pop();
+        falcon.traverse(function (child) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        });
+    });
+
 
     /**
      * Gamepad
@@ -178,19 +205,63 @@ function control() {
 
         // Stick gauche haut : reculer
         if (gamepad.axes[1] <= -0.1) {
-            camera.translateZ(currentMoveSpeed * gamepad.axes[1])
+            camera.translateZ(currentMoveSpeed * gamepad.axes[1]);
+            if (currentShipMoveFrontRotationEffect > -shipMoveFrontRotationEffect) {
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect < 0) {
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
         }
         // Stick gauche bas : avancer
         if (gamepad.axes[1] >= 0.1) {
-            camera.translateZ(currentMoveSpeed * gamepad.axes[1])
+            camera.translateZ(currentMoveSpeed * gamepad.axes[1]);
+            if (currentShipMoveFrontRotationEffect < shipMoveFrontRotationEffect) {
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect > 0) {
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
         }
         // Stick gauche gauche : gauche
         if (gamepad.axes[0] <= -0.1) {
             camera.translateX(-currentMoveSpeed * -gamepad.axes[0]);
+            if (currentShipMoveSideRotationEffect > -shipMoveSideRotationEffect) {
+                falconPivot.rotation.z += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect < 0) {
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
         }
         // Stick gauche gauche : droite
         if (gamepad.axes[0] >= 0.1) {
-            camera.translateX(currentMoveSpeed * gamepad.axes[0])
+            camera.translateX(currentMoveSpeed * gamepad.axes[0]);
+            if (currentShipMoveSideRotationEffect < shipMoveSideRotationEffect) {
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect > 0) {
+                falconPivot.rotation.z += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
         }
         // Stick droit haut : roulade avant
         if (gamepad.axes[3] <= -0.1) {
@@ -244,16 +315,60 @@ function control() {
             camera.rotateOnAxis(vectorY, -shipRotationSpeed);
         }
         if (keyboard.pressed("z")) {
-            camera.translateZ(-currentMoveSpeed)
+            camera.translateZ(-currentMoveSpeed);
+            if (currentShipMoveFrontRotationEffect < shipMoveFrontRotationEffect) {
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect > 0) {
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
         }
         if (keyboard.pressed("s")) {
-            camera.translateZ(currentMoveSpeed)
+            camera.translateZ(currentMoveSpeed);
+            if (currentShipMoveFrontRotationEffect > -shipMoveFrontRotationEffect) {
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
+                currentShipMoveFrontRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveFrontRotationEffect < 0) {
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
+                currentShipMoveFrontRotationEffect++;
+            }
         }
         if (keyboard.pressed("q")) {
             camera.translateX(-currentMoveSpeed);
+            if (currentShipMoveSideRotationEffect > -shipMoveSideRotationEffect) {
+                falconPivot.rotation.z += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect < 0) {
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
         }
         if (keyboard.pressed("d")) {
             camera.translateX(currentMoveSpeed);
+            if (currentShipMoveSideRotationEffect < shipMoveSideRotationEffect) {
+                falconPivot.rotation.z -= shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect++;
+            }
+        } else {
+            if (currentShipMoveSideRotationEffect > 0) {
+                falconPivot.rotation.z += shipMoveRotationPresicion;
+                currentShipMoveSideRotationEffect--;
+            }
         }
         if (keyboard.pressed("space")) {
             camera.translateY(currentMoveSpeed);
@@ -303,8 +418,8 @@ function startGUI() {
                     scene = sceneSpace;
                     camera = cameraSpace;
                     scene.add(camera);
-                    camera.add(cube);
-                    cube.position.set(0, -5, -12);
+                    // camera.add(cube);
+                    // cube.position.set(0, -5, -12);
                     planets = scene.getObjectByName("planets");
                     camera.add(listener); // Ajout de l'audio à la caméra
                     sound.play();
@@ -320,10 +435,10 @@ function startGUI() {
                     break;
             }
         },
-        PlanetRotationSpeed : planetRotationSpeed,
-        SystemRotationSpeed : systemRotationSpeed,
+        PlanetRotationSpeed: planetRotationSpeed,
+        SystemRotationSpeed: systemRotationSpeed,
         MusicVolume: musicVolume,
-        PlayPauseMusic : function () {
+        PlayPauseMusic: function () {
             if (sound.isPlaying) {
                 sound.pause();
             } else {
@@ -374,5 +489,6 @@ function startGUI() {
 
 
     spaceFolder.open();
+    spaceSoundFolder.open();
     shipControlsFolder.open();
 }
