@@ -297,6 +297,7 @@ function control() {
         }
         // Appui bouton a
         if (gamepad.buttons[0].pressed) {
+            onLoad();
             currentMoveSpeed = shipBoostSpeed;
         } else {
             currentMoveSpeed = shipMoveSpeed;
