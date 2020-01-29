@@ -13,8 +13,10 @@ let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
 let sound = new THREE.Audio(listener);
-let camera, scene, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot, falcon;
+let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
+    falcon;
 let gamepad = false;
+let onGamePadSelectButton = false;
 let spaceRadius = 14000;
 let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
 let shipMoveSpeed = 10;
@@ -181,6 +183,7 @@ function control() {
      * b : 1
      * x : 2
      * y : 3
+     * select : 8
      * gachette haut gauche : 4
      * gachette haut droite : 5
      * gachette gauche : 6
@@ -203,37 +206,37 @@ function control() {
     if (gamepad) {
         gamepad = navigator.getGamepads()[0];
 
-        // Stick gauche haut : reculer
+        // Stick gauche haut : avancer
         if (gamepad.axes[1] <= -0.1) {
             camera.translateZ(currentMoveSpeed * gamepad.axes[1]);
             if (currentShipMoveFrontRotationEffect > -shipMoveFrontRotationEffect) {
-                falconPivot.rotation.x += shipMoveRotationPresicion;
-                falcon.position.y += 0.5;
-                falcon.position.z += 0.5;
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
                 currentShipMoveFrontRotationEffect--;
             }
         } else {
             if (currentShipMoveFrontRotationEffect < 0) {
-                falconPivot.rotation.x -= shipMoveRotationPresicion;
-                falcon.position.y -= 0.5;
-                falcon.position.z -= 0.5;
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
                 currentShipMoveFrontRotationEffect++;
             }
         }
-        // Stick gauche bas : avancer
+        // Stick gauche bas : reculer
         if (gamepad.axes[1] >= 0.1) {
             camera.translateZ(currentMoveSpeed * gamepad.axes[1]);
             if (currentShipMoveFrontRotationEffect < shipMoveFrontRotationEffect) {
-                falconPivot.rotation.x -= shipMoveRotationPresicion;
-                falcon.position.y -= 0.5;
-                falcon.position.z -= 0.5;
+                falconPivot.rotation.x += shipMoveRotationPresicion;
+                falcon.position.y += 0.5;
+                falcon.position.z += 0.5;
                 currentShipMoveFrontRotationEffect++;
             }
         } else {
             if (currentShipMoveFrontRotationEffect > 0) {
-                falconPivot.rotation.x += shipMoveRotationPresicion;
-                falcon.position.y += 0.5;
-                falcon.position.z += 0.5;
+                falconPivot.rotation.x -= shipMoveRotationPresicion;
+                falcon.position.y -= 0.5;
+                falcon.position.z -= 0.5;
                 currentShipMoveFrontRotationEffect--;
             }
         }
@@ -301,6 +304,15 @@ function control() {
             currentMoveSpeed = shipBoostSpeed;
         } else {
             currentMoveSpeed = shipMoveSpeed;
+        }
+        // Appui bouton select
+        if (gamepad.buttons[8].pressed) {
+            onGamePadSelectButton = true;
+        } else {
+            if (onGamePadSelectButton) {
+                onGamePadSelectButton = false;
+                params.Switch();
+            }
         }
     } else { // Partie clavier
         if (keyboard.pressed("up")) {
@@ -411,7 +423,7 @@ function music() {
 
 function startGUI() {
 
-    let params = {
+    params = {
         Switch: function () {
             switch (dimension) {
                 case "space":
