@@ -181,8 +181,13 @@ export function initShip(terrainMat) {
     let terrain = new THREE.Mesh(geometry, terrainMat);
     terrain.receiveShadow = true;
     terrain.rotateX(Math.radians(-90));
-
     scene.add(terrain);
+
+    let geometryCylinder = new THREE.CylinderBufferGeometry( 11, 11, 20, 4, 1, true, 6, 3.15);
+    let materialCylinder = new THREE.MeshBasicMaterial( {color: 0x616161} );
+    let cylinder = new THREE.Mesh( geometryCylinder, materialCylinder );
+    scene.add(cylinder);
+
 
     /**
      * Ambient light
