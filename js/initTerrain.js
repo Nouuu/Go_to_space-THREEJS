@@ -170,6 +170,7 @@ export function initShip(terrainMat) {
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 30;
+    camera.position.x = 30;
     camera.position.y = 10;
     // camera.rotation.x -= Math.radians(90);
 
@@ -183,9 +184,10 @@ export function initShip(terrainMat) {
     terrain.rotateX(Math.radians(-90));
     scene.add(terrain);
 
-    let geometryCylinder = new THREE.CylinderBufferGeometry( 11, 11, 20, 4, 1, true, 6, 3.15);
+    let geometryCylinder = new THREE.CylinderBufferGeometry( 11, 11, 20, 4, 1, true, 6, 3);
     let materialCylinder = new THREE.MeshBasicMaterial( {color: 0x616161} );
     let cylinder = new THREE.Mesh( geometryCylinder, materialCylinder );
+    cylinder.position.y = 10;
     scene.add(cylinder);
 
 
