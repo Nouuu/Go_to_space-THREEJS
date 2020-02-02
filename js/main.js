@@ -69,7 +69,7 @@ function init() {
      */
     // Récupération des scènes et caméra
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
-    [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
+    [sceneShip, cameraShip] = initTerrain.initShip();
     // Par défaut, positionnement sur la scène du vaisseau
     scene = sceneShip;
     camera = cameraShip;

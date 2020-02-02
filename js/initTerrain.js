@@ -1,4 +1,5 @@
 import * as THREE from "./libs/three.module.js";
+import { FBXLoader } from './libs/FBXLoader.js';
 
 const loader = new THREE.TextureLoader();
 
@@ -166,37 +167,34 @@ export function initSpace(radius) { // radius = rayon du système solaire
     return [scene, camera];
 }
 
-export function initShip(terrainMat) {
+export function initShip() {
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
-    camera.position.z = 30;
-    camera.position.x = 30;
-    camera.position.y = 10;
-    // camera.rotation.x -= Math.radians(90);
+    scene = new THREE.Scene();
 
+    let camera = new THREE.PerspectiveCamera( 450, window.innerWidth / window.innerHeight, 1, 1300 * 7 );
+    camera.position.set(0, 350, 0 );
 
-    /**
-     * Ajout du terrain
-     */
-    let geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
-    let terrain = new THREE.Mesh(geometry, terrainMat);
-    terrain.receiveShadow = true;
-    terrain.rotateX(Math.radians(-90));
-    scene.add(terrain);
+    // Lumière
+    /*light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+    light.position.set( 0, 200, 0 );
+    scene.add( light );*/
+    let light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 0, 200, 100 );
+    light.castShadow = true;
+    scene.add( light );
 
-    let geometryCylinder = new THREE.CylinderBufferGeometry( 11, 11, 20, 8, 1, true, 6, 6.3);
-    let materialCylinder = new THREE.MeshBasicMaterial( {color: 0x616161} );
-    let cylinder = new THREE.Mesh( geometryCylinder, materialCylinder );
-    cylinder.position.y = 10;
-    scene.add(cylinder);
-
-
-    /**
-     * Ambient light
-     */
-
-    let light = new THREE.AmbientLight(0xf2f2f2, 1);
-    scene.add(light);
+    // Modèle 3D
+    let fbxLoader = new FBXLoader();
+    fbxLoader.load( './content/models/corridor/corridor.fbx', function ( object ) {
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.set( 0, 0, 0 );
+        scene.add( object );
+    } );
 
     return [scene, camera];
 }
