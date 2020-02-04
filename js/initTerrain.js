@@ -2,6 +2,7 @@ import * as THREE from "./libs/three.module.js";
 import { FBXLoader } from './libs/FBXLoader.js';
 
 const loader = new THREE.TextureLoader();
+const corridorLength = 1096;
 
 // Sizes
 const planetSizes = {
@@ -185,7 +186,7 @@ export function initShip() {
 
     // Modèle 3D
     let fbxLoader = new FBXLoader();
-    fbxLoader.load( './content/models/corridor/corridor.fbx', function ( object ) {
+    fbxLoader.load( './content/models/corridor/corridor_0.fbx', function ( object ) {
         object.traverse( function ( child ) {
             if ( child.isMesh ) {
                 child.castShadow = true;
@@ -194,6 +195,14 @@ export function initShip() {
         } );
         object.position.set( 0, 0, 0 );
         scene.add( object );
+
+        let corridor1 = object.clone();
+        corridor1.position.set( 0, 0, corridorLength );
+        scene.add( corridor1 );
+
+        let corridor2 = object.clone();
+        corridor2.position.set( 0, 0, -corridorLength );
+        scene.add( corridor2 );
     } );
 
     return [scene, camera];
