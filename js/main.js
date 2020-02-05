@@ -49,6 +49,11 @@ let dimension = "space";
 
 startGUI();
 
+/**
+ * Collision
+ */
+let raycaster
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 init();
 animate();
@@ -114,6 +119,11 @@ function init() {
         });
     });
 
+    /**
+     * Raycaster pour la collision
+     */
+    raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+
 
     /**
      * Gamepad
@@ -166,6 +176,16 @@ function animate() {
     control();
     if (dimension !== "space") {
         planetUpdate();
+    } else {
+        //raycaster.ray.origin.copy( controls.getObject().position );
+        raycaster.ray.origin.y -= 10;
+
+        //var intersections = raycaster.intersectObjects( objects );
+        //var onObject = intersections.length > 0;
+        //if ( onObject === true ) {
+        //  velocity.y = Math.max( 0, velocity.y );
+        //  canJump = true;
+        //}
     }
 }
 
