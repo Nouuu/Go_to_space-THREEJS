@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Indie+Flower&display=swap');
-
+@import url('https://fonts.googleapis.com/css?family=Fontdiner+Swanky&display=swap');
 :root {
 	--duration: 1.5s;
 	--container-size: 250px;
@@ -49,20 +48,121 @@ canvas.display {
 	position: absolute;
 }
 
-.h1 {
+.card {
+	@mixin backlight($x, $y, $spread, $size, $colorA, $colorB, $duration) {
+		&:after {
+		  position: absolute;
+		  content: "";
+		  top: $y;
+		  left: $x;
+		  right: 0;
+		  z-index: -1;
+		  height: 100%;
+		  width: 100%;
+		  margin: 0 auto;
+		  transform: scale($size);
+		  -webkit-filter: blur($spread);
+		  -moz-filter: blur($spread);
+		  -ms-filter: blur($spread);
+		  filter: blur($spread);
+		  background: linear-gradient(270deg, $colorA, $colorB);
+		  background-size: 200% 200%;
+		  animation: animateGlow $duration ease infinite;
+		  
+		  @keyframes animateGlow {
+			0%{background-position:0% 50%}
+			50%{background-position:100% 50%}
+			100%{background-position:0% 50%}
+		  }
+		}
+	  }
+	  
 	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	top: 54vh;
+	top: 10%;
+	left: 75%;
+	width: 20vw;
+	height: 29vw;
+	font-family: "Ubuntu";
+	text-align: center;
+	color: #252B37;
+	background-color: #151823;
+	animation: textColor 10s ease infinite;
+	@include backlight(0, 5vw, 5vw, 0.75, #0fffc1, #7e0fff, 10s);
 
-	font-family: 'Indie Flower';
-	font-size: 140px;
-	text-transform: uppercase;
-	background: linear-gradient(to right, #4ca1af, #c4e0e5 100%);
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
+	ul {
+		text-align: left;
+		margin: 30px;
+		padding: 0;
+	}
+		
+	@keyframes textColor {
+		0% {
+		color: #7e0fff;
+		}
+		50% {
+		color: #0fffc1;
+		}
+		100% {
+		color: #7e0fff;
+		}
+	}
+
 }
+
+// .title {
+// 	position: absolute;
+// 	top: 62vh;
+// 	left: 50%;
+// 	transform: translate(-50%);
+// 	z-index: 200;
+
+// 	svg {
+// 		display: block;
+// 		font-size: 170px;
+// 		font-family: 'Fontdiner Swanky', cursive;
+// 		width: 960px;
+// 		height: 300px;
+// 		margin: 0 30px;
+// 	}
+	
+// 	.text-copy {
+// 		fill: none;
+// 		stroke: white;
+// 		stroke-dasharray: 6% 29%;
+// 		stroke-width: 5px;
+// 		stroke-dashoffset: 0%;
+// 		animation: stroke-offset 5.5s infinite linear;
+// 	}
+	
+// 	.text-copy:nth-child(1){
+// 		stroke: #4D163D;
+// 		animation-delay: -1;
+// 	}
+	
+// 	.text-copy:nth-child(2){
+// 		stroke: #840037;
+// 		animation-delay: -2s;
+// 	}
+	
+// 	.text-copy:nth-child(3){
+// 		stroke: #BD0034;
+// 		animation-delay: -3s;
+// 	}
+	
+// 	.text-copy:nth-child(4){
+// 		stroke: #BD0034;
+// 		animation-delay: -4s;
+// 	}
+	
+// 	.text-copy:nth-child(5){
+// 		stroke: #FDB731;
+// 		animation-delay: -5s;
+// 	}
+	
+// 	@keyframes stroke-offset{
+// 		100% {stroke-dashoffset: -35%;}
+// 	}
+// }
 
 .item {
 	width: var(--box-size);
@@ -79,7 +179,7 @@ canvas.display {
 		position: absolute;
 		top: 0;
 		right: 0;
-		background-color: #ee350e;
+		background-color: #0FFFC1;
 		border-radius: var(--box-border-radius);
 		box-shadow: 0px 0px 10px 0px rgba(#e79200, 0.4);
 	}
@@ -101,16 +201,16 @@ canvas.display {
 	}
 
 	&:nth-child(2):after {
-		background-color: #ee350e;
+		background-color: #1AE7C7;
 	}
 	&:nth-child(3):after {
-		background-color: #ed6a00;
+		background-color: #30B7D3;
 	}
 	&:nth-child(4):after {
-		background-color: #e79200;
+		background-color: #516FE6;
 	}
 	&:nth-child(5):after {
-		background-color: #ddb600;
+		background-color: #7E0FFF;
 	}
 }
 
@@ -127,10 +227,10 @@ canvas.display {
 
 @keyframes color-change {
 	0% {
-		background-color: #ee0e0e;
+		background-color: #0FFFC1;
 	}
 	100% {
-		background-color: #d6c031;
+		background-color: #7E0FFF;
 	}
 }
 
@@ -217,7 +317,7 @@ canvas.display {
 	width: 15px;
 	height: 15px;
 	border-radius: 50%;
-	background: #4c00ff;
+	background: #30B7D3;
 }
 .background_box {
 	position: relative;
@@ -227,19 +327,19 @@ canvas.display {
 }
 .b1 {
 	border-radius: 100% 0 0 0;
-	background: linear-gradient(rgb(255, 81, 0), rgb(206, 156, 64));
+	background: linear-gradient(#0FFFC1, #30B7D3);
 }
 .b2 {
 	border-radius: 0 100% 0 0;
-	background: linear-gradient(transparent, rgba(174, 100, 32, 0.747));
+	background: linear-gradient(transparent, #673FF2);
 }
 .b3 {
 	border-radius: 0 0 0 100%;
-	background: linear-gradient(rgb(206, 156, 64), rgba(174, 80, 26, 0.952));
+	background: linear-gradient(#30B7D3, #516FE6);
 }
 .b4 {
 	border-radius: 0 0 100% 0;
-	background: linear-gradient(rgba(174, 80, 26, 0.904), rgba(174, 105, 26, 0.863));
+	background: linear-gradient(#516FE6, #673FF2);
 }
 .background {
 	position: absolute;
