@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Indie+Flower&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Fontdiner+Swanky&display=swap");
 :root {
   --duration: 1.5s;
   --container-size: 250px;
@@ -48,18 +48,63 @@ canvas.display {
   position: absolute;
 }
 
-.h1 {
+.card {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 54vh;
-  font-family: "Indie Flower";
-  font-size: 140px;
-  text-transform: uppercase;
-  background: linear-gradient(to right, #4ca1af, #c4e0e5 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  top: 10%;
+  left: 75%;
+  width: 20vw;
+  height: 29vw;
+  font-family: "Ubuntu";
+  text-align: center;
+  color: #252B37;
+  background-color: #151823;
+  animation: textColor 10s ease infinite;
+}
+.card:after {
+  position: absolute;
+  content: "";
+  top: 5vw;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  transform: scale(0.75);
+  -webkit-filter: blur(5vw);
+  -moz-filter: blur(5vw);
+  -ms-filter: blur(5vw);
+  filter: blur(5vw);
+  background: linear-gradient(270deg, #0fffc1, #7e0fff);
+  background-size: 200% 200%;
+  animation: animateGlow 10s ease infinite;
+}
+@keyframes animateGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.card ul {
+  text-align: left;
+  margin: 30px;
+  padding: 0;
+}
+@keyframes textColor {
+  0% {
+    color: #7e0fff;
+  }
+  50% {
+    color: #0fffc1;
+  }
+  100% {
+    color: #7e0fff;
+  }
 }
 
 .item {
@@ -77,7 +122,7 @@ canvas.display {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #ee350e;
+  background-color: #0FFFC1;
   border-radius: var(--box-border-radius);
   box-shadow: 0px 0px 10px 0px rgba(231, 146, 0, 0.4);
 }
@@ -112,16 +157,16 @@ canvas.display {
   animation: squidge-4 var(--duration) ease-in-out infinite alternate;
 }
 .item:nth-child(2):after {
-  background-color: #ee350e;
+  background-color: #1AE7C7;
 }
 .item:nth-child(3):after {
-  background-color: #ed6a00;
+  background-color: #30B7D3;
 }
 .item:nth-child(4):after {
-  background-color: #e79200;
+  background-color: #516FE6;
 }
 .item:nth-child(5):after {
-  background-color: #ddb600;
+  background-color: #7E0FFF;
 }
 
 @keyframes slide {
@@ -134,10 +179,10 @@ canvas.display {
 }
 @keyframes color-change {
   0% {
-    background-color: #ee0e0e;
+    background-color: #0FFFC1;
   }
   100% {
-    background-color: #d6c031;
+    background-color: #7E0FFF;
   }
 }
 @keyframes flip-1 {
@@ -305,7 +350,7 @@ canvas.display {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #4c00ff;
+  background: #30B7D3;
 }
 
 .background_box {
@@ -317,22 +362,22 @@ canvas.display {
 
 .b1 {
   border-radius: 100% 0 0 0;
-  background: linear-gradient(#ff5100, #ce9c40);
+  background: linear-gradient(#0FFFC1, #30B7D3);
 }
 
 .b2 {
   border-radius: 0 100% 0 0;
-  background: linear-gradient(transparent, rgba(174, 100, 32, 0.747));
+  background: linear-gradient(transparent, #673FF2);
 }
 
 .b3 {
   border-radius: 0 0 0 100%;
-  background: linear-gradient(#ce9c40, rgba(174, 80, 26, 0.952));
+  background: linear-gradient(#30B7D3, #516FE6);
 }
 
 .b4 {
   border-radius: 0 0 100% 0;
-  background: linear-gradient(rgba(174, 80, 26, 0.904), rgba(174, 105, 26, 0.863));
+  background: linear-gradient(#516FE6, #673FF2);
 }
 
 .background {
