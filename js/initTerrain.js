@@ -1,18 +1,20 @@
 import * as THREE from "./libs/three.module.js";
+import {FBXLoader} from './libs/FBXLoader.js';
+import {ColladaLoader} from './libs/ColladaLoader.js';
 
 const loader = new THREE.TextureLoader();
 
 // Sizes
 const planetSizes = {
-    sun: 300,
-    earth: 90,
-    mercury: 30,
-    venus: 100,
-    mars: 60,
-    jupiter: 200,
-    saturne: 150,
-    uranus: 110,
-    neptune: 110,
+    sun: 600,
+    earth: 180,
+    mercury: 60,
+    venus: 200,
+    mars: 120,
+    jupiter: 400,
+    saturne: 300,
+    uranus: 220,
+    neptune: 220,
 };
 
 // Textures
@@ -135,14 +137,58 @@ export function initSpace(radius) { // radius = rayon du système solaire
     planets.add(meshSun);
 
     // Ajout du groupe dans la scène
+
+    /**
+     * Death star
+     */
+
+    let deathStar;
+    let deathStarG = new THREE.Group();
+
+    let loadingManager = new THREE.LoadingManager(function () {
+        meshEarth.add(deathStarG);
+    });
+    let loader = new ColladaLoader(loadingManager);
+    loader.load('./content/models/ds/model.dae', function (collada) {
+        deathStar = collada.scene;
+        deathStar.traverse(function (child) {
+            if (child.type === 'LineSegments') {
+                child.visible = false;
+            }
+        });
+        deathStar.scale.x = deathStar.scale.y = deathStar.scale.z = 0.015;
+        deathStar.position.x += planetSizes.earth * 3;
+        deathStarG.add(deathStar);
+
+    });
+
+    let SWListener = new THREE.AudioListener();
+    camera.add(SWListener);
+    let SWSound = new THREE.PositionalAudio(SWListener);
+
+    let SWAudioLoader = new THREE.AudioLoader();
+    SWAudioLoader.load('./content/audio/starwars.ogg', function (buffer) {
+        SWSound.setBuffer(buffer); // Définition de la source du buffer
+        SWSound.setRefDistance(50);
+        SWSound.setMaxDistance(150);
+        SWSound.setLoop(true);
+        SWSound.setVolume(2);
+        // SWSound.play();
+    });
+
+    deathStarG.add(SWSound);
+
+
     scene.add(planets);
+
 
     /**
      * Light
      */
 
-    // Création du spotlight
-    let pointLight = new THREE.PointLight(0xffffff, 2, radius * 2);
+        // Création du spotlight
+    let pointLight = new THREE.PointLight(0xffffff, 1.5, radius * 2);
+    pointLight.decay = 2;
     pointLight.position.set(0, 0, 0);       // Positionné au centre de la scène (au centre du soleil)
     pointLight.castShadow = true;           // Génère des ombres
     pointLight.shadow.camera.near = 1;      // Distance minimum d'émission des ombres
