@@ -12,12 +12,12 @@ let planetRotationSpeed = 0.01;
 let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
-let sound = new THREE.Audio(listener);
+let sound = new THREE.Audio(listener), SWSound;
 let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
     falcon;
 let gamepad = false;
 let onGamePadSelectButton = false;
-let spaceRadius = 14000;
+let spaceRadius = 18000;
 let keyboard = new THREEx.KeyboardState(); // import de la librairie qui écoute le clavier
 let shipMoveSpeed = 10;
 let shipBoostSpeed = 15;
@@ -68,7 +68,7 @@ function init() {
      * init terrains
      */
     // Récupération des scènes et caméra
-    [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
+    [sceneSpace, cameraSpace, SWSound] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
     // Par défaut, positionnement sur la scène du vaisseau
     scene = sceneShip;
@@ -431,11 +431,9 @@ function startGUI() {
                     scene = sceneSpace;
                     camera = cameraSpace;
                     scene.add(camera);
-                    // camera.add(cube);
-                    // cube.position.set(0, -5, -12);
                     planets = scene.getObjectByName("planets");
-                    camera.add(listener); // Ajout de l'audio à la caméra
                     sound.play();
+                    SWSound.play();
                     dimension = "ship";
                     break;
                 case "ship":
@@ -443,6 +441,7 @@ function startGUI() {
                     scene = sceneShip;
                     dimension = "space";
                     sound.stop();
+                    SWSound.stop();
                     break;
                 default:
                     break;

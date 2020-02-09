@@ -71,10 +71,14 @@ let sunMaterial = new THREE.MeshPhongMaterial({
 let geometry;
 let meshPlanet;
 
+//audio
+let SWSound;
+let SWAudioLoader;
+
 export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
-    camera.position.z = 600;
+    camera.position.z = 1200;
     camera.position.y = 0;
     camera.position.x = 0;
     //camera.lookAt(new THREE.Vector3(600,0,0));
@@ -203,13 +207,13 @@ export function initSpace(radius) { // radius = rayon du système solaire
      * Background
      */
 
-    // Génération et ajout des particules d'étoiles dans la scène
+        // Génération et ajout des particules d'étoiles dans la scène
     let starField = stars(radius);          // Fonction qui retourne un tableau de deux éléménets
     scene.add(starField[0]);
     scene.add(starField[1]);
 
     // La fonction renvoie un tableau contenant la scène et la caméra
-    return [scene, camera];
+    return [scene, camera, SWSound];
 }
 
 export function initShip(terrainMat) {
