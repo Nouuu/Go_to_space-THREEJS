@@ -64,8 +64,7 @@
     var camera, scene, renderer, controls;
 
     var objects = [];
-
-    //var raycaster;
+    var raycaster;
 
     var moveForward = false;
     var moveBackward = false;
@@ -168,7 +167,7 @@
         document.addEventListener( 'keydown', onKeyDown, false );
         document.addEventListener( 'keyup', onKeyUp, false );
 
-        //raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+        raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
 
 
         var floorGeometry = new THREE.PlaneBufferGeometry( 2000, 2000, 100, 100 );
@@ -243,11 +242,11 @@
         requestAnimationFrame( animate );
 
         if ( controls.isLocked === true ) {
-            //raycaster.ray.origin.copy( controls.getObject().position );
-            //raycaster.ray.origin.y -= 10;
+            raycaster.ray.origin.copy( controls.getObject().position );
+            raycaster.ray.origin.y -= 10;
 
-            //var intersections = raycaster.intersectObjects( objects );
-            //var onObject = intersections.length > 0;
+            var intersections = raycaster.intersectObjects( objects );
+            var onObject = intersections.length > 0;
             var time = performance.now();
             var delta = ( time - prevTime ) / 1000;
 
@@ -261,10 +260,10 @@
 
             if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
             if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
-            //if ( onObject === true ) {
-            //    velocity.y = Math.max( 0, velocity.y );
-            //    canJump = true;
-            //}
+            if ( onObject === true ) {
+                velocity.x = Math.max( 0, velocity.x );
+                canJump = true;
+            }
 
             controls.moveRight( - velocity.x * delta );
             controls.moveForward( - velocity.z * delta );
