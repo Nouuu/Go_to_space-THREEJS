@@ -414,9 +414,9 @@ function planetUpdate() {
 
 function music() {
     let audioLoader = new THREE.AudioLoader();
-    audioLoader.load('./content/audio/2001.ogg', function (buffer) {
+    audioLoader.load('./content/audio/SpaceAmbient.ogg', function (buffer) {
         sound.setBuffer(buffer); // Définition de la source du buffer
-        sound.setLoop(false);
+        sound.setLoop(true);
         sound.setVolume(musicVolume);
     });
 }
