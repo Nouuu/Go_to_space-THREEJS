@@ -86,7 +86,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
     /**
      * Planets
      */
-    // Création du groupe qui contient toutes les planètes
+        // Création du groupe qui contient toutes les planètes
     let planets = new THREE.Group();
     planets.position.set(0, 0, 0); // Positionné au centre du plan
     planets.name = "planets";
@@ -103,29 +103,29 @@ export function initSpace(radius) { // radius = rayon du système solaire
     let meshSun = sun();
 
     //Position
-    meshMercury.position.x = Math.cos(Math.radians(180)) * (1000 + planetSizes.mercury / 2);
-    meshMercury.position.z = Math.sin(Math.radians(180)) * (1000 + planetSizes.mercury / 2);
+    meshMercury.position.x = Math.cos(Math.radians(180)) * (2000 + planetSizes.mercury / 2);
+    meshMercury.position.z = Math.sin(Math.radians(180)) * (2000 + planetSizes.mercury / 2);
 
-    meshVenus.position.x = Math.cos(Math.radians(30)) * (2000 + planetSizes.venus / 2);
-    meshVenus.position.z = Math.sin(Math.radians(30)) * (2000 + planetSizes.venus / 2);
+    meshVenus.position.x = Math.cos(Math.radians(30)) * (4000 + planetSizes.venus / 2);
+    meshVenus.position.z = Math.sin(Math.radians(30)) * (4000 + planetSizes.venus / 2);
 
-    meshEarth.position.x = Math.cos(Math.radians(225)) * (3000 + planetSizes.earth / 2);
-    meshEarth.position.z = Math.sin(Math.radians(225)) * (3000 + planetSizes.earth / 2);
+    meshEarth.position.x = Math.cos(Math.radians(225)) * (6000 + planetSizes.earth / 2);
+    meshEarth.position.z = Math.sin(Math.radians(225)) * (6000 + planetSizes.earth / 2);
 
-    meshMars.position.x = Math.cos(Math.radians(150)) * (4000 + planetSizes.mars / 2);
-    meshMars.position.z = Math.sin(Math.radians(150)) * (4000 + planetSizes.mars / 2);
+    meshMars.position.x = Math.cos(Math.radians(150)) * (8000 + planetSizes.mars / 2);
+    meshMars.position.z = Math.sin(Math.radians(150)) * (8000 + planetSizes.mars / 2);
 
-    meshJupiter.position.x = Math.cos(Math.radians(300)) * (5000 + planetSizes.jupiter / 2);
-    meshJupiter.position.z = Math.sin(Math.radians(300)) * (5000 + planetSizes.jupiter / 2);
+    meshJupiter.position.x = Math.cos(Math.radians(300)) * (10000 + planetSizes.jupiter / 2);
+    meshJupiter.position.z = Math.sin(Math.radians(300)) * (10000 + planetSizes.jupiter / 2);
 
-    meshSaturne.position.x = Math.cos(Math.radians(90)) * (6000 + planetSizes.saturne / 2);
-    meshSaturne.position.z = Math.sin(Math.radians(90)) * (6000 + planetSizes.saturne / 2);
+    meshSaturne.position.x = Math.cos(Math.radians(90)) * (12000 + planetSizes.saturne / 2);
+    meshSaturne.position.z = Math.sin(Math.radians(90)) * (12000 + planetSizes.saturne / 2);
 
-    meshUranus.position.x = Math.cos(Math.radians(120)) * (7000 + planetSizes.uranus / 2);
-    meshUranus.position.z = Math.sin(Math.radians(120)) * (7000 + planetSizes.uranus / 2);
+    meshUranus.position.x = Math.cos(Math.radians(120)) * (14000 + planetSizes.uranus / 2);
+    meshUranus.position.z = Math.sin(Math.radians(120)) * (14000 + planetSizes.uranus / 2);
 
-    meshNeptune.position.x = Math.cos(Math.radians(270)) * (8000 + planetSizes.neptune / 2);
-    meshNeptune.position.z = Math.sin(Math.radians(270)) * (8000 + planetSizes.neptune / 2);
+    meshNeptune.position.x = Math.cos(Math.radians(270)) * (18000 + planetSizes.neptune / 2);
+    meshNeptune.position.z = Math.sin(Math.radians(270)) * (18000 + planetSizes.neptune / 2);
 
 
     // Ajout des planètes dans le groupe
@@ -267,7 +267,7 @@ function stars(radius) {
     let star2Coordinates = [];
 
     // Boucle sur tout le rayon de l'univers
-    for (let i = 0; i < radius; i++) {
+    for (let i = 0; i < radius/2; i++) {
         // Attribution aléatoire de coordonnées à aux étoiles
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
@@ -290,8 +290,8 @@ function stars(radius) {
 
     // Couleur et taille
     let starMaterial = [
-        new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false}),
-        new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
+        new THREE.PointsMaterial({color: 0xffffff, size: 1, sizeAttenuation: false}),
+        new THREE.PointsMaterial({color: 0xFFFC00, size: 0.5, sizeAttenuation: false})
     ];
 
     // Création de points basés sur les coordonnées dans les starsGeometry
