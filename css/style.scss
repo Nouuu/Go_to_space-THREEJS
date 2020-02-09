@@ -48,48 +48,69 @@ canvas.display {
 	position: absolute;
 }
 
-.card {
+.card-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.card-left {
+	position: relative;
+	top: 40px;
+	left: 300px;
+}
+.card-right {
+	position: relative;
+	top: 40px;
+	left: calc(100% - 300px);
+}
+
+.card-content {
 	@mixin backlight($x, $y, $spread, $size, $colorA, $colorB, $duration) {
 		&:after {
-		  position: absolute;
-		  content: "";
-		  top: $y;
-		  left: $x;
-		  right: 0;
-		  z-index: -1;
-		  height: 100%;
-		  width: 100%;
-		  margin: 0 auto;
-		  transform: scale($size);
-		  -webkit-filter: blur($spread);
-		  -moz-filter: blur($spread);
-		  -ms-filter: blur($spread);
-		  filter: blur($spread);
-		  background: linear-gradient(270deg, $colorA, $colorB);
-		  background-size: 200% 200%;
-		  animation: animateGlow $duration ease infinite;
-		  
-		  @keyframes animateGlow {
-			0%{background-position:0% 50%}
-			50%{background-position:100% 50%}
-			100%{background-position:0% 50%}
-		  }
+			position: absolute;
+			content: "";
+			top: $y;
+			left: $x;
+			right: 0;
+			z-index: -1;
+			height: 100%;
+			width: 100%;
+			margin: 0 auto;
+			transform: scale($size);
+			-webkit-filter: blur($spread);
+			-moz-filter: blur($spread);
+			-ms-filter: blur($spread);
+			filter: blur($spread);
+			background: linear-gradient(270deg, $colorA, $colorB);
+			background-size: 200% 200%;
+
+			animation: animateGlow $duration ease infinite;
+			
+			@keyframes animateGlow {
+				0%{background-position:0% 50%}
+				50%{background-position:100% 50%}
+				100%{background-position:0% 50%}
+			}
 		}
-	  }
-	  
+	}
+
 	position: absolute;
-	top: 10%;
-	left: 75%;
 	width: 20vw;
-	height: 29vw;
+	height: 30vw;
 	font-family: "Ubuntu";
 	text-align: center;
 	color: #252B37;
 	background-color: #151823;
+	// transform: translateX(-50%);
+
 	animation: textColor 10s ease infinite;
 	@include backlight(0, 5vw, 5vw, 0.75, #0fffc1, #7e0fff, 10s);
 
 	ul {
+		flex: 50%;
 		text-align: left;
 		margin: 30px;
 		padding: 0;
@@ -97,72 +118,17 @@ canvas.display {
 		
 	@keyframes textColor {
 		0% {
-		color: #7e0fff;
+			color: #7e0fff;
 		}
 		50% {
-		color: #0fffc1;
+			color: #0fffc1;
 		}
 		100% {
-		color: #7e0fff;
+			color: #7e0fff;
 		}
 	}
 
 }
-
-// .title {
-// 	position: absolute;
-// 	top: 62vh;
-// 	left: 50%;
-// 	transform: translate(-50%);
-// 	z-index: 200;
-
-// 	svg {
-// 		display: block;
-// 		font-size: 170px;
-// 		font-family: 'Fontdiner Swanky', cursive;
-// 		width: 960px;
-// 		height: 300px;
-// 		margin: 0 30px;
-// 	}
-	
-// 	.text-copy {
-// 		fill: none;
-// 		stroke: white;
-// 		stroke-dasharray: 6% 29%;
-// 		stroke-width: 5px;
-// 		stroke-dashoffset: 0%;
-// 		animation: stroke-offset 5.5s infinite linear;
-// 	}
-	
-// 	.text-copy:nth-child(1){
-// 		stroke: #4D163D;
-// 		animation-delay: -1;
-// 	}
-	
-// 	.text-copy:nth-child(2){
-// 		stroke: #840037;
-// 		animation-delay: -2s;
-// 	}
-	
-// 	.text-copy:nth-child(3){
-// 		stroke: #BD0034;
-// 		animation-delay: -3s;
-// 	}
-	
-// 	.text-copy:nth-child(4){
-// 		stroke: #BD0034;
-// 		animation-delay: -4s;
-// 	}
-	
-// 	.text-copy:nth-child(5){
-// 		stroke: #FDB731;
-// 		animation-delay: -5s;
-// 	}
-	
-// 	@keyframes stroke-offset{
-// 		100% {stroke-dashoffset: -35%;}
-// 	}
-// }
 
 .item {
 	width: var(--box-size);
