@@ -13,7 +13,7 @@ let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let listener = new THREE.AudioListener();
 let sound = new THREE.Audio(listener);
-let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
+let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, objects, renderer, stats, planets, falconPivot,
     falcon;
 let gamepad = false;
 let onGamePadSelectButton = false;
@@ -52,7 +52,8 @@ startGUI();
 /**
  * Collision
  */
-let raycaster
+let raycaster;
+//let objects = [];
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 init();
@@ -74,7 +75,7 @@ function init() {
      */
     // Récupération des scènes et caméra
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
-    [sceneShip, cameraShip] = initTerrain.initShip();
+    [sceneShip, cameraShip, objects] = initTerrain.initShip();
     // Par défaut, positionnement sur la scène du vaisseau
     scene = sceneShip;
     camera = cameraShip;
@@ -179,13 +180,11 @@ function animate() {
     } else {
         //raycaster.ray.origin.copy( controls.getObject().position );
         raycaster.ray.origin.y -= 10;
-
-        //var intersections = raycaster.intersectObjects( objects );
-        //var onObject = intersections.length > 0;
-        //if ( onObject === true ) {
-        //  velocity.y = Math.max( 0, velocity.y );
-        //  canJump = true;
-        //}
+        let intersections = raycaster.intersectObjects( objects );
+        let onObject = intersections.length > 0;
+        if ( onObject === true ) {
+          console.log("hit");
+        }
     }
 }
 

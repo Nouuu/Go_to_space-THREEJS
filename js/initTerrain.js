@@ -3,6 +3,9 @@ import { FBXLoader } from './libs/FBXLoader.js';
 
 const loader = new THREE.TextureLoader();
 const corridorLength = 1096;
+const corridorWidth = 1320;
+const corridorHeight = 815;
+
 
 // Sizes
 const planetSizes = {
@@ -70,6 +73,7 @@ let sunMaterial = new THREE.MeshPhongMaterial({
 
 let geometry;
 let meshPlanet;
+let objects = [];
 
 export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
@@ -171,18 +175,62 @@ export function initSpace(radius) { // radius = rayon du système solaire
 export function initShip() {
     let scene = new THREE.Scene();
     scene = new THREE.Scene();
-
-    let camera = new THREE.PerspectiveCamera( 450, window.innerWidth / window.innerHeight, 1, 1300 * 7 );
+    let camera = new THREE.PerspectiveCamera( 450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
     camera.position.set(0, 350, 0 );
 
+    let geometry = new THREE.PlaneGeometry(corridorWidth, corridorLength * 3, 32);
+    let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide});
+
+    let floor = new THREE.Mesh(geometry, material);
+    floor.rotation.x = Math.radians(90);
+    floor.position.set(0, 0, 40);
+
+    let ceiling = new THREE.Mesh(geometry, material);
+    ceiling.rotation.x = Math.radians(90);
+    ceiling.position.set(0, corridorHeight, 40);
+
+    geometry = new THREE.PlaneGeometry( corridorHeight, corridorLength * 3, 32 );
+    material = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
+    let rightWall = new THREE.Mesh( geometry, material );
+    rightWall.rotation.y = Math.radians(90);
+    rightWall.rotation.x = Math.radians(90);
+    rightWall.position.set(corridorWidth/2, corridorHeight/2, 40);
+
+    let leftWall = new THREE.Mesh( geometry, material );
+    leftWall.rotation.y = Math.radians(90);
+    leftWall.rotation.x = Math.radians(90);
+    leftWall.position.set(-corridorWidth/2, corridorHeight/2, 40);
+
+    geometry = new THREE.PlaneGeometry( corridorWidth, corridorHeight, 32 );
+    material = new THREE.MeshBasicMaterial({color: 0x00ffff, side: THREE.DoubleSide});
+    let door1 = new THREE.Mesh( geometry, material );
+    door1.position.set(0, corridorHeight/2, (corridorLength/2) * 3 + 40);
+
+    let door2 = new THREE.Mesh( geometry, material );
+    door2.position.set(0, corridorHeight/2, -(corridorLength/2) * 3 + 40);
+
+    /*scene.add(floor);
+    scene.add(ceiling);
+    scene.add(rightWall);
+    scene.add(leftWall);
+    scene.add(door1);
+    scene.add(door2);*/
+
+    objects.push(floor);
+    objects.push(ceiling);
+    objects.push(rightWall);
+    objects.push(leftWall);
+    objects.push(door1);
+    objects.push(door2);
+
     // Lumière
-    /*light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-    light.position.set( 0, 200, 0 );
-    scene.add( light );*/
     let light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 0, 200, 100 );
     light.castShadow = true;
     scene.add( light );
+    /*light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+    light.position.set( 0, 200, 0 );
+    scene.add( light );*/
 
     // Modèle 3D
     let fbxLoader = new FBXLoader();
@@ -205,7 +253,19 @@ export function initShip() {
         scene.add( corridor2 );
     } );
 
-    return [scene, camera];
+    fbxLoader.load( './content/models/anime.fbx', function ( object ) {
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.set( 0, 0, 0 );
+        object.scale.set(50,50,50);
+        scene.add( object );
+    } );
+
+    return [scene, camera, objects];
 }
 
 // Fonction de création des particules d'étoiles
