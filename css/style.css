@@ -41,45 +41,44 @@ canvas.display {
 }
 
 .preloader {
-  width: var(--container-size);
+  position: absolute;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
+  width: var(--container-size);
 }
 
 .card-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 40px;
+  left: 50%;
+  width: 80%;
   height: 100%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
 }
 
-.card-left {
+.card {
   position: relative;
-  top: 40px;
-  left: 300px;
-}
-
-.card-right {
-  position: relative;
-  top: 40px;
-  left: calc(100% - 300px);
-}
-
-.card-content {
-  position: absolute;
   width: 20vw;
   height: 30vw;
   font-family: "Ubuntu";
-  text-align: center;
   color: #252B37;
   background-color: #151823;
-  transform: translateX(-50%);
   animation: textColor 10s ease infinite;
 }
-.card-content:after {
+.card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.card ul {
+  margin-left: 40px;
+}
+.card li {
+  padding-bottom: 10px;
+}
+.card:after {
   position: absolute;
   content: "";
   top: 5vw;
@@ -108,12 +107,6 @@ canvas.display {
   100% {
     background-position: 0% 50%;
   }
-}
-.card-content ul {
-  flex: 50%;
-  text-align: left;
-  margin: 30px;
-  padding: 0;
 }
 @keyframes textColor {
   0% {
