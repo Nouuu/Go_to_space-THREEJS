@@ -41,24 +41,42 @@ canvas.display {
 }
 
 .preloader {
-  width: var(--container-size);
+  position: absolute;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: var(--container-size);
+}
+
+.card-container {
   position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 80%;
+  height: 100%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
 }
 
 .card {
-  position: absolute;
-  top: 10%;
-  left: 75%;
+  position: relative;
   width: 20vw;
-  height: 29vw;
+  height: 30vw;
   font-family: "Ubuntu";
-  text-align: center;
   color: #252B37;
   background-color: #151823;
   animation: textColor 10s ease infinite;
+}
+.card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.card ul {
+  margin-left: 40px;
+}
+.card li {
+  padding-bottom: 10px;
 }
 .card:after {
   position: absolute;
@@ -89,11 +107,6 @@ canvas.display {
   100% {
     background-position: 0% 50%;
   }
-}
-.card ul {
-  text-align: left;
-  margin: 30px;
-  padding: 0;
 }
 @keyframes textColor {
   0% {
