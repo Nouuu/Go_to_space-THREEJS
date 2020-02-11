@@ -11,8 +11,9 @@ Math.radians = (degrees) => degrees * Math.PI / 180;
 let planetRotationSpeed = 0.01;
 let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
-let listener = new THREE.AudioListener();
-let sound = new THREE.Audio(listener), SWSound;
+let spaceListener = new THREE.AudioListener();
+let spaceSound = new THREE.Audio(spaceListener);
+let SWSound = new THREE.PositionalAudio(spaceListener);
 let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
     falcon;
 let gamepad = false;
@@ -58,21 +59,18 @@ function init() {
     stats = new Stats();
     document.body.appendChild(stats.dom);
 
-    /**
-     * load music
-     */
-
-    music();
 
     /**
      * init terrains
      */
     // Récupération des scènes et caméra
-    [sceneSpace, cameraSpace, SWSound] = initTerrain.initSpace(spaceRadius);
+    [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip(whiteMat);
     // Par défaut, positionnement sur la scène du vaisseau
     scene = sceneShip;
     camera = cameraShip;
+
+    cameraSpace.add(spaceListener);
 
     /**
      * Get planets
@@ -85,14 +83,15 @@ function init() {
     /**
      * Camera object
      */
-    // Création du cube représentant la caméra
-    // cube = new THREE.Mesh(
-    //     new THREE.CubeGeometry(2, 2, 2),
-    //     new THREE.MeshPhongMaterial({color: 0xf2f2f2})
-    // );
-    // cube.castShadow = true;
-    // cube.receiveShadow = true;
-    scene.add(camera);
+    sceneShip.add(cameraShip);
+    sceneSpace.add(cameraSpace);
+
+    /**
+     * load music
+     */
+
+    music();
+
 
     let loadingManager = new THREE.LoadingManager(function () {
         cameraSpace.add(falconPivot);
@@ -413,12 +412,21 @@ function planetUpdate() {
 }
 
 function music() {
-    let audioLoader = new THREE.AudioLoader();
-    audioLoader.load('./content/audio/SpaceAmbient.ogg', function (buffer) {
-        sound.setBuffer(buffer); // Définition de la source du buffer
-        sound.setLoop(true);
-        sound.setVolume(musicVolume);
+    let spaceAudioLoader = new THREE.AudioLoader();
+    spaceAudioLoader.load('./content/audio/SpaceAmbient.ogg', function (buffer) {
+        spaceSound.setBuffer(buffer); // Définition de la source du buffer
+        spaceSound.setLoop(true);
+        spaceSound.setVolume(musicVolume);
     });
+    let SWAudioLoader = new THREE.AudioLoader();
+    SWAudioLoader.load('./content/audio/starwars.ogg', function (buffer) {
+        SWSound.setBuffer(buffer); // Définition de la source du buffer
+        SWSound.setRefDistance(50);
+        SWSound.setMaxDistance(150);
+        SWSound.setLoop(true);
+        SWSound.setVolume(2);
+    });
+    sceneSpace.getChildByName("earth").add(SWSound);
 }
 
 function startGUI() {
@@ -427,12 +435,10 @@ function startGUI() {
         Switch: function () {
             switch (dimension) {
                 case "space":
-                    scene.remove(camera);
                     scene = sceneSpace;
                     camera = cameraSpace;
-                    scene.add(camera);
                     planets = scene.getObjectByName("planets");
-                    sound.play();
+                    spaceSound.play();
                     SWSound.play();
                     dimension = "ship";
                     break;
@@ -440,7 +446,7 @@ function startGUI() {
                     camera = cameraShip;
                     scene = sceneShip;
                     dimension = "space";
-                    sound.stop();
+                    spaceSound.stop();
                     SWSound.stop();
                     break;
                 default:
@@ -451,15 +457,15 @@ function startGUI() {
         SystemRotationSpeed: systemRotationSpeed,
         MusicVolume: musicVolume,
         PlayPauseMusic: function () {
-            if (sound.isPlaying) {
-                sound.pause();
+            if (spaceSound.isPlaying) {
+                spaceSound.pause();
             } else {
-                sound.play();
+                spaceSound.play();
             }
         },
         RestartMusic: function () {
-            sound.stop();
-            sound.play();
+            spaceSound.stop();
+            spaceSound.play();
         },
         ShipMoveSpeed: shipMoveSpeed,
         ShipBoostSpeed: shipBoostSpeed,
@@ -484,7 +490,7 @@ function startGUI() {
     spaceSoundFolder = spaceFolder.addFolder('Sound control');
     spaceSoundFolder.add(params, 'MusicVolume').name('Music volume').min(0).max(2).step(0.1).onChange(function () {
         musicVolume = params.MusicVolume;
-        sound.setVolume(musicVolume);
+        spaceSound.setVolume(musicVolume);
     });
     spaceSoundFolder.add(params, 'PlayPauseMusic').name('Play/Pause music');
     spaceSoundFolder.add(params, 'RestartMusic').name('Restart music');

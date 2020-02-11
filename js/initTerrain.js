@@ -148,6 +148,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
 
     let deathStar;
     let deathStarG = new THREE.Group();
+    deathStarG.name = "deathStar";
 
     let loadingManager = new THREE.LoadingManager(function () {
         meshEarth.add(deathStarG);
@@ -163,24 +164,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
         deathStar.scale.x = deathStar.scale.y = deathStar.scale.z = 0.015;
         deathStar.position.x += planetSizes.earth * 3;
         deathStarG.add(deathStar);
-
     });
-
-    let SWListener = new THREE.AudioListener();
-    camera.add(SWListener);
-    let SWSound = new THREE.PositionalAudio(SWListener);
-
-    let SWAudioLoader = new THREE.AudioLoader();
-    SWAudioLoader.load('./content/audio/starwars.ogg', function (buffer) {
-        SWSound.setBuffer(buffer); // Définition de la source du buffer
-        SWSound.setRefDistance(50);
-        SWSound.setMaxDistance(150);
-        SWSound.setLoop(true);
-        SWSound.setVolume(2);
-        // SWSound.play();
-    });
-
-    deathStarG.add(SWSound);
 
 
     scene.add(planets);
@@ -213,7 +197,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
     scene.add(starField[1]);
 
     // La fonction renvoie un tableau contenant la scène et la caméra
-    return [scene, camera, SWSound];
+    return [scene, camera];
 }
 
 export function initShip(terrainMat) {
