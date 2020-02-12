@@ -1,18 +1,20 @@
 import * as THREE from "./libs/three.module.js";
+import {FBXLoader} from './libs/FBXLoader.js';
+import {ColladaLoader} from './libs/ColladaLoader.js';
 
 const loader = new THREE.TextureLoader();
 
 // Sizes
 const planetSizes = {
-    sun: 300,
-    earth: 90,
-    mercury: 30,
-    venus: 100,
-    mars: 60,
-    jupiter: 200,
-    saturne: 150,
-    uranus: 110,
-    neptune: 110,
+    sun: 600,
+    earth: 180,
+    mercury: 60,
+    venus: 200,
+    mars: 120,
+    jupiter: 400,
+    saturne: 300,
+    uranus: 220,
+    neptune: 220,
 };
 
 // Textures
@@ -69,10 +71,14 @@ let sunMaterial = new THREE.MeshPhongMaterial({
 let geometry;
 let meshPlanet;
 
+//audio
+let SWSound;
+let SWAudioLoader;
+
 export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
-    camera.position.z = 600;
+    camera.position.z = 1200;
     camera.position.y = 0;
     camera.position.x = 0;
     //camera.lookAt(new THREE.Vector3(600,0,0));
@@ -80,7 +86,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
     /**
      * Planets
      */
-    // Création du groupe qui contient toutes les planètes
+        // Création du groupe qui contient toutes les planètes
     let planets = new THREE.Group();
     planets.position.set(0, 0, 0); // Positionné au centre du plan
     planets.name = "planets";
@@ -97,29 +103,29 @@ export function initSpace(radius) { // radius = rayon du système solaire
     let meshSun = sun();
 
     //Position
-    meshMercury.position.x = Math.cos(Math.radians(180)) * (1000 + planetSizes.mercury / 2);
-    meshMercury.position.z = Math.sin(Math.radians(180)) * (1000 + planetSizes.mercury / 2);
+    meshMercury.position.x = Math.cos(Math.radians(180)) * (2000 + planetSizes.mercury / 2);
+    meshMercury.position.z = Math.sin(Math.radians(180)) * (2000 + planetSizes.mercury / 2);
 
-    meshVenus.position.x = Math.cos(Math.radians(30)) * (2000 + planetSizes.venus / 2);
-    meshVenus.position.z = Math.sin(Math.radians(30)) * (2000 + planetSizes.venus / 2);
+    meshVenus.position.x = Math.cos(Math.radians(30)) * (4000 + planetSizes.venus / 2);
+    meshVenus.position.z = Math.sin(Math.radians(30)) * (4000 + planetSizes.venus / 2);
 
-    meshEarth.position.x = Math.cos(Math.radians(225)) * (3000 + planetSizes.earth / 2);
-    meshEarth.position.z = Math.sin(Math.radians(225)) * (3000 + planetSizes.earth / 2);
+    meshEarth.position.x = Math.cos(Math.radians(225)) * (6000 + planetSizes.earth / 2);
+    meshEarth.position.z = Math.sin(Math.radians(225)) * (6000 + planetSizes.earth / 2);
 
-    meshMars.position.x = Math.cos(Math.radians(150)) * (4000 + planetSizes.mars / 2);
-    meshMars.position.z = Math.sin(Math.radians(150)) * (4000 + planetSizes.mars / 2);
+    meshMars.position.x = Math.cos(Math.radians(150)) * (8000 + planetSizes.mars / 2);
+    meshMars.position.z = Math.sin(Math.radians(150)) * (8000 + planetSizes.mars / 2);
 
-    meshJupiter.position.x = Math.cos(Math.radians(300)) * (5000 + planetSizes.jupiter / 2);
-    meshJupiter.position.z = Math.sin(Math.radians(300)) * (5000 + planetSizes.jupiter / 2);
+    meshJupiter.position.x = Math.cos(Math.radians(300)) * (10000 + planetSizes.jupiter / 2);
+    meshJupiter.position.z = Math.sin(Math.radians(300)) * (10000 + planetSizes.jupiter / 2);
 
-    meshSaturne.position.x = Math.cos(Math.radians(90)) * (6000 + planetSizes.saturne / 2);
-    meshSaturne.position.z = Math.sin(Math.radians(90)) * (6000 + planetSizes.saturne / 2);
+    meshSaturne.position.x = Math.cos(Math.radians(90)) * (12000 + planetSizes.saturne / 2);
+    meshSaturne.position.z = Math.sin(Math.radians(90)) * (12000 + planetSizes.saturne / 2);
 
-    meshUranus.position.x = Math.cos(Math.radians(120)) * (7000 + planetSizes.uranus / 2);
-    meshUranus.position.z = Math.sin(Math.radians(120)) * (7000 + planetSizes.uranus / 2);
+    meshUranus.position.x = Math.cos(Math.radians(120)) * (14000 + planetSizes.uranus / 2);
+    meshUranus.position.z = Math.sin(Math.radians(120)) * (14000 + planetSizes.uranus / 2);
 
-    meshNeptune.position.x = Math.cos(Math.radians(270)) * (8000 + planetSizes.neptune / 2);
-    meshNeptune.position.z = Math.sin(Math.radians(270)) * (8000 + planetSizes.neptune / 2);
+    meshNeptune.position.x = Math.cos(Math.radians(270)) * (18000 + planetSizes.neptune / 2);
+    meshNeptune.position.z = Math.sin(Math.radians(270)) * (18000 + planetSizes.neptune / 2);
 
 
     // Ajout des planètes dans le groupe
@@ -135,14 +141,42 @@ export function initSpace(radius) { // radius = rayon du système solaire
     planets.add(meshSun);
 
     // Ajout du groupe dans la scène
+
+    /**
+     * Death star
+     */
+
+    let deathStar;
+    let deathStarG = new THREE.Group();
+    deathStarG.name = "deathStar";
+
+    let loadingManager = new THREE.LoadingManager(function () {
+        meshEarth.add(deathStarG);
+    });
+    let loader = new ColladaLoader(loadingManager);
+    loader.load('./content/models/ds/model.dae', function (collada) {
+        deathStar = collada.scene;
+        deathStar.traverse(function (child) {
+            if (child.type === 'LineSegments') {
+                child.visible = false;
+            }
+            child.castShadow = true;
+        });
+        deathStar.scale.x = deathStar.scale.y = deathStar.scale.z = 0.015;
+        deathStar.position.x += planetSizes.earth * 3;
+        deathStarG.add(deathStar);
+    });
+
+
     scene.add(planets);
+
 
     /**
      * Light
      */
 
-    // Création du spotlight
-    let pointLight = new THREE.PointLight(0xffffff, 2, radius * 2);
+        // Création du spotlight
+    let pointLight = new THREE.PointLight(0xf2f2f2, 1.5, radius * 2);
     pointLight.position.set(0, 0, 0);       // Positionné au centre de la scène (au centre du soleil)
     pointLight.castShadow = true;           // Génère des ombres
     pointLight.shadow.camera.near = 1;      // Distance minimum d'émission des ombres
@@ -157,7 +191,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      * Background
      */
 
-    // Génération et ajout des particules d'étoiles dans la scène
+        // Génération et ajout des particules d'étoiles dans la scène
     let starField = stars(radius);          // Fonction qui retourne un tableau de deux éléménets
     scene.add(starField[0]);
     scene.add(starField[1]);
@@ -217,7 +251,7 @@ function stars(radius) {
     let star2Coordinates = [];
 
     // Boucle sur tout le rayon de l'univers
-    for (let i = 0; i < radius; i++) {
+    for (let i = 0; i < radius/2; i++) {
         // Attribution aléatoire de coordonnées à aux étoiles
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
@@ -240,8 +274,8 @@ function stars(radius) {
 
     // Couleur et taille
     let starMaterial = [
-        new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false}),
-        new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
+        new THREE.PointsMaterial({color: 0xffffff, size: 1, sizeAttenuation: false}),
+        new THREE.PointsMaterial({color: 0xFFFC00, size: 0.5, sizeAttenuation: false})
     ];
 
     // Création de points basés sur les coordonnées dans les starsGeometry
@@ -262,7 +296,7 @@ function generatePlanet(size, material) {
 }
 
 function sun() {
-    geometry = new THREE.SphereBufferGeometry(planetSizes.sun, 32, 32);
+    geometry = new THREE.SphereBufferGeometry(planetSizes.sun, 64, 64);
     meshPlanet = new THREE.Mesh(geometry, sunMaterial);
     meshPlanet.name = "sun";
     meshPlanet.position.set(0, 0, 0);
