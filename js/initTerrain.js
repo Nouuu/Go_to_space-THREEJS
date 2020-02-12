@@ -160,6 +160,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
             if (child.type === 'LineSegments') {
                 child.visible = false;
             }
+            child.castShadow = true;
         });
         deathStar.scale.x = deathStar.scale.y = deathStar.scale.z = 0.015;
         deathStar.position.x += planetSizes.earth * 3;
@@ -175,8 +176,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      */
 
         // Création du spotlight
-    let pointLight = new THREE.PointLight(0xffffff, 1.5, radius * 2);
-    pointLight.decay = 2;
+    let pointLight = new THREE.PointLight(0xf2f2f2, 1.5, radius * 2);
     pointLight.position.set(0, 0, 0);       // Positionné au centre de la scène (au centre du soleil)
     pointLight.castShadow = true;           // Génère des ombres
     pointLight.shadow.camera.near = 1;      // Distance minimum d'émission des ombres
@@ -296,7 +296,7 @@ function generatePlanet(size, material) {
 }
 
 function sun() {
-    geometry = new THREE.SphereBufferGeometry(planetSizes.sun, 32, 32);
+    geometry = new THREE.SphereBufferGeometry(planetSizes.sun, 64, 64);
     meshPlanet = new THREE.Mesh(geometry, sunMaterial);
     meshPlanet.name = "sun";
     meshPlanet.position.set(0, 0, 0);

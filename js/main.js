@@ -421,8 +421,8 @@ function music() {
     let SWAudioLoader = new THREE.AudioLoader();
     SWAudioLoader.load('./content/audio/starwars.ogg', function (buffer) {
         SWSound.setBuffer(buffer); // Définition de la source du buffer
-        SWSound.setRefDistance(50);
-        SWSound.setMaxDistance(150);
+        SWSound.setRefDistance(150);
+        SWSound.setMaxDistance(200);
         SWSound.setLoop(true);
         SWSound.setVolume(2);
     });
@@ -480,10 +480,10 @@ function startGUI() {
 
     gui.add(params, 'Switch').name('Switch scene');
 
-    spaceFolder.add(params, 'PlanetRotationSpeed').name('Planet rotation speed').min(0).max(0.1).step(0.005).onChange(function () {
+    spaceFolder.add(params, 'PlanetRotationSpeed').name('Planet rotation speed').min(0).max(0.1).step(0.001).onChange(function () {
         planetRotationSpeed = params.PlanetRotationSpeed;
     });
-    spaceFolder.add(params, 'SystemRotationSpeed').name('System rotation speed').min(0).max(0.01).step(0.0005).onChange(function () {
+    spaceFolder.add(params, 'SystemRotationSpeed').name('System rotation speed').min(0).max(0.01).step(0.0001).onChange(function () {
         systemRotationSpeed = params.SystemRotationSpeed;
     });
 
