@@ -578,13 +578,16 @@ function startGUI() {
         },
         ShipMoveSpeed: shipMoveSpeed,
         ShipBoostSpeed: shipBoostSpeed,
-        ShipRotationSpeed: shipRotationSpeed
+        ShipRotationSpeed: shipRotationSpeed,
+        CharacterMoveSpeed: characterMoveSpeed,
+        CharacterRotationSpeed: characterRotationSpeed
     };
 
     let gui = new GUI();
     gui.width = 310;
     let spaceFolder = gui.addFolder('Space settings');
     let shipControlsFolder = gui.addFolder('SpaceShip controls settings');
+    let characterControlsFolder = gui.addFolder('Character controls settings');
     let spaceSoundFolder;
 
     gui.add(params, 'Switch').name('Switch scene');
@@ -596,7 +599,7 @@ function startGUI() {
         systemRotationSpeed = params.SystemRotationSpeed;
     });
 
-    spaceSoundFolder = spaceFolder.addFolder('Sound control');
+    spaceSoundFolder = spaceFolder.addFolder('Sound spaceControl');
     spaceSoundFolder.add(params, 'MusicVolume').name('Music volume').min(0).max(2).step(0.1).onChange(function () {
         musicVolume = params.MusicVolume;
         sound.setVolume(musicVolume);
@@ -614,8 +617,10 @@ function startGUI() {
         shipRotationSpeed = params.ShipRotationSpeed;
     });
 
-
-    spaceFolder.open();
-    spaceSoundFolder.open();
-    shipControlsFolder.open();
+    characterControlsFolder.add(params, 'CharacterMoveSpeed').name('Character move speed').min(0.5).max(3).step(0.1).onChange(function () {
+        characterMoveSpeed = params.CharacterMoveSpeed;
+    });
+    characterControlsFolder.add(params, 'CharacterRotationSpeed').name('Character rotation speed').min(0.001).max(0.05).step(0.001).onChange(function () {
+        characterRotationSpeed = params.CharacterRotationSpeed;
+    });
 }
