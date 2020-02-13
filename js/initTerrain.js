@@ -3,10 +3,6 @@ import {FBXLoader} from './libs/FBXLoader.js';
 import {ColladaLoader} from './libs/ColladaLoader.js';
 
 const loader = new THREE.TextureLoader();
-const corridorLength = 1096;
-const corridorWidth = 1320;
-const corridorHeight = 815;
-
 
 // Sizes
 const planetSizes = {
@@ -74,7 +70,12 @@ let sunMaterial = new THREE.MeshPhongMaterial({
 
 let geometry;
 let meshPlanet;
-let objects = [];
+
+// Taille du couloir
+const corridorLength = 1096;
+let box;
+let width;
+let length;
 
 //audio
 let SWSound;
@@ -86,12 +87,11 @@ export function initSpace(radius) { // radius = rayon du système solaire
     camera.position.z = 1200;
     camera.position.y = 0;
     camera.position.x = 0;
-    //camera.lookAt(new THREE.Vector3(600,0,0));
 
     /**
      * Planets
      */
-        // Création du groupe qui contient toutes les planètes
+    // Création du groupe qui contient toutes les planètes
     let planets = new THREE.Group();
     planets.position.set(0, 0, 0); // Positionné au centre du plan
     planets.name = "planets";
@@ -180,7 +180,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      * Light
      */
 
-        // Création du spotlight
+    // Création du spotlight
     let pointLight = new THREE.PointLight(0xf2f2f2, 1.5, radius * 2);
     pointLight.position.set(0, 0, 0);       // Positionné au centre de la scène (au centre du soleil)
     pointLight.castShadow = true;           // Génère des ombres
@@ -196,7 +196,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      * Background
      */
 
-        // Génération et ajout des particules d'étoiles dans la scène
+    // Génération et ajout des particules d'étoiles dans la scène
     let starField = stars(radius);          // Fonction qui retourne un tableau de deux éléménets
     scene.add(starField[0]);
     scene.add(starField[1]);
@@ -211,59 +211,11 @@ export function initShip() {
     let camera = new THREE.PerspectiveCamera(450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
     camera.position.set(0, 350, 0);
 
-    let geometry = new THREE.PlaneGeometry(corridorWidth, corridorLength * 3, 32);
-    let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide});
-
-    let floor = new THREE.Mesh(geometry, material);
-    floor.rotation.x = Math.radians(90);
-    floor.position.set(0, 0, 40);
-
-    let ceiling = new THREE.Mesh(geometry, material);
-    ceiling.rotation.x = Math.radians(90);
-    ceiling.position.set(0, corridorHeight, 40);
-
-    geometry = new THREE.PlaneGeometry(corridorHeight, corridorLength * 3, 32);
-    material = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
-    let rightWall = new THREE.Mesh(geometry, material);
-    rightWall.rotation.y = Math.radians(90);
-    rightWall.rotation.x = Math.radians(90);
-    rightWall.position.set(corridorWidth / 2, corridorHeight / 2, 40);
-
-    let leftWall = new THREE.Mesh(geometry, material);
-    leftWall.rotation.y = Math.radians(90);
-    leftWall.rotation.x = Math.radians(90);
-    leftWall.position.set(-corridorWidth / 2, corridorHeight / 2, 40);
-
-    geometry = new THREE.PlaneGeometry(corridorWidth, corridorHeight, 32);
-    material = new THREE.MeshBasicMaterial({color: 0x00ffff, side: THREE.DoubleSide});
-    let door1 = new THREE.Mesh(geometry, material);
-    door1.position.set(0, corridorHeight / 2, (corridorLength / 2) * 3 + 40);
-
-    let door2 = new THREE.Mesh(geometry, material);
-    door2.position.set(0, corridorHeight / 2, -(corridorLength / 2) * 3 + 40);
-
-    /*scene.add(floor);
-    scene.add(ceiling);
-    scene.add(rightWall);
-    scene.add(leftWall);
-    scene.add(door1);
-    scene.add(door2);*/
-
-    objects.push(floor);
-    objects.push(ceiling);
-    objects.push(rightWall);
-    objects.push(leftWall);
-    objects.push(door1);
-    objects.push(door2);
-
     // Lumière
     let light = new THREE.DirectionalLight(0xffffff);
     light.position.set(0, 200, 100);
     light.castShadow = true;
-    scene.add(light);
-    /*light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-    light.position.set( 0, 200, 0 );
-    scene.add( light );*/
+    scene.add( light );
 
     // Modèle 3D
     let fbxLoader = new FBXLoader();
@@ -277,17 +229,23 @@ export function initShip() {
         object.position.set(0, 0, 0);
         scene.add(object);
 
+        // Récupération de la taille de l'objet
+        box = new THREE.Box3().setFromObject( object );
+        width = box.getSize().x;
+        length = box.getSize().z;
+
         let corridor1 = object.clone();
-        corridor1.position.set(0, 0, corridorLength);
-        scene.add(corridor1);
+        corridor1.position.set( 0, 0, length );
+        scene.add( corridor1 );
 
         let corridor2 = object.clone();
-        corridor2.position.set(0, 0, -corridorLength);
-        scene.add(corridor2);
-    });
+        corridor2.position.set( 0, 0, -length );
+        scene.add( corridor2 );
+    } );
 
 
-    return [scene, camera, objects];
+
+    return [scene, camera];
 }
 
 // Fonction de création des particules d'étoiles

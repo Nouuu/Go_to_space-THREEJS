@@ -15,7 +15,7 @@ let spaceListener = new THREE.AudioListener();
 let spaceSound = new THREE.Audio(spaceListener);
 let SWSound = new THREE.PositionalAudio(spaceListener);
 let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
-    falcon, objects;
+    falcon;
 let gamepad = false;
 let onGamePadSelectButton = false;
 let spaceRadius = 18000;
@@ -36,6 +36,7 @@ let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
 let vectorZ = new THREE.Vector3(0, 0, 1);
 
+let test = 1096;
 
 /**
  * Textures matériel
@@ -50,13 +51,11 @@ const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
  */
 let dimension = "space";
 
-startGUI();
+// Collisions
+let corridorWidth = 1318;
+let corridorLength = 1097;
 
-/**
- * Collision
- */
-let raycaster;
-//let objects = [];
+startGUI();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 init();
@@ -73,7 +72,7 @@ function init() {
      */
     // Récupération des scènes et caméra
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
-    [sceneShip, cameraShip, objects] = initTerrain.initShip();
+    [sceneShip, cameraShip] = initTerrain.initShip();
     // Par défaut, positionnement sur la scène du vaisseau
     scene = sceneShip;
     camera = cameraShip;
@@ -122,12 +121,6 @@ function init() {
     });
 
     /**
-     * Raycaster pour la collision
-     */
-    raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
-
-
-    /**
      * Gamepad
      */
     // Ecoute du branchement de la manette
@@ -171,7 +164,6 @@ function onLoad() {
     preload.classList.add('container-finish');
 }
 
-
 function animate() {
     requestAnimationFrame(animate);
     render();
@@ -180,13 +172,6 @@ function animate() {
         planetUpdate();
     } else {
         shipControl();
-        //raycaster.ray.origin.copy( controls.getObject().position );
-        raycaster.ray.origin.y -= 10;
-        let intersections = raycaster.intersectObjects(objects);
-        let onObject = intersections.length > 0;
-        if (onObject === true) {
-            console.log("hit");
-        }
     }
 }
 
@@ -552,8 +537,19 @@ function shipControl() {
         }
 
     }
-    camera.position.y = 200;
+    camera.position.y = 10;
+    camera.rotation.z = 0;
+    
+    // Collisions
+    if (camera.position.x >= corridorWidth)
+        camera.position.x = corridorWidth;
+    if (camera.position.x <= -corridorWidth)
+        camera.position.x = -corridorWidth;
 
+    if (camera.position.z >= corridorLength)
+        camera.position.z = corridorLength;
+    if (camera.position.z <= -corridorLength)
+        camera.position.z = -corridorLength;
 }
 
 function planetUpdate() {
