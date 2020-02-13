@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Indie+Flower&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Fontdiner+Swanky&display=swap");
 :root {
   --duration: 1.5s;
   --container-size: 250px;
@@ -41,25 +41,83 @@ canvas.display {
 }
 
 .preloader {
-  width: var(--container-size);
+  position: absolute;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  width: var(--container-size);
 }
 
-.h1 {
+.card-container {
   position: absolute;
+  top: 40px;
   left: 50%;
+  width: 80%;
+  height: 100%;
   transform: translateX(-50%);
-  top: 55vh;
-  font-family: "Indie Flower";
-  font-size: 170px;
-  text-transform: uppercase;
-  background: linear-gradient(to right, #4ca1af, #c4e0e5 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card {
+  position: relative;
+  width: 20vw;
+  height: 30vw;
+  font-family: "Ubuntu";
+  color: #252B37;
+  background-color: #151823;
+  animation: textColor 10s ease infinite;
+}
+.card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.card ul {
+  margin-left: 40px;
+}
+.card li {
+  padding-bottom: 10px;
+}
+.card:after {
+  position: absolute;
+  content: "";
+  top: 5vw;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  transform: scale(0.75);
+  -webkit-filter: blur(5vw);
+  -moz-filter: blur(5vw);
+  -ms-filter: blur(5vw);
+  filter: blur(5vw);
+  background: linear-gradient(270deg, #0fffc1, #7e0fff);
+  background-size: 200% 200%;
+  animation: animateGlow 10s ease infinite;
+}
+@keyframes animateGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes textColor {
+  0% {
+    color: #7e0fff;
+  }
+  50% {
+    color: #0fffc1;
+  }
+  100% {
+    color: #7e0fff;
+  }
 }
 
 .item {
@@ -77,7 +135,7 @@ canvas.display {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #ee350e;
+  background-color: #0FFFC1;
   border-radius: var(--box-border-radius);
   box-shadow: 0px 0px 10px 0px rgba(231, 146, 0, 0.4);
 }
@@ -112,16 +170,16 @@ canvas.display {
   animation: squidge-4 var(--duration) ease-in-out infinite alternate;
 }
 .item:nth-child(2):after {
-  background-color: #ee350e;
+  background-color: #1AE7C7;
 }
 .item:nth-child(3):after {
-  background-color: #ed6a00;
+  background-color: #30B7D3;
 }
 .item:nth-child(4):after {
-  background-color: #e79200;
+  background-color: #516FE6;
 }
 .item:nth-child(5):after {
-  background-color: #ddb600;
+  background-color: #7E0FFF;
 }
 
 @keyframes slide {
@@ -134,10 +192,10 @@ canvas.display {
 }
 @keyframes color-change {
   0% {
-    background-color: #ee0e0e;
+    background-color: #0FFFC1;
   }
   100% {
-    background-color: #d6c031;
+    background-color: #7E0FFF;
   }
 }
 @keyframes flip-1 {
@@ -305,7 +363,7 @@ canvas.display {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #4c00ff;
+  background: #30B7D3;
 }
 
 .background_box {
@@ -317,22 +375,22 @@ canvas.display {
 
 .b1 {
   border-radius: 100% 0 0 0;
-  background: linear-gradient(#ff5100, #ce9c40);
+  background: linear-gradient(#0FFFC1, #30B7D3);
 }
 
 .b2 {
   border-radius: 0 100% 0 0;
-  background: linear-gradient(transparent, rgba(174, 100, 32, 0.747));
+  background: linear-gradient(transparent, #673FF2);
 }
 
 .b3 {
   border-radius: 0 0 0 100%;
-  background: linear-gradient(#ce9c40, rgba(174, 80, 26, 0.952));
+  background: linear-gradient(#30B7D3, #516FE6);
 }
 
 .b4 {
   border-radius: 0 0 100% 0;
-  background: linear-gradient(rgba(174, 80, 26, 0.904), rgba(174, 105, 26, 0.863));
+  background: linear-gradient(#516FE6, #673FF2);
 }
 
 .background {
@@ -365,6 +423,136 @@ canvas.display {
   left: 0;
   top: 0;
   border-radius: 0 0 100% 0;
+}
+
+/*----  Animation 3 les planets qui tourne  ----*/
+.orbit-animation *,
+.orbit-animation *::before,
+.orbit-animation *::after {
+  box-sizing: border-box;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  margin: 0;
+  padding: 0;
+}
+.orbit-animation .sizer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  width: 100vh;
+  height: 100vh;
+  margin: 0 auto;
+}
+.orbit-animation .wrapper {
+  position: relative;
+  width: 80%;
+  padding-bottom: 80%;
+}
+.orbit-animation .solar-system {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.orbit-animation .positioner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-animation .orbit {
+  border-radius: 50%;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-name: orbit;
+  animation-timing-function: linear;
+}
+.orbit-animation .planet {
+  border-radius: 50%;
+  display: block;
+  background-color: currentColor;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-animation .saturn {
+  height: 71.4%;
+  width: 71.4%;
+  animation-delay: -12s;
+  animation-duration: 15s;
+  color: #ceb272;
+}
+.orbit-animation .saturn.orbit {
+  border: 1px solid #7c632b;
+}
+.orbit-animation .saturn .planet {
+  height: 8%;
+  width: 8%;
+}
+.orbit-animation .saturn .planet::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 155%;
+  width: 155%;
+  border: 4px solid #706453;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-animation .uranus {
+  height: 88.8%;
+  width: 88.8%;
+  animation-delay: -12.6s;
+  animation-duration: 28s;
+  color: #cbf0f1;
+}
+.orbit-animation .uranus.orbit {
+  border: 1px solid #52cdd1;
+}
+.orbit-animation .uranus .planet {
+  height: 4%;
+  width: 4%;
+}
+.orbit-animation .uranus .planet::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  border: 1px solid #90b9d1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-animation .neptune {
+  height: 100%;
+  width: 100%;
+  animation-delay: -18.7s;
+  animation-duration: 34s;
+  color: #09769b;
+}
+.orbit-animation .neptune.orbit {
+  border: 1px solid #1b497e;
+}
+.orbit-animation .neptune .planet {
+  height: 3.57%;
+  width: 3.57%;
+}
+
+@keyframes orbit {
+  0% {
+    transform: translateY(-50%) translateX(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-50%) translateX(-50%) rotate(360deg);
+  }
 }
 
 /*# sourceMappingURL=style.css.map */
