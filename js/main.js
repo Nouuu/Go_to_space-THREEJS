@@ -12,8 +12,10 @@ let planetRotationSpeed = 0.01;
 let systemRotationSpeed = 0.0005;
 let planetList = ['earth', 'mercury', 'venus', 'mars', 'jupiter', 'saturne', 'uranus', 'neptune'];
 let spaceListener = new THREE.AudioListener();
+let shipListener = new THREE.AudioListener();
 let spaceSound = new THREE.Audio(spaceListener);
-let SWSound = new THREE.PositionalAudio(spaceListener);
+let sWSound = new THREE.PositionalAudio(spaceListener);
+let shipSound = new THREE.PositionalAudio(shipListener);
 let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
     falcon;
 let gamepad = false;
@@ -32,9 +34,20 @@ let currentShipMoveFrontRotationEffect = 0;
 let currentShipMoveSideRotationEffect = 0;
 let shipMoveRotationPresicion = 0.02;
 let musicVolume = 1;
+let shipVolume = 1;
+let clock = new THREE.Clock();
 let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
 let vectorZ = new THREE.Vector3(0, 0, 1);
+let stormMixer1 = undefined;
+let stormMixer2 = undefined;
+let stormMixer3 = undefined;
+let stormMixer4 = undefined;
+let stormMixer5 = undefined;
+let stormMixer6 = undefined;
+let stormMixer7 = undefined;
+let stormMixer8 = undefined;
+let stormMixer9 = undefined;
 
 /**
  * Textures matériel
@@ -47,7 +60,7 @@ const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
 /**
  * GUI
  */
-let dimension = "space";
+let dimension = "ship";
 
 // Collisions
 let corridorWidth = 550;
@@ -72,10 +85,11 @@ function init() {
     [sceneSpace, cameraSpace] = initTerrain.initSpace(spaceRadius);
     [sceneShip, cameraShip] = initTerrain.initShip();
     // Par défaut, positionnement sur la scène du vaisseau
-    scene = sceneShip;
-    camera = cameraShip;
+    scene = sceneSpace;
+    camera = cameraSpace;
 
     cameraSpace.add(spaceListener);
+    cameraShip.add(shipListener);
 
     /**
      * Get planets
@@ -170,12 +184,104 @@ function animate() {
         planetUpdate();
     } else {
         shipControl();
+        danceStorm();
     }
 }
 
 function render() {
     stats.update();
     renderer.render(scene, camera);
+}
+
+function danceStorm() {
+    if (shipSound.isPlaying) {
+        let storm1 = sceneShip.getObjectByName('storm1');
+        let delta = clock.getDelta();
+        if (storm1 !== undefined) {
+            if (stormMixer1 === undefined) {
+                stormMixer1 = new THREE.AnimationMixer(storm1);
+                let action = stormMixer1.clipAction(storm1.animations[0]);
+                action.play();
+            }
+            if (stormMixer1) stormMixer1.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm2 = sceneShip.getObjectByName('storm2');
+        if (storm2 !== undefined) {
+            if (stormMixer2 === undefined) {
+                stormMixer2 = new THREE.AnimationMixer(storm2);
+                let action = stormMixer2.clipAction(storm2.animations[0]);
+                action.play();
+            }
+            if (stormMixer2) stormMixer2.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm3 = sceneShip.getObjectByName('storm3');
+        if (storm3 !== undefined) {
+            if (stormMixer3 === undefined) {
+                stormMixer3 = new THREE.AnimationMixer(storm3);
+                let action = stormMixer3.clipAction(storm3.animations[0]);
+                action.play();
+            }
+            if (stormMixer3) stormMixer3.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm4 = sceneShip.getObjectByName('storm4');
+        if (storm4 !== undefined) {
+            if (stormMixer4 === undefined) {
+                stormMixer4 = new THREE.AnimationMixer(storm4);
+                let action = stormMixer4.clipAction(storm4.animations[0]);
+                action.play();
+            }
+            if (stormMixer4) stormMixer4.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm5 = sceneShip.getObjectByName('storm5');
+        if (storm5 !== undefined) {
+            if (stormMixer5 === undefined) {
+                stormMixer5 = new THREE.AnimationMixer(storm5);
+                let action = stormMixer5.clipAction(storm5.animations[0]);
+                action.play();
+            }
+            if (stormMixer5) stormMixer5.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm6 = sceneShip.getObjectByName('storm6');
+        if (storm6 !== undefined) {
+            if (stormMixer6 === undefined) {
+                stormMixer6 = new THREE.AnimationMixer(storm6);
+                let action = stormMixer6.clipAction(storm6.animations[0]);
+                action.play();
+            }
+            console.log(delta);
+            if (stormMixer6) stormMixer6.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm7 = sceneShip.getObjectByName('storm7');
+        if (storm7 !== undefined) {
+            if (stormMixer7 === undefined) {
+                stormMixer7 = new THREE.AnimationMixer(storm7);
+                let action = stormMixer7.clipAction(storm7.animations[0]);
+                action.play();
+            }
+            console.log(delta);
+            if (stormMixer7) stormMixer7.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm8 = sceneShip.getObjectByName('storm8');
+        if (storm8 !== undefined) {
+            if (stormMixer8 === undefined) {
+                stormMixer8 = new THREE.AnimationMixer(storm8);
+                let action = stormMixer8.clipAction(storm8.animations[0]);
+                action.play();
+            }
+            console.log(delta);
+            if (stormMixer8) stormMixer8.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+        let storm9 = sceneShip.getObjectByName('storm9');
+        if (storm9 !== undefined) {
+            if (stormMixer9 === undefined) {
+                stormMixer9 = new THREE.AnimationMixer(storm9);
+                let action = stormMixer9.clipAction(storm9.animations[0]);
+                action.play();
+            }
+            console.log(delta);
+            if (stormMixer9) stormMixer9.update(delta + THREE.Math.randFloatSpread(0.002));
+        }
+    }
 }
 
 function spaceControl() {
@@ -509,11 +615,9 @@ function shipControl() {
         }
         if (keyboard.pressed("left")) {
             camera.rotateOnAxis(vectorY, characterRotationSpeed);
-            console.log(camera.rotation);
         }
         if (keyboard.pressed("right")) {
             camera.rotateOnAxis(vectorY, -characterRotationSpeed);
-            console.log(camera.rotation);
         }
         if (keyboard.pressed("z")) {
             camera.translateZ(-characterMoveSpeed);
@@ -564,16 +668,28 @@ function music() {
         spaceSound.setBuffer(buffer); // Définition de la source du buffer
         spaceSound.setLoop(true);
         spaceSound.setVolume(musicVolume);
+        spaceSound.play();
     });
     let SWAudioLoader = new THREE.AudioLoader();
     SWAudioLoader.load('./content/audio/starwars.ogg', function (buffer) {
-        SWSound.setBuffer(buffer); // Définition de la source du buffer
-        SWSound.setRefDistance(150);
-        SWSound.setMaxDistance(200);
-        SWSound.setLoop(true);
-        SWSound.setVolume(2);
+        sWSound.setBuffer(buffer); // Définition de la source du buffer
+        sWSound.setRefDistance(150);
+        sWSound.setMaxDistance(200);
+        sWSound.setLoop(true);
+        sWSound.setVolume(2);
     });
-    sceneSpace.getChildByName("earth").add(SWSound);
+    sceneSpace.getObjectByName("earth").add(sWSound);
+
+    let shipAudioLoader = new THREE.AudioLoader();
+    shipAudioLoader.load('./content/audio/cantina.ogg', function (buffer) {
+        shipSound.setBuffer(buffer);
+        shipSound.setRefDistance(200);
+        shipSound.setMaxDistance(300);
+        shipSound.setLoop(true);
+        shipSound.setVolume(shipVolume);
+    });
+    sceneShip.add(shipSound);
+    shipSound.position.set(0, 100, 0);
 }
 
 function startGUI() {
@@ -585,8 +701,9 @@ function startGUI() {
                     scene = sceneSpace;
                     camera = cameraSpace;
                     planets = scene.getObjectByName("planets");
+                    shipSound.pause();
                     spaceSound.play();
-                    SWSound.play();
+                    sWSound.play();
                     dimension = "ship";
                     break;
                 case "ship":
@@ -594,7 +711,7 @@ function startGUI() {
                     scene = sceneShip;
                     dimension = "space";
                     spaceSound.stop();
-                    SWSound.stop();
+                    sWSound.stop();
                     break;
                 default:
                     break;
@@ -603,16 +720,28 @@ function startGUI() {
         PlanetRotationSpeed: planetRotationSpeed,
         SystemRotationSpeed: systemRotationSpeed,
         MusicVolume: musicVolume,
-        PlayPauseMusic: function () {
+        ShipMusicVolume: shipVolume,
+        PlayPauseSpaceMusic: function () {
             if (spaceSound.isPlaying) {
                 spaceSound.pause();
             } else {
                 spaceSound.play();
             }
         },
-        RestartMusic: function () {
+        RestartSpaceMusic: function () {
             spaceSound.stop();
             spaceSound.play();
+        },
+        PlayPauseShipMusic: function () {
+            if (shipSound.isPlaying) {
+                shipSound.pause();
+            } else {
+                shipSound.play();
+            }
+        },
+        RestartShipMusic: function () {
+            shipSound.stop();
+            shipSound.play();
         },
         ShipMoveSpeed: shipMoveSpeed,
         ShipBoostSpeed: shipBoostSpeed,
@@ -625,8 +754,10 @@ function startGUI() {
     gui.width = 310;
     let spaceFolder = gui.addFolder('Space settings');
     let shipControlsFolder = gui.addFolder('SpaceShip controls settings');
-    let characterControlsFolder = gui.addFolder('Character controls settings');
     let spaceSoundFolder;
+    let shipFolder = gui.addFolder('Ship settings');
+    let characterControlsFolder = shipFolder.addFolder('Character controls settings');
+    let shipSoundFolder = shipFolder.addFolder('Music');
 
     gui.add(params, 'Switch').name('Switch scene');
 
@@ -642,8 +773,8 @@ function startGUI() {
         musicVolume = params.MusicVolume;
         spaceSound.setVolume(musicVolume);
     });
-    spaceSoundFolder.add(params, 'PlayPauseMusic').name('Play/Pause music');
-    spaceSoundFolder.add(params, 'RestartMusic').name('Restart music');
+    spaceSoundFolder.add(params, 'PlayPauseSpaceMusic').name('Play/Pause music');
+    spaceSoundFolder.add(params, 'RestartSpaceMusic').name('Restart music');
 
     shipControlsFolder.add(params, 'ShipMoveSpeed').name('Ship move speed').min(1).max(10).step(0.5).onChange(function () {
         shipMoveSpeed = params.ShipMoveSpeed;
@@ -661,4 +792,11 @@ function startGUI() {
     characterControlsFolder.add(params, 'CharacterRotationSpeed').name('Character rotation speed').min(0.001).max(0.05).step(0.001).onChange(function () {
         characterRotationSpeed = params.CharacterRotationSpeed;
     });
+
+    shipSoundFolder.add(params, 'ShipMusicVolume').name('Ship volume').min(0).max(2).step(0.1).onChange(function () {
+        shipVolume = params.ShipMusicVolume;
+        shipSound.setVolume(shipVolume);
+    });
+    shipSoundFolder.add(params, 'PlayPauseShipMusic').name('Play/Pause music');
+    shipSoundFolder.add(params, 'RestartShipMusic').name('Restart music');
 }
