@@ -15,7 +15,7 @@ let spaceListener = new THREE.AudioListener();
 let spaceSound = new THREE.Audio(spaceListener);
 let SWSound = new THREE.PositionalAudio(spaceListener);
 let camera, scene, params, cameraSpace, cameraShip, sceneSpace, sceneShip, renderer, stats, planets, falconPivot,
-    falcon;
+    falcon, objects;
 let gamepad = false;
 let onGamePadSelectButton = false;
 let spaceRadius = 18000;
