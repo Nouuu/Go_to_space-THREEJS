@@ -36,8 +36,6 @@ let vectorX = new THREE.Vector3(1, 0, 0);
 let vectorY = new THREE.Vector3(0, 1, 0);
 let vectorZ = new THREE.Vector3(0, 0, 1);
 
-let test = 1096;
-
 /**
  * Textures matériel
  */
@@ -52,8 +50,8 @@ const greenMat = new THREE.MeshStandardMaterial({color: 0x38FF00});
 let dimension = "space";
 
 // Collisions
-let corridorWidth = 1318;
-let corridorLength = 1097;
+let corridorWidth = 550;
+let corridorLength = 1600;
 
 startGUI();
 

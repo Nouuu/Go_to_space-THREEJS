@@ -74,7 +74,6 @@ let meshPlanet;
 // Taille du couloir
 const corridorLength = 1096;
 let box;
-let width;
 let length;
 
 //audio
@@ -84,8 +83,8 @@ let SWAudioLoader;
 export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
-    camera.position.z = 1200;
-    camera.position.y = 0;
+    camera.position.z = 0;
+    camera.position.y = 500;
     camera.position.x = 0;
 
     /**
@@ -209,7 +208,8 @@ export function initShip() {
     let scene = new THREE.Scene();
     scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
-    camera.position.set(0, 350, 0);
+    //camera.position.set(0, 3500, 0);
+    camera.position.y = 3500;
 
     // Lumière
     let light = new THREE.DirectionalLight(0xffffff);
@@ -231,7 +231,6 @@ export function initShip() {
 
         // Récupération de la taille de l'objet
         box = new THREE.Box3().setFromObject( object );
-        width = box.getSize().x;
         length = box.getSize().z;
 
         let corridor1 = object.clone();
@@ -242,8 +241,6 @@ export function initShip() {
         corridor2.position.set( 0, 0, -length );
         scene.add( corridor2 );
     } );
-
-
 
     return [scene, camera];
 }
