@@ -286,6 +286,86 @@ export function initShip() {
         scene.add(corridor2);
     });
 
+    // Dancing stormstooper
+
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm1';
+        object.position.set(150, 20, -1000);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(30);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm2';
+        object.position.set(-250, 20, -400);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(10);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm3';
+        object.position.set(100, 20, -200);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(70);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm4';
+        object.position.set(150, 20, 800);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm5';
+        object.position.set(-260, 20, 450);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-30);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm6';
+        object.position.set(75, 20, 325);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-60);
+        scene.add(object);
+    });
+
 
     return [scene, camera, objects];
 }
