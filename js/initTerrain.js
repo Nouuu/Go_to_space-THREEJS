@@ -286,17 +286,6 @@ export function initShip() {
         scene.add(corridor2);
     });
 
-    fbxLoader.load('./content/models/anime.fbx', function (object) {
-        object.traverse(function (child) {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-        object.position.set(0, 0, 0);
-        object.scale.set(50, 50, 50);
-        scene.add(object);
-    });
 
     return [scene, camera, objects];
 }
