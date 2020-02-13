@@ -83,8 +83,8 @@ let SWAudioLoader;
 export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
-    camera.position.z = 0;
-    camera.position.y = 500;
+    camera.position.z = 1500;
+    camera.position.y = 0;
     camera.position.x = 0;
 
     /**

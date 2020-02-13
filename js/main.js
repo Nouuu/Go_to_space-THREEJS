@@ -639,9 +639,8 @@ function shipControl() {
         }
 
     }
-    camera.position.y = 10;
-    camera.rotation.z = 0;
-    
+    camera.position.y = 200;
+
     // Collisions
     if (camera.position.x >= corridorWidth)
         camera.position.x = corridorWidth;
