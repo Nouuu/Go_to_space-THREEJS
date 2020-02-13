@@ -75,6 +75,8 @@ let meshPlanet;
 const corridorLength = 1096;
 let box;
 let length;
+let width;
+let height;
 
 //audio
 let SWSound;
@@ -217,7 +219,7 @@ export function initShip() {
     light.castShadow = true;
     scene.add( light );
 
-    // Modèle 3D
+    // Couloir
     let fbxLoader = new FBXLoader();
     fbxLoader.load('./content/models/corridor/corridor_0.fbx', function (object) {
         object.traverse(function (child) {
@@ -232,6 +234,8 @@ export function initShip() {
         // Récupération de la taille de l'objet
         box = new THREE.Box3().setFromObject( object );
         length = box.getSize().z;
+        width = box.getSize().x;
+        height = box.getSize().y;
 
         let corridor1 = object.clone();
         corridor1.position.set( 0, 0, length );
@@ -240,6 +244,16 @@ export function initShip() {
         let corridor2 = object.clone();
         corridor2.position.set( 0, 0, -length );
         scene.add( corridor2 );
+
+        let geometry = new THREE.PlaneGeometry( width, height, 32 );
+        let material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+        let door1 = new THREE.Mesh( geometry, material );
+        door1.position.set(0,height/2,length/2 + length + 40);
+        scene.add( door1 );
+
+        let door2 = new THREE.Mesh( geometry, material );
+        door2.position.set(0,height/2,-(length/2 + length - 40));
+        scene.add( door2 );
     } );
 
     // Dancing stormstooper
