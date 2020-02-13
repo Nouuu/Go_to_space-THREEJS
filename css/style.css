@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Fontdiner+Swanky&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
 :root {
   --duration: 1.5s;
   --container-size: 250px;
@@ -73,7 +73,7 @@ canvas.display {
   margin-bottom: 30px;
 }
 .card ul {
-  margin-left: 40px;
+  margin-left: 20px;
 }
 .card li {
   padding-bottom: 10px;
