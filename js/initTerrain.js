@@ -3,6 +3,10 @@ import {FBXLoader} from './libs/FBXLoader.js';
 import {ColladaLoader} from './libs/ColladaLoader.js';
 
 const loader = new THREE.TextureLoader();
+const corridorLength = 1096;
+const corridorWidth = 1320;
+const corridorHeight = 815;
+
 
 // Sizes
 const planetSizes = {
@@ -70,6 +74,7 @@ let sunMaterial = new THREE.MeshPhongMaterial({
 
 let geometry;
 let meshPlanet;
+let objects = [];
 
 //audio
 let SWSound;
@@ -200,32 +205,208 @@ export function initSpace(radius) { // radius = rayon du système solaire
     return [scene, camera];
 }
 
-export function initShip(terrainMat) {
+export function initShip() {
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
-    camera.position.z = 30;
-    camera.position.y = 10;
-    // camera.rotation.x -= Math.radians(90);
+    scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
+    camera.position.set(0, 350, 0);
 
+    let geometry = new THREE.PlaneGeometry(corridorWidth, corridorLength * 3, 32);
+    let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide});
 
-    /**
-     * Ajout du terrain
-     */
-    let geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
-    let terrain = new THREE.Mesh(geometry, terrainMat);
-    terrain.receiveShadow = true;
-    terrain.rotateX(Math.radians(-90));
+    let floor = new THREE.Mesh(geometry, material);
+    floor.rotation.x = Math.radians(90);
+    floor.position.set(0, 0, 40);
 
-    scene.add(terrain);
+    let ceiling = new THREE.Mesh(geometry, material);
+    ceiling.rotation.x = Math.radians(90);
+    ceiling.position.set(0, corridorHeight, 40);
 
-    /**
-     * Ambient light
-     */
+    geometry = new THREE.PlaneGeometry(corridorHeight, corridorLength * 3, 32);
+    material = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
+    let rightWall = new THREE.Mesh(geometry, material);
+    rightWall.rotation.y = Math.radians(90);
+    rightWall.rotation.x = Math.radians(90);
+    rightWall.position.set(corridorWidth / 2, corridorHeight / 2, 40);
 
-    let light = new THREE.AmbientLight(0xf2f2f2, 1);
+    let leftWall = new THREE.Mesh(geometry, material);
+    leftWall.rotation.y = Math.radians(90);
+    leftWall.rotation.x = Math.radians(90);
+    leftWall.position.set(-corridorWidth / 2, corridorHeight / 2, 40);
+
+    geometry = new THREE.PlaneGeometry(corridorWidth, corridorHeight, 32);
+    material = new THREE.MeshBasicMaterial({color: 0x00ffff, side: THREE.DoubleSide});
+    let door1 = new THREE.Mesh(geometry, material);
+    door1.position.set(0, corridorHeight / 2, (corridorLength / 2) * 3 + 40);
+
+    let door2 = new THREE.Mesh(geometry, material);
+    door2.position.set(0, corridorHeight / 2, -(corridorLength / 2) * 3 + 40);
+
+    /*scene.add(floor);
+    scene.add(ceiling);
+    scene.add(rightWall);
+    scene.add(leftWall);
+    scene.add(door1);
+    scene.add(door2);*/
+
+    objects.push(floor);
+    objects.push(ceiling);
+    objects.push(rightWall);
+    objects.push(leftWall);
+    objects.push(door1);
+    objects.push(door2);
+
+    // Lumière
+    let light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(0, 200, 100);
+    light.castShadow = true;
     scene.add(light);
+    /*light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+    light.position.set( 0, 200, 0 );
+    scene.add( light );*/
 
-    return [scene, camera];
+    // Modèle 3D
+    let fbxLoader = new FBXLoader();
+    fbxLoader.load('./content/models/corridor/corridor_0.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.position.set(0, 0, 0);
+        scene.add(object);
+
+        let corridor1 = object.clone();
+        corridor1.position.set(0, 0, corridorLength);
+        scene.add(corridor1);
+
+        let corridor2 = object.clone();
+        corridor2.position.set(0, 0, -corridorLength);
+        scene.add(corridor2);
+    });
+
+    // Dancing stormstooper
+
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm1';
+        object.position.set(150, 20, -1000);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(30);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm2';
+        object.position.set(-250, 20, -400);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(10);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm3';
+        object.position.set(100, 20, -200);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(70);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm4';
+        object.position.set(150, 20, 800);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm5';
+        object.position.set(-260, 20, 450);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-30);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm6';
+        object.position.set(75, 20, 325);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-60);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm7';
+        object.position.set(-100, 20, -1400);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        // object.rotation.y += Math.radians(180);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm8';
+        object.position.set(-260, 20, 1000);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-200);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm9';
+        object.position.set(75, 20, 1200);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-250);
+        scene.add(object);
+    });
+
+
+    return [scene, camera, objects];
 }
 
 // Fonction de création des particules d'étoiles
@@ -251,7 +432,7 @@ function stars(radius) {
     let star2Coordinates = [];
 
     // Boucle sur tout le rayon de l'univers
-    for (let i = 0; i < radius/2; i++) {
+    for (let i = 0; i < radius / 2; i++) {
         // Attribution aléatoire de coordonnées à aux étoiles
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
@@ -274,8 +455,8 @@ function stars(radius) {
 
     // Couleur et taille
     let starMaterial = [
-        new THREE.PointsMaterial({color: 0xffffff, size: 1, sizeAttenuation: false}),
-        new THREE.PointsMaterial({color: 0xFFFC00, size: 0.5, sizeAttenuation: false})
+        new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false}),
+        new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
     ];
 
     // Création de points basés sur les coordonnées dans les starsGeometry
