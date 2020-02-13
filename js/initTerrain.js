@@ -94,7 +94,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
     /**
      * Planets
      */
-    // Création du groupe qui contient toutes les planètes
+        // Création du groupe qui contient toutes les planètes
     let planets = new THREE.Group();
     planets.position.set(0, 0, 0); // Positionné au centre du plan
     planets.name = "planets";
@@ -183,7 +183,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      * Light
      */
 
-    // Création du spotlight
+        // Création du spotlight
     let pointLight = new THREE.PointLight(0xf2f2f2, 1.5, radius * 2);
     pointLight.position.set(0, 0, 0);       // Positionné au centre de la scène (au centre du soleil)
     pointLight.castShadow = true;           // Génère des ombres
@@ -199,7 +199,7 @@ export function initSpace(radius) { // radius = rayon du système solaire
      * Background
      */
 
-    // Génération et ajout des particules d'étoiles dans la scène
+        // Génération et ajout des particules d'étoiles dans la scène
     let starField = stars(radius);          // Fonction qui retourne un tableau de deux éléménets
     scene.add(starField[0]);
     scene.add(starField[1]);
@@ -219,7 +219,7 @@ export function initShip() {
     let light = new THREE.DirectionalLight(0xffffff);
     light.position.set(0, 200, 100);
     light.castShadow = true;
-    scene.add( light );
+    scene.add(light);
 
     // Couloir
     let fbxLoader = new FBXLoader();
@@ -373,8 +373,25 @@ export function initShip() {
         scene.add(object);
     });
 
+    scene.add(lightBall(0xFFBF00, 'light1').clone());
+    scene.add(lightBall(0x38FF00, 'light2').clone());
+    scene.add(lightBall(0xFF0AC5, 'light3').clone());
 
     return [scene, camera];
+}
+
+function lightBall(color, name) {
+    let sphere = new THREE.SphereBufferGeometry(10, 32, 32);
+
+    let light = new THREE.PointLight(color, 1.5);
+    light.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: color})));
+    light.position.set(0, 550, 0);
+    light.castShadow = true;
+    light.distance = 1600;
+    light.shadow.camera.near = 50;      // Distance minimum d'émission des ombres
+    light.shadow.camera.far = 1600;  // Distance maximale d'émission des ombres
+    light.name = name;
+    return light;
 }
 
 // Fonction de création des particules d'étoiles

@@ -184,7 +184,7 @@ function animate() {
         planetUpdate();
     } else {
         shipControl();
-        danceStorm();
+        shipAnimation();
     }
 }
 
@@ -193,7 +193,7 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function danceStorm() {
+function shipAnimation() {
     if (shipSound.isPlaying) {
         let storm1 = sceneShip.getObjectByName('storm1');
         let delta = clock.getDelta();
@@ -248,7 +248,6 @@ function danceStorm() {
                 let action = stormMixer6.clipAction(storm6.animations[0]);
                 action.play();
             }
-            console.log(delta);
             if (stormMixer6) stormMixer6.update(delta + THREE.Math.randFloatSpread(0.002));
         }
         let storm7 = sceneShip.getObjectByName('storm7');
@@ -258,7 +257,6 @@ function danceStorm() {
                 let action = stormMixer7.clipAction(storm7.animations[0]);
                 action.play();
             }
-            console.log(delta);
             if (stormMixer7) stormMixer7.update(delta + THREE.Math.randFloatSpread(0.002));
         }
         let storm8 = sceneShip.getObjectByName('storm8');
@@ -268,7 +266,6 @@ function danceStorm() {
                 let action = stormMixer8.clipAction(storm8.animations[0]);
                 action.play();
             }
-            console.log(delta);
             if (stormMixer8) stormMixer8.update(delta + THREE.Math.randFloatSpread(0.002));
         }
         let storm9 = sceneShip.getObjectByName('storm9');
@@ -278,9 +275,26 @@ function danceStorm() {
                 let action = stormMixer9.clipAction(storm9.animations[0]);
                 action.play();
             }
-            console.log(delta);
             if (stormMixer9) stormMixer9.update(delta + THREE.Math.randFloatSpread(0.002));
         }
+    }
+
+
+    let time = Date.now() * 0.0005;
+    let light1 = scene.getObjectByName('light1');
+    if (light1 !== undefined) {
+        light1.position.x = Math.sin(time * 0.7) * corridorWidth - 10;
+        light1.position.z = Math.sin(time * 0.3) * corridorLength - 10;
+    }
+    let light2 = scene.getObjectByName('light2');
+    if (light2 !== undefined) {
+        light2.position.x = Math.sin(time * 0.1) * corridorWidth - 10;
+        light2.position.z = Math.sin(time * -0.6) * corridorLength - 10;
+    }
+    let light3 = scene.getObjectByName('light3');
+    if (light3 !== undefined) {
+        light3.position.x = Math.sin(time * 0.9) * corridorWidth - 10;
+        light3.position.z = Math.sin(time * 0.7) * corridorLength - 10;
     }
 }
 
@@ -639,7 +653,7 @@ function shipControl() {
         }
 
     }
-    camera.position.y = 200;
+    camera.position.y = 250;
 
     // Collisions
     if (camera.position.x >= corridorWidth)
