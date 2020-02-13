@@ -24,7 +24,7 @@ let shipMoveSpeed = 10;
 let shipBoostSpeed = 15;
 let currentShipMoveSpeed = shipMoveSpeed;
 let shipRotationSpeed = 0.02;
-let characterMoveSpeed = 1;
+let characterMoveSpeed = 5;
 let characterRotationSpeed = 0.02;
 let shipMoveFrontRotationEffect = 10;
 let shipMoveSideRotationEffect = 10;
@@ -124,7 +124,7 @@ function init() {
     /**
      * Raycaster pour la collision
      */
-    raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+    raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
 
 
     /**
@@ -182,10 +182,10 @@ function animate() {
         shipControl();
         //raycaster.ray.origin.copy( controls.getObject().position );
         raycaster.ray.origin.y -= 10;
-        let intersections = raycaster.intersectObjects( objects );
+        let intersections = raycaster.intersectObjects(objects);
         let onObject = intersections.length > 0;
-        if ( onObject === true ) {
-          console.log("hit");
+        if (onObject === true) {
+            console.log("hit");
         }
     }
 }
@@ -475,11 +475,15 @@ function shipControl() {
         }
         // Stick droit haut : roulade avant
         if (gamepad.axes[3] <= -0.1) {
-            camera.rotateOnAxis(vectorX, characterRotationSpeed * -gamepad.axes[3]);
+            if (camera.rotation.x < Math.radians(40)) {
+                camera.rotateOnAxis(vectorX, characterRotationSpeed * -gamepad.axes[3]);
+            }
         }
         // Stick droit haut : roulade arrière
         if (gamepad.axes[3] >= 0.1) {
-            camera.rotateOnAxis(vectorX, -characterRotationSpeed * gamepad.axes[3]);
+            if (camera.rotation.x > Math.radians(-40)) {
+                camera.rotateOnAxis(vectorX, -characterRotationSpeed * gamepad.axes[3]);
+            }
         }
         // Stick droit gauche : tourner à gauche
         if (gamepad.axes[2] <= -0.1) {
@@ -488,6 +492,14 @@ function shipControl() {
         // Stick droit gauche : tourner à droite
         if (gamepad.axes[2] >= 0.1) {
             camera.rotateOnAxis(vectorY, -characterRotationSpeed * gamepad.axes[2]);
+        }
+        // Appui sur gachette haut gauche : tonneau à gauche
+        if (gamepad.buttons[4].pressed) {
+            camera.rotateOnAxis(vectorZ, characterRotationSpeed * 0.5);
+        }
+        // Appui sur gachette haut droite : tonneau à droite
+        if (gamepad.buttons[5].pressed) {
+            camera.rotateOnAxis(vectorZ, -characterRotationSpeed * 0.5);
         }
         // Appui bouton select
         if (gamepad.buttons[8].pressed) {
@@ -498,18 +510,19 @@ function shipControl() {
                 params.Switch();
             }
         }
+        if (gamepad.buttons[0].pressed) {
+            onLoad();
+        }
     } else { // Partie clavier
         if (keyboard.pressed("up")) {
-            if (camera.rotation.x < Math.radians(20)) {
+            if (camera.rotation.x < Math.radians(40)) {
                 camera.rotateOnAxis(vectorX, characterRotationSpeed);
             }
-            console.log(camera.rotation);
         }
         if (keyboard.pressed("down")) {
-            if (camera.rotation.x > Math.radians(-20)) {
+            if (camera.rotation.x > Math.radians(-40)) {
                 camera.rotateOnAxis(vectorX, -characterRotationSpeed);
             }
-            console.log(camera.rotation);
         }
         if (keyboard.pressed("left")) {
             camera.rotateOnAxis(vectorY, characterRotationSpeed);
@@ -531,9 +544,16 @@ function shipControl() {
         if (keyboard.pressed("d")) {
             camera.translateX(characterMoveSpeed);
         }
+        if (keyboard.pressed("a")) {
+            camera.rotateOnAxis(vectorZ, characterRotationSpeed * 0.5);
+        }
+        if (keyboard.pressed("e")) {
+            camera.rotateOnAxis(vectorZ, -characterRotationSpeed * 0.5);
+        }
+
     }
-    camera.position.y = 10;
-    camera.rotation.z = 0;
+    camera.position.y = 200;
+
 }
 
 function planetUpdate() {
@@ -641,7 +661,7 @@ function startGUI() {
         shipRotationSpeed = params.ShipRotationSpeed;
     });
 
-    characterControlsFolder.add(params, 'CharacterMoveSpeed').name('Character move speed').min(0.5).max(3).step(0.1).onChange(function () {
+    characterControlsFolder.add(params, 'CharacterMoveSpeed').name('Character move speed').min(1).max(10).step(0.1).onChange(function () {
         characterMoveSpeed = params.CharacterMoveSpeed;
     });
     characterControlsFolder.add(params, 'CharacterRotationSpeed').name('Character rotation speed').min(0.001).max(0.05).step(0.001).onChange(function () {

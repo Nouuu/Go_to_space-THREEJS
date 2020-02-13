@@ -208,8 +208,8 @@ export function initSpace(radius) { // radius = rayon du système solaire
 export function initShip() {
     let scene = new THREE.Scene();
     scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera( 450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
-    camera.position.set(0, 350, 0 );
+    let camera = new THREE.PerspectiveCamera(450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
+    camera.position.set(0, 350, 0);
 
     let geometry = new THREE.PlaneGeometry(corridorWidth, corridorLength * 3, 32);
     let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide});
@@ -222,25 +222,25 @@ export function initShip() {
     ceiling.rotation.x = Math.radians(90);
     ceiling.position.set(0, corridorHeight, 40);
 
-    geometry = new THREE.PlaneGeometry( corridorHeight, corridorLength * 3, 32 );
+    geometry = new THREE.PlaneGeometry(corridorHeight, corridorLength * 3, 32);
     material = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
-    let rightWall = new THREE.Mesh( geometry, material );
+    let rightWall = new THREE.Mesh(geometry, material);
     rightWall.rotation.y = Math.radians(90);
     rightWall.rotation.x = Math.radians(90);
-    rightWall.position.set(corridorWidth/2, corridorHeight/2, 40);
+    rightWall.position.set(corridorWidth / 2, corridorHeight / 2, 40);
 
-    let leftWall = new THREE.Mesh( geometry, material );
+    let leftWall = new THREE.Mesh(geometry, material);
     leftWall.rotation.y = Math.radians(90);
     leftWall.rotation.x = Math.radians(90);
-    leftWall.position.set(-corridorWidth/2, corridorHeight/2, 40);
+    leftWall.position.set(-corridorWidth / 2, corridorHeight / 2, 40);
 
-    geometry = new THREE.PlaneGeometry( corridorWidth, corridorHeight, 32 );
+    geometry = new THREE.PlaneGeometry(corridorWidth, corridorHeight, 32);
     material = new THREE.MeshBasicMaterial({color: 0x00ffff, side: THREE.DoubleSide});
-    let door1 = new THREE.Mesh( geometry, material );
-    door1.position.set(0, corridorHeight/2, (corridorLength/2) * 3 + 40);
+    let door1 = new THREE.Mesh(geometry, material);
+    door1.position.set(0, corridorHeight / 2, (corridorLength / 2) * 3 + 40);
 
-    let door2 = new THREE.Mesh( geometry, material );
-    door2.position.set(0, corridorHeight/2, -(corridorLength/2) * 3 + 40);
+    let door2 = new THREE.Mesh(geometry, material);
+    door2.position.set(0, corridorHeight / 2, -(corridorLength / 2) * 3 + 40);
 
     /*scene.add(floor);
     scene.add(ceiling);
@@ -257,46 +257,35 @@ export function initShip() {
     objects.push(door2);
 
     // Lumière
-    let light = new THREE.DirectionalLight( 0xffffff );
-    light.position.set( 0, 200, 100 );
+    let light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(0, 200, 100);
     light.castShadow = true;
-    scene.add( light );
+    scene.add(light);
     /*light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
     light.position.set( 0, 200, 0 );
     scene.add( light );*/
 
     // Modèle 3D
     let fbxLoader = new FBXLoader();
-    fbxLoader.load( './content/models/corridor/corridor_0.fbx', function ( object ) {
-        object.traverse( function ( child ) {
-            if ( child.isMesh ) {
+    fbxLoader.load('./content/models/corridor/corridor_0.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
             }
-        } );
-        object.position.set( 0, 0, 0 );
-        scene.add( object );
+        });
+        object.position.set(0, 0, 0);
+        scene.add(object);
 
         let corridor1 = object.clone();
-        corridor1.position.set( 0, 0, corridorLength );
-        scene.add( corridor1 );
+        corridor1.position.set(0, 0, corridorLength);
+        scene.add(corridor1);
 
         let corridor2 = object.clone();
-        corridor2.position.set( 0, 0, -corridorLength );
-        scene.add( corridor2 );
-    } );
+        corridor2.position.set(0, 0, -corridorLength);
+        scene.add(corridor2);
+    });
 
-    fbxLoader.load( './content/models/anime.fbx', function ( object ) {
-        object.traverse( function ( child ) {
-            if ( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        } );
-        object.position.set( 0, 0, 0 );
-        object.scale.set(50,50,50);
-        scene.add( object );
-    } );
 
     return [scene, camera, objects];
 }
@@ -324,7 +313,7 @@ function stars(radius) {
     let star2Coordinates = [];
 
     // Boucle sur tout le rayon de l'univers
-    for (let i = 0; i < radius/2; i++) {
+    for (let i = 0; i < radius / 2; i++) {
         // Attribution aléatoire de coordonnées à aux étoiles
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
@@ -347,8 +336,8 @@ function stars(radius) {
 
     // Couleur et taille
     let starMaterial = [
-        new THREE.PointsMaterial({color: 0xffffff, size: 1, sizeAttenuation: false}),
-        new THREE.PointsMaterial({color: 0xFFFC00, size: 0.5, sizeAttenuation: false})
+        new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false}),
+        new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
     ];
 
     // Création de points basés sur les coordonnées dans les starsGeometry
