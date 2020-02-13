@@ -28,6 +28,7 @@ const saturneTexture = loader.load("./content/textures/saturn.jpg");
 const saturneRingTexture = loader.load("./content/textures/saturn_ring.png");
 const uranusTexture = loader.load("./content/textures/uranus.jpg");
 const neptuneTexture = loader.load("./content/textures/neptune.jpg");
+const doorTexture = loader.load("./content/textures/door.jpg");
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
@@ -67,16 +68,17 @@ let sunMaterial = new THREE.MeshPhongMaterial({
     emissiveIntensity: 0.3, // Intensité de la couleur émise
     side: THREE.DoubleSide  // Applique la texture des deux côtés et garantit que la lumière passe à travers
 });
+let doorMaterial = new THREE.MeshPhongMaterial({
+    map: doorTexture, side: THREE.DoubleSide
+});
 
 let geometry;
 let meshPlanet;
 
 // Taille du couloir
-const corridorLength = 1096;
-let box;
-let length;
-let width;
-let height;
+const corridorLength = 1097;
+const corridorWidth = 1318;
+const corridorHeight = 847;
 
 //audio
 let SWSound;
@@ -231,30 +233,26 @@ export function initShip() {
         object.position.set(0, 0, 0);
         scene.add(object);
 
-        // Récupération de la taille de l'objet
-        box = new THREE.Box3().setFromObject( object );
-        length = box.getSize().z;
-        width = box.getSize().x;
-        height = box.getSize().y;
-
         let corridor1 = object.clone();
-        corridor1.position.set( 0, 0, length );
+        corridor1.position.set( 0, 0, corridorLength );
         scene.add( corridor1 );
 
         let corridor2 = object.clone();
-        corridor2.position.set( 0, 0, -length );
+        corridor2.position.set( 0, 0, -corridorLength );
         scene.add( corridor2 );
-
-        let geometry = new THREE.PlaneGeometry( width, height, 32 );
-        let material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-        let door1 = new THREE.Mesh( geometry, material );
-        door1.position.set(0,height/2,length/2 + length + 40);
-        scene.add( door1 );
-
-        let door2 = new THREE.Mesh( geometry, material );
-        door2.position.set(0,height/2,-(length/2 + length - 40));
-        scene.add( door2 );
     } );
+
+    // Portes
+    let geometry = new THREE.PlaneGeometry( corridorWidth, corridorHeight, 32 );
+
+    let door1 = new THREE.Mesh( geometry, doorMaterial );
+    door1.position.set(0, corridorHeight/2, corridorLength/2 + corridorLength + 40);
+    door1.rotation.y = Math.radians(180);
+    scene.add( door1 );
+
+    let door2 = new THREE.Mesh( geometry, doorMaterial );
+    door2.position.set(0, corridorHeight/2, -(corridorLength/2 + corridorLength - 40));
+    scene.add( door2 );
 
     // Dancing stormstooper
 
