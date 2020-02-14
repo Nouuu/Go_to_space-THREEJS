@@ -194,89 +194,108 @@ function render() {
 }
 
 function shipAnimation() {
-    if (shipSound.isPlaying) {
-        let storm1 = sceneShip.getObjectByName('storm1');
-        let delta = clock.getDelta();
-        if (storm1 !== undefined) {
-            if (stormMixer1 === undefined) {
-                stormMixer1 = new THREE.AnimationMixer(storm1);
-                let action = stormMixer1.clipAction(storm1.animations[0]);
-                action.play();
-            }
-            if (stormMixer1) stormMixer1.update(delta + THREE.Math.randFloatSpread(0.002));
+    let delta = clock.getDelta();
+    let storm1 = sceneShip.getObjectByName('storm1');
+    if (storm1 !== undefined) {
+        if (stormMixer1 === undefined) {
+            stormMixer1 = new THREE.AnimationMixer(storm1);
         }
-        let storm2 = sceneShip.getObjectByName('storm2');
-        if (storm2 !== undefined) {
-            if (stormMixer2 === undefined) {
-                stormMixer2 = new THREE.AnimationMixer(storm2);
-                let action = stormMixer2.clipAction(storm2.animations[0]);
-                action.play();
-            }
-            if (stormMixer2) stormMixer2.update(delta + THREE.Math.randFloatSpread(0.002));
+
+        let action = stormMixer1.clipAction(storm1.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer1.clipAction(storm1.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer1) stormMixer1.update(delta + THREE.Math.randFloatSpread(0.002));
+    }
+    let storm2 = sceneShip.getObjectByName('storm2');
+    if (storm2 !== undefined) {
+        if (stormMixer2 === undefined) {
+            stormMixer2 = new THREE.AnimationMixer(storm2);
         }
-        let storm3 = sceneShip.getObjectByName('storm3');
-        if (storm3 !== undefined) {
-            if (stormMixer3 === undefined) {
-                stormMixer3 = new THREE.AnimationMixer(storm3);
-                let action = stormMixer3.clipAction(storm3.animations[0]);
-                action.play();
-            }
-            if (stormMixer3) stormMixer3.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer2.clipAction(storm2.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer2.clipAction(storm2.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer2) stormMixer2.update(delta + THREE.Math.randFloatSpread(0.002));
+    }
+    let storm3 = sceneShip.getObjectByName('storm3');
+    if (storm3 !== undefined) {
+        if (stormMixer3 === undefined) {
+            stormMixer3 = new THREE.AnimationMixer(storm3);
         }
-        let storm4 = sceneShip.getObjectByName('storm4');
-        if (storm4 !== undefined) {
-            if (stormMixer4 === undefined) {
-                stormMixer4 = new THREE.AnimationMixer(storm4);
-                let action = stormMixer4.clipAction(storm4.animations[0]);
-                action.play();
-            }
-            if (stormMixer4) stormMixer4.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer3.clipAction(storm3.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer3.clipAction(storm3.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer3) stormMixer3.update(delta + THREE.Math.randFloatSpread(0.002));
+
+    }
+    let storm4 = sceneShip.getObjectByName('storm4');
+    if (storm4 !== undefined) {
+        if (stormMixer4 === undefined) {
+            stormMixer4 = new THREE.AnimationMixer(storm4);
         }
-        let storm5 = sceneShip.getObjectByName('storm5');
-        if (storm5 !== undefined) {
-            if (stormMixer5 === undefined) {
-                stormMixer5 = new THREE.AnimationMixer(storm5);
-                let action = stormMixer5.clipAction(storm5.animations[0]);
-                action.play();
-            }
-            if (stormMixer5) stormMixer5.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer4.clipAction(storm4.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer4.clipAction(storm4.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer4) stormMixer4.update(delta + THREE.Math.randFloatSpread(0.002));
+    }
+    let storm5 = sceneShip.getObjectByName('storm5');
+    if (storm5 !== undefined) {
+        if (stormMixer5 === undefined) {
+            stormMixer5 = new THREE.AnimationMixer(storm5);
         }
-        let storm6 = sceneShip.getObjectByName('storm6');
-        if (storm6 !== undefined) {
-            if (stormMixer6 === undefined) {
-                stormMixer6 = new THREE.AnimationMixer(storm6);
-                let action = stormMixer6.clipAction(storm6.animations[0]);
-                action.play();
-            }
-            if (stormMixer6) stormMixer6.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer5.clipAction(storm5.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer5.clipAction(storm5.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer5) stormMixer5.update(delta + THREE.Math.randFloatSpread(0.002));
+
+    }
+    let storm6 = sceneShip.getObjectByName('storm6');
+    if (storm6 !== undefined) {
+        if (stormMixer6 === undefined) {
+            stormMixer6 = new THREE.AnimationMixer(storm6);
         }
-        let storm7 = sceneShip.getObjectByName('storm7');
-        if (storm7 !== undefined) {
-            if (stormMixer7 === undefined) {
-                stormMixer7 = new THREE.AnimationMixer(storm7);
-                let action = stormMixer7.clipAction(storm7.animations[0]);
-                action.play();
-            }
-            if (stormMixer7) stormMixer7.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer6.clipAction(storm6.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer6.clipAction(storm6.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer6) stormMixer6.update(delta + THREE.Math.randFloatSpread(0.002));
+    }
+    let storm7 = sceneShip.getObjectByName('storm7');
+    if (storm7 !== undefined) {
+        if (stormMixer7 === undefined) {
+            stormMixer7 = new THREE.AnimationMixer(storm7);
         }
-        let storm8 = sceneShip.getObjectByName('storm8');
-        if (storm8 !== undefined) {
-            if (stormMixer8 === undefined) {
-                stormMixer8 = new THREE.AnimationMixer(storm8);
-                let action = stormMixer8.clipAction(storm8.animations[0]);
-                action.play();
-            }
-            if (stormMixer8) stormMixer8.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer7.clipAction(storm7.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer7.clipAction(storm7.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer7) stormMixer7.update(delta + THREE.Math.randFloatSpread(0.002));
+    }
+    let storm8 = sceneShip.getObjectByName('storm8');
+    if (storm8 !== undefined) {
+        if (stormMixer8 === undefined) {
+            stormMixer8 = new THREE.AnimationMixer(storm8);
         }
-        let storm9 = sceneShip.getObjectByName('storm9');
-        if (storm9 !== undefined) {
-            if (stormMixer9 === undefined) {
-                stormMixer9 = new THREE.AnimationMixer(storm9);
-                let action = stormMixer9.clipAction(storm9.animations[0]);
-                action.play();
-            }
-            if (stormMixer9) stormMixer9.update(delta + THREE.Math.randFloatSpread(0.002));
+        let action = stormMixer8.clipAction(storm8.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer8.clipAction(storm8.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer8) stormMixer8.update(delta + THREE.Math.randFloatSpread(0.002));
+    }
+    let storm9 = sceneShip.getObjectByName('storm9');
+    if (storm9 !== undefined) {
+        if (stormMixer9 === undefined) {
+            stormMixer9 = new THREE.AnimationMixer(storm9);
         }
+        let action = stormMixer9.clipAction(storm9.animations[shipSound.isPlaying ? 1 : 0]);
+        action.stop();
+        action = stormMixer9.clipAction(storm9.animations[shipSound.isPlaying ? 0 : 1]);
+        action.play();
+        if (stormMixer9) stormMixer9.update(delta + THREE.Math.randFloatSpread(0.002));
     }
 
 
@@ -689,7 +708,8 @@ function music() {
         sWSound.setRefDistance(150);
         sWSound.setMaxDistance(200);
         sWSound.setLoop(true);
-        sWSound.setVolume(2);
+        sWSound.play();
+        sWSound.setVolume(1);
     });
     sceneSpace.getObjectByName("earth").add(sWSound);
 

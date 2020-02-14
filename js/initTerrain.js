@@ -256,6 +256,11 @@ export function initShip() {
 
     // Dancing stormstooper
 
+    let idleAnimation;
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperIdle.fbx', function (object) {
+        idleAnimation = object.animations[0];
+    });
+
     fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
         object.traverse(function (child) {
             if (child.isMesh) {
@@ -264,6 +269,7 @@ export function initShip() {
             }
         });
         object.name = 'storm1';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(150, 20, -1000);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(30);
@@ -277,6 +283,7 @@ export function initShip() {
             }
         });
         object.name = 'storm2';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(-250, 20, -400);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(10);
@@ -290,6 +297,7 @@ export function initShip() {
             }
         });
         object.name = 'storm3';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(100, 20, -200);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(70);
@@ -303,6 +311,7 @@ export function initShip() {
             }
         });
         object.name = 'storm4';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(150, 20, 800);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         scene.add(object);
@@ -315,6 +324,7 @@ export function initShip() {
             }
         });
         object.name = 'storm5';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(-260, 20, 450);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(-30);
@@ -328,6 +338,7 @@ export function initShip() {
             }
         });
         object.name = 'storm6';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(75, 20, 325);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(-60);
@@ -341,6 +352,7 @@ export function initShip() {
             }
         });
         object.name = 'storm7';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(-100, 20, -1400);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         // object.rotation.y += Math.radians(180);
@@ -354,6 +366,7 @@ export function initShip() {
             }
         });
         object.name = 'storm8';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(-260, 20, 1000);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(-200);
@@ -367,6 +380,7 @@ export function initShip() {
             }
         });
         object.name = 'storm9';
+        object.animations[1] =(idleAnimation.clone());
         object.position.set(75, 20, 1200);
         object.scale.x = object.scale.y = object.scale.z = 0.7;
         object.rotation.y += Math.radians(-250);
