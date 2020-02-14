@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Fontdiner+Swanky&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
 :root {
   --duration: 1.5s;
   --container-size: 250px;
@@ -73,7 +73,7 @@ canvas.display {
   margin-bottom: 30px;
 }
 .card ul {
-  margin-left: 40px;
+  margin-left: 20px;
 }
 .card li {
   padding-bottom: 10px;
@@ -374,23 +374,20 @@ canvas.display {
 }
 
 .b1 {
-  border-radius: 100% 0 0 0;
-  background: linear-gradient(#0FFFC1, #30B7D3);
+	border-radius: 100% 0 0 0;
+	background: linear-gradient(#0FFFC1, rgba(48, 184, 211, 0.822));
 }
-
 .b2 {
-  border-radius: 0 100% 0 0;
-  background: linear-gradient(transparent, #673FF2);
+	border-radius: 0 100% 0 0;
+	background: linear-gradient(transparent, rgba(102, 63, 242, 0.651));
 }
-
 .b3 {
-  border-radius: 0 0 0 100%;
-  background: linear-gradient(#30B7D3, #516FE6);
+	border-radius: 0 0 0 100%;
+	background: linear-gradient(rgba(48, 184, 211, 0.822), rgba(81, 111, 230, 0.774));
 }
-
 .b4 {
-  border-radius: 0 0 100% 0;
-  background: linear-gradient(#516FE6, #673FF2);
+	border-radius: 0 0 100% 0;
+	background: linear-gradient(rgba(81, 111, 230, 0.774), rgba(102, 63, 242, 0.651));
 }
 
 .background {

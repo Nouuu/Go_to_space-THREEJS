@@ -28,6 +28,7 @@ const saturneTexture = loader.load("./content/textures/saturn.jpg");
 const saturneRingTexture = loader.load("./content/textures/saturn_ring.png");
 const uranusTexture = loader.load("./content/textures/uranus.jpg");
 const neptuneTexture = loader.load("./content/textures/neptune.jpg");
+const doorTexture = loader.load("./content/textures/door.jpg");
 
 // Materials
 let earthMaterial = new THREE.MeshPhongMaterial({
@@ -67,9 +68,17 @@ let sunMaterial = new THREE.MeshPhongMaterial({
     emissiveIntensity: 0.3, // Intensité de la couleur émise
     side: THREE.DoubleSide  // Applique la texture des deux côtés et garantit que la lumière passe à travers
 });
+let doorMaterial = new THREE.MeshPhongMaterial({
+    map: doorTexture, side: THREE.DoubleSide
+});
 
 let geometry;
 let meshPlanet;
+
+// Taille du couloir
+const corridorLength = 1097;
+const corridorWidth = 1318;
+const corridorHeight = 847;
 
 //audio
 let SWSound;
@@ -78,10 +87,9 @@ let SWAudioLoader;
 export function initSpace(radius) { // radius = rayon du système solaire
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, radius * 2);
-    camera.position.z = 1200;
+    camera.position.z = 1500;
     camera.position.y = 0;
     camera.position.x = 0;
-    //camera.lookAt(new THREE.Vector3(600,0,0));
 
     /**
      * Planets
@@ -200,32 +208,204 @@ export function initSpace(radius) { // radius = rayon du système solaire
     return [scene, camera];
 }
 
-export function initShip(terrainMat) {
+export function initShip() {
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
-    camera.position.z = 30;
-    camera.position.y = 10;
-    // camera.rotation.x -= Math.radians(90);
+    scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(450, window.innerWidth / window.innerHeight, 1, corridorLength * 4);
+    //camera.position.set(0, 3500, 0);
+    camera.position.y = 3500;
 
-
-    /**
-     * Ajout du terrain
-     */
-    let geometry = new THREE.PlaneBufferGeometry(30, 30, 32, 32);
-    let terrain = new THREE.Mesh(geometry, terrainMat);
-    terrain.receiveShadow = true;
-    terrain.rotateX(Math.radians(-90));
-
-    scene.add(terrain);
-
-    /**
-     * Ambient light
-     */
-
-    let light = new THREE.AmbientLight(0xf2f2f2, 1);
+    // Lumière
+    let light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(0, 200, 100);
+    light.castShadow = true;
     scene.add(light);
 
+    // Couloir
+    let fbxLoader = new FBXLoader();
+    fbxLoader.load('./content/models/corridor/corridor_0.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.position.set(0, 0, 0);
+        scene.add(object);
+
+        let corridor1 = object.clone();
+        corridor1.position.set( 0, 0, corridorLength );
+        scene.add( corridor1 );
+
+        let corridor2 = object.clone();
+        corridor2.position.set( 0, 0, -corridorLength );
+        scene.add( corridor2 );
+    } );
+
+    // Portes
+    let geometry = new THREE.PlaneGeometry( corridorWidth, corridorHeight, 32 );
+
+    let door1 = new THREE.Mesh( geometry, doorMaterial );
+    door1.position.set(0, corridorHeight/2, corridorLength/2 + corridorLength + 40);
+    door1.rotation.y = Math.radians(180);
+    scene.add( door1 );
+
+    let door2 = new THREE.Mesh( geometry, doorMaterial );
+    door2.position.set(0, corridorHeight/2, -(corridorLength/2 + corridorLength - 40));
+    scene.add( door2 );
+
+    // Dancing stormstooper
+
+    let idleAnimation;
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperIdle.fbx', function (object) {
+        idleAnimation = object.animations[0];
+    });
+
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm1';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(150, 20, -1000);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(30);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm2';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(-250, 20, -400);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(10);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm3';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(100, 20, -200);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(70);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm4';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(150, 20, 800);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm5';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(-260, 20, 450);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-30);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm6';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(75, 20, 325);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-60);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance2.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm7';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(-100, 20, -1400);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        // object.rotation.y += Math.radians(180);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance3.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm8';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(-260, 20, 1000);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-200);
+        scene.add(object);
+    });
+    fbxLoader.load('./content/models/dancingTroopers/StormtrooperDance.fbx', function (object) {
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        object.name = 'storm9';
+        object.animations[1] =(idleAnimation.clone());
+        object.position.set(75, 20, 1200);
+        object.scale.x = object.scale.y = object.scale.z = 0.7;
+        object.rotation.y += Math.radians(-250);
+        scene.add(object);
+    });
+
+    scene.add(lightBall(0xFFBF00, 'light1').clone());
+    scene.add(lightBall(0x38FF00, 'light2').clone());
+    scene.add(lightBall(0xFF0AC5, 'light3').clone());
+
     return [scene, camera];
+}
+
+function lightBall(color, name) {
+    let sphere = new THREE.SphereBufferGeometry(10, 32, 32);
+
+    let light = new THREE.PointLight(color, 1.5);
+    light.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: color})));
+    light.position.set(0, 550, 0);
+    light.castShadow = true;
+    light.distance = 1600;
+    light.shadow.camera.near = 50;      // Distance minimum d'émission des ombres
+    light.shadow.camera.far = 1600;  // Distance maximale d'émission des ombres
+    light.name = name;
+    return light;
 }
 
 // Fonction de création des particules d'étoiles
@@ -251,7 +431,7 @@ function stars(radius) {
     let star2Coordinates = [];
 
     // Boucle sur tout le rayon de l'univers
-    for (let i = 0; i < radius/2; i++) {
+    for (let i = 0; i < radius / 2; i++) {
         // Attribution aléatoire de coordonnées à aux étoiles
         star.set(newRand(radius), newRand(radius), newRand(radius));
         star2.set(newRand(radius), newRand(radius), newRand(radius));
@@ -274,8 +454,8 @@ function stars(radius) {
 
     // Couleur et taille
     let starMaterial = [
-        new THREE.PointsMaterial({color: 0xffffff, size: 1, sizeAttenuation: false}),
-        new THREE.PointsMaterial({color: 0xFFFC00, size: 0.5, sizeAttenuation: false})
+        new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false}),
+        new THREE.PointsMaterial({color: 0xFFFC00, size: 1, sizeAttenuation: false})
     ];
 
     // Création de points basés sur les coordonnées dans les starsGeometry
