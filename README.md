@@ -4,19 +4,22 @@
 |:-------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|:--------------------------------------------------------:|
 
 
-
-
 A ThreeJS school project where you travel in space
 
 ## Description
 
-Not too long ago in a fairly close galaxy, the millennium falcon got lost...\
-This world contains two scenes, one in space and the other inside the  ship. You can adjust several parameters directly from the GUI.\
-If you have an xbox controller, you can use it !
+Not too long ago in a fairly close galaxy, the millennium falcon got
+lost...\ This world contains two scenes, one in space and the other
+inside the ship. You can adjust several parameters directly from the
+GUI.\ If you have an xbox controller, you can use it !
 
 
-- **Space scene :** This is the main scene where you spawn at the beginning. You will find there the planets of the solar system. This is not the true scale but we recognize the planets quite easily.
-- **Ship scene :** It’s sort of a bonus scene that we’ve added for fun. There are some stormtroopers in a kind of warehouse (tip: launch the music of the ship from the GUI :wink:).
+- **Space scene :** This is the main scene where you spawn at the
+  beginning. You will find there the planets of the solar system. This
+  is not the true scale but we recognize the planets quite easily.
+- **Ship scene :** It’s sort of a bonus scene that we’ve added for fun.
+  There are some stormtroopers in a kind of warehouse (tip: launch the
+  music of the ship from the GUI :wink:).
 
 ## Visuals
 
@@ -37,6 +40,7 @@ If you have an xbox controller, you can use it !
 ![alt-ship-gif](pictures/ship.gif)
 
 ## Usage
+
 If you play on keyboard, you might use `azerty` layout :fr:.
 
 ### Keyboard :keyboard: :
@@ -61,13 +65,17 @@ If you play on keyboard, you might use `azerty` layout :fr:.
 ![](pictures/360_controller.svg)
 
 ### GUI Settings :
-We can adjust several settings directly from the GUI like the precision of the camera, the movement speed, the rotation speed of the planets, the music:
+
+We can adjust several settings directly from the GUI like the precision
+of the camera, the movement speed, the rotation speed of the planets,
+the music:
 
 | ![](pictures/gui_controls.png) | ![](pictures/gui_space.png) | ![](pictures/gui_ship_music.png) |
 |:------------------------------:|:---------------------------:|:--------------------------------:|
 
 
 ## Authors
+
 This project was carried out in a group of four people, myself included.
 
 |                                                      |                                                             |
@@ -79,11 +87,17 @@ This project was carried out in a group of four people, myself included.
 
 ## More Documentation
 
-Here are the main sites / resources used during the development of our project
+Here are the main sites / resources used during the development of our
+project
 
 - ThreeJS library [threejs](https://threejs.org/)
 - Gamepad Control [html5gamepad](https://html5gamepad.com/)
-- Solar system textures [solarsystemscope](https://www.solarsystemscope.com/textures/)
-- 3D objects [turbosquid](https://www.turbosquid.com/Search/3D-Models/free/fbx) [open3dmodel](https://open3dmodel.com/3d-models/dae) [sketchfab](https://sketchfab.com/tags/fbx) [cadnav](http://www.cadnav.com/3d-models/sort-21.html)
+- Solar system textures
+  [solarsystemscope](https://www.solarsystemscope.com/textures/)
+- 3D objects
+  [turbosquid](https://www.turbosquid.com/Search/3D-Models/free/fbx)
+  [open3dmodel](https://open3dmodel.com/3d-models/dae)
+  [sketchfab](https://sketchfab.com/tags/fbx)
+  [cadnav](http://www.cadnav.com/3d-models/sort-21.html)
 - 3D animations [mixamo](https://www.mixamo.com/)
 
