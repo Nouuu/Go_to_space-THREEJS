@@ -9,9 +9,11 @@ A ThreeJS school project where you travel in space
 ## Description
 
 Not too long ago in a fairly close galaxy, the millennium falcon got
-lost...\ This world contains two scenes, one in space and the other
+lost...  
+This world contains two scenes, one in space and the other
 inside the ship. You can adjust several parameters directly from the
-GUI.\ If you have an xbox controller, you can use it !
+GUI.  
+If you have an xbox controller, you can use it !
 
 
 - **Space scene :** This is the main scene where you spawn at the
